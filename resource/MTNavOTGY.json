@@ -1,0 +1,44 @@
+######################################################################
+######################################################################
+###
+######################################################################
+######################################################################
+{
+    "informable": {
+        "place_search_keyword" : ["petrol station", "restaurant", "cafe", "coffee shop", "food court", "bar", "pub", "club", "bakery", "supermarket", "shopping centre", "park", "gym", "cinema", "hotel", "hospital", "clinic", "library",
+            "post office", "convenience store", "musuem", "beach", "bank", "parking lot", "dental clinic", "car wash", "laundry shop", "beauty salon", "barber shop", "tan tock seng hospital", "changi general hospital", "mount elizabeth hospital",
+            "east shore hospital", "jurong medical centre", "kk women's and children's hospital", "ren ci hospital", "khoo teck puat hospital", "national university hospital", "gleneagles hospital", "bright vision hospital", "st andrew's community hospital",
+            "singapore general hospital", "institute of mental health", "mount elizabeth novena hospital", "national neuroscience institute", "kwong wai shiu", "mount alvernia hospital", "thomson medical centre", "clementi polyclinic", "pasir ris polyclinic",
+            "singapore red cross society", "assisi hospice", "rochor beancurd house", "chong pang food", "lau pa sat", "hard rock cafe sentosa", "everton food place", "newton food centre", "strictly pancakes", "chomp chomp food centre", "wave house sentosa",
+            "chinatown food street", "dempsey hill", "paragon shopping centre", "victoria concert hall", "bugis street", "marina bay financial centre", "singapore mint coin gallery", "changi sailing club", "keppel club", "changi beach club", "singapore soka association",
+            "coronation plaza", "balestier plaza", "qian hu fish farm", "raffles xchange", "one raffles place", "jurong frog farm", "bollywood veggies", "school of the arts singapore", "nanyang girls' high school", "singapore sports school", "raffles girls' school",
+            "singapore chinese girls' school", "st. andrew's junior school", "ngee ann polytechnic", "hwa chong institution", "insead singapore", "national university of singapore", "serangoon junior college", "nanyang polytechnic", "nanyang junior college", "temasek polytechnic",
+            "anglo chinese junior college", "bukit batok driving centre", "duke nus", "home team academy", "alkaff mansion", "universal studios singapore", "singapore management university", "safra toa payoh", "east coast lagoon food village", "farmart centre", "tanjong beach club",
+            "bukit panjang plaza", "singapore flyer", "fountain of wealth", "serangoon stadium", "changi business park", "jurong logistics hub", "woodlands swimming complex", "bukit batok swimming complex", "orchard plaza", "keppel bay tower", "hougang stadium",
+            "sun yat sen nanyang memorial hall", "tripleone somerset", "pasir panjang ferry terminal", "ion orchard", "hougang mall", "tampines mall", "313 somerset", "bugis junction", "ngee ann city", "tanglin mall", "suntec city mall", "cathay cineleisure", "amk hub", "nex singapore",
+            "jurong point", "tiong bahru plaza", "clarke quay central", "lucky plaza", "chijmes singapore", "imm building", "citylink mall", "millenia walk", "orchard central", "wisma atria", "queensway shopping centre", "raffles city shopping centre", "wheelock place", "tanglin shopping centre",
+            "marina square", "112 katong mall", "asian civilisations museum", "capitol theatre singapore", "marina bay sands", "hong lim park", "singapore indoor stadium", "max atria", "bedok stadium", "choa chu kang stadium", "helix bridge", "bishan stadium", "jalan besar stadium",
+            "lower seletar reservoir", "woodlands stadium", "marina barrage", "woodlands town garden", "clementi stadium", "resorts world sentosa", "henderson waves", "east coast park", "sungei buloh wetland reserve", "the southern ridges", "sota concert hall", "upper seletar reservoir",
+            "jurong stadium", "punggol park", "leisure park kallang", "tampines stadium", "tekka centre", "siloso beach", "plaza singapura", "jurong east stadium", "ang mo kio town garden west", "clementi woods park", "yio chu kang stadium", "causeway point", "madame tussauds singapore",
+            "ang mo kio town garden east", "pasir ris town park", "upper peirce reservoir", "merlion park", "west coast park", "sim lim square", "kent ridge park", "university cultural centre", "palawan beach", "esplanade theatre", "mount faber park", "lower peirce reservoir",
+            "lee foundation theatre", "kallang wave mall", "singapore discovery centre", "zepp@bigbox", "artscience museum", "changi beach park", "jurong lake", "bedok reservoir", "jurong bird park", "toa payoh stadium", "bukit timah hill", "jurong west stadium", "bukit gombak stadium",
+            "national gallery singapore", "telok blangah hill park", "singapore zoo", "bedok town park", "far east plaza", "marina bay floating platform", "singapore national stadium", "national museum of singapore", "bedok mall", "hortpark", "bukit batok nature park",
+            "maritime experiential museum & aquarium", "tanjong beach", "s.e.a aquarium", "istana", "yishun stadium", "dairy farm nature park", "singapore art museum", "bukit batok town park", "thian hock keng temple", "victoria theatre and concert hall", "river safari",
+            "bishan-ang mo kio park", "macritchie reservoir", "people's park complex", "wild wild wet", "night safari", "festive grand theatre", "labrador park", "malay heritage centre", "raffles city convention centre", "peranakan museum", "mustafa centre", "star performing arts centre",
+            "changi exhibition centre", "liang court", "science centre singapore", "suntec convention centre", "novena square", "singapore polytecnic", "bras basah complex", "beauty world centre", "bugis street", "changi airport terminal 1", "changi airport terminal 2", "changi airport terminal 3",
+            "changi airport terminal 4", "ica building", "gardens by the bay", "holland village market", "tanah merah ferry terminal", "botanic gardens", "chinese garden", "bedok reservoir", "army museum of singapore", "gillman barracks", "mint museum of toys", "changi village", "bukit timah nature reserve", "sungei buloh nature park"],
+        "search_place_ratings" : [],
+        "order" : []
+    },
+    "requestable" : {
+        "distance" : [],
+        "duration": [],
+        "waypoints" : [],
+        "place_address": [],
+        "open_now": [],
+
+    },
+    "other" : {
+        "place"  : []
+    }
+}

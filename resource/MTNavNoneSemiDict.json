@@ -1,0 +1,826 @@
+######################################################################
+######################################################################
+###
+######################################################################
+######################################################################
+{
+    "112 katong mall": [
+        "112 katong mall"
+    ],
+    "313 somerset": [
+        "313 somerset"
+    ],
+    "alkaff mansion": [
+        "alkaff mansion"
+    ],
+    "amk hub": [
+        "amk hub"
+    ],
+    "ang mo kio town garden east": [
+        "ang mo kio town garden east"
+    ],
+    "ang mo kio town garden west": [
+        "ang mo kio town garden west"
+    ],
+    "anglo chinese junior college": [
+        "anglo chinese junior college"
+    ],
+    "army museum of singapore": [
+        "army museum of singapore"
+    ],
+    "artscience museum": [
+        "artscience museum"
+    ],
+    "asian civilisations museum": [
+        "asian civilisations museum"
+    ],
+    "assisi hospice": [
+        "assisi hospice"
+    ],
+    "bakery": [
+        "bakery"
+    ],
+    "balestier plaza": [
+        "balestier plaza"
+    ],
+    "bank": [
+        "bank"
+    ],
+    "bar": [
+        "bar"
+    ],
+    "barber shop": [
+        "barber shop"
+    ],
+    "beach": [
+        "beach"
+    ],
+    "beauty salon": [
+        "beauty salon"
+    ],
+    "beauty world centre": [
+        "beauty world centre"
+    ],
+    "bedok mall": [
+        "bedok mall"
+    ],
+    "bedok reservoir": [
+        "bedok reservoir"
+    ],
+    "bedok stadium": [
+        "bedok stadium"
+    ],
+    "bedok town park": [
+        "bedok town park"
+    ],
+    "bishan stadium": [
+        "bishan stadium"
+    ],
+    "bishan-ang mo kio park": [
+        "bishan-ang mo kio park"
+    ],
+    "bollywood veggies": [
+        "bollywood veggies"
+    ],
+    "botanic gardens": [
+        "botanic gardens"
+    ],
+    "bras basah complex": [
+        "bras basah complex"
+    ],
+    "bright vision hospital": [
+        "bright vision hospital"
+    ],
+    "bugis junction": [
+        "bugis junction"
+    ],
+    "bugis street": [
+        "bugis street"
+    ],
+    "bukit batok driving centre": [
+        "bukit batok driving centre"
+    ],
+    "bukit batok nature park": [
+        "bukit batok nature park"
+    ],
+    "bukit batok swimming complex": [
+        "bukit batok swimming complex"
+    ],
+    "bukit batok town park": [
+        "bukit batok town park"
+    ],
+    "bukit gombak stadium": [
+        "bukit gombak stadium"
+    ],
+    "bukit panjang plaza": [
+        "bukit panjang plaza"
+    ],
+    "bukit timah hill": [
+        "bukit timah hill"
+    ],
+    "bukit timah nature reserve": [
+        "bukit timah nature reserve"
+    ],
+    "cafe": [
+        "cafe"
+    ],
+    "capitol theatre singapore": [
+        "capitol theatre singapore"
+    ],
+    "car wash": [
+        "car wash"
+    ],
+    "cathay cineleisure": [
+        "cathay cineleisure"
+    ],
+    "causeway point": [
+        "causeway point"
+    ],
+    "changi airport terminal 1": [
+        "changi airport terminal 1"
+    ],
+    "changi airport terminal 2": [
+        "changi airport terminal 2"
+    ],
+    "changi airport terminal 3": [
+        "changi airport terminal 3"
+    ],
+    "changi airport terminal 4": [
+        "changi airport terminal 4"
+    ],
+    "changi beach club": [
+        "changi beach club"
+    ],
+    "changi beach park": [
+        "changi beach park"
+    ],
+    "changi business park": [
+        "changi business park"
+    ],
+    "changi exhibition centre": [
+        "changi exhibition centre"
+    ],
+    "changi general hospital": [
+        "changi general hospital"
+    ],
+    "changi sailing club": [
+        "changi sailing club"
+    ],
+    "changi village": [
+        "changi village"
+    ],
+    "chijmes singapore": [
+        "chijmes singapore"
+    ],
+    "chinatown food street": [
+        "chinatown food street"
+    ],
+    "chinese garden": [
+        "chinese garden"
+    ],
+    "choa chu kang stadium": [
+        "choa chu kang stadium"
+    ],
+    "chomp chomp food centre": [
+        "chomp chomp food centre"
+    ],
+    "chong pang food": [
+        "chong pang food"
+    ],
+    "cinema": [
+        "cinema"
+    ],
+    "citylink mall": [
+        "citylink mall"
+    ],
+    "clarke quay central": [
+        "clarke quay central"
+    ],
+    "clementi polyclinic": [
+        "clementi polyclinic"
+    ],
+    "clementi stadium": [
+        "clementi stadium"
+    ],
+    "clementi woods park": [
+        "clementi woods park"
+    ],
+    "clinic": [
+        "clinic"
+    ],
+    "club": [
+        "club"
+    ],
+    "coffee shop": [
+        "coffee shop"
+    ],
+    "convenience store": [
+        "convenience store"
+    ],
+    "coronation plaza": [
+        "coronation plaza"
+    ],
+    "dairy farm nature park": [
+        "dairy farm nature park"
+    ],
+    "dempsey hill": [
+        "dempsey hill"
+    ],
+    "dental clinic": [
+        "dental clinic"
+    ],
+    "distance": [
+        "distance"
+    ],
+    "duke nus": [
+        "duke nus"
+    ],
+    "duration": [
+        "duration"
+    ],
+    "east coast lagoon food village": [
+        "east coast lagoon food village"
+    ],
+    "east coast park": [
+        "east coast park"
+    ],
+    "east shore hospital": [
+        "east shore hospital"
+    ],
+    "esplanade theatre": [
+        "esplanade theatre"
+    ],
+    "everton food place": [
+        "everton food place"
+    ],
+    "far east plaza": [
+        "far east plaza"
+    ],
+    "farmart centre": [
+        "farmart centre"
+    ],
+    "festive grand theatre": [
+        "festive grand theatre"
+    ],
+    "food court": [
+        "food court"
+    ],
+    "fountain of wealth": [
+        "fountain of wealth"
+    ],
+    "gardens by the bay": [
+        "gardens by the bay"
+    ],
+    "gillman barracks": [
+        "gillman barracks"
+    ],
+    "gleneagles hospital": [
+        "gleneagles hospital"
+    ],
+    "gym": [
+        "gym"
+    ],
+    "hard rock cafe sentosa": [
+        "hard rock cafe sentosa"
+    ],
+    "helix bridge": [
+        "helix bridge"
+    ],
+    "henderson waves": [
+        "henderson waves"
+    ],
+    "holland village market": [
+        "holland village market"
+    ],
+    "home team academy": [
+        "home team academy"
+    ],
+    "hong lim park": [
+        "hong lim park"
+    ],
+    "hortpark": [
+        "hortpark"
+    ],
+    "hospital": [
+        "hospital"
+    ],
+    "hotel": [
+        "hotel"
+    ],
+    "hougang mall": [
+        "hougang mall"
+    ],
+    "hougang stadium": [
+        "hougang stadium"
+    ],
+    "hwa chong institution": [
+        "hwa chong institution"
+    ],
+    "ica building": [
+        "ica building"
+    ],
+    "imm building": [
+        "imm building"
+    ],
+    "insead singapore": [
+        "insead singapore"
+    ],
+    "institute of mental health": [
+        "institute of mental health"
+    ],
+    "ion orchard": [
+        "ion orchard"
+    ],
+    "istana": [
+        "istana"
+    ],
+    "jalan besar stadium": [
+        "jalan besar stadium"
+    ],
+    "jurong bird park": [
+        "jurong bird park"
+    ],
+    "jurong east stadium": [
+        "jurong east stadium"
+    ],
+    "jurong frog farm": [
+        "jurong frog farm"
+    ],
+    "jurong lake": [
+        "jurong lake"
+    ],
+    "jurong logistics hub": [
+        "jurong logistics hub"
+    ],
+    "jurong medical centre": [
+        "jurong medical centre"
+    ],
+    "jurong point": [
+        "jurong point"
+    ],
+    "jurong stadium": [
+        "jurong stadium"
+    ],
+    "jurong west stadium": [
+        "jurong west stadium"
+    ],
+    "kallang wave mall": [
+        "kallang wave mall"
+    ],
+    "kent ridge park": [
+        "kent ridge park"
+    ],
+    "keppel bay tower": [
+        "keppel bay tower"
+    ],
+    "keppel club": [
+        "keppel club"
+    ],
+    "khoo teck puat hospital": [
+        "khoo teck puat hospital"
+    ],
+    "kk women's and children's hospital": [
+        "kk women's and children's hospital"
+    ],
+    "kwong wai shiu": [
+        "kwong wai shiu"
+    ],
+    "labrador park": [
+        "labrador park"
+    ],
+    "lau pa sat": [
+        "lau pa sat"
+    ],
+    "laundry shop": [
+        "laundry shop"
+    ],
+    "lee foundation theatre": [
+        "lee foundation theatre"
+    ],
+    "leisure park kallang": [
+        "leisure park kallang"
+    ],
+    "liang court": [
+        "liang court"
+    ],
+    "library": [
+        "library"
+    ],
+    "lower peirce reservoir": [
+        "lower peirce reservoir"
+    ],
+    "lower seletar reservoir": [
+        "lower seletar reservoir"
+    ],
+    "lucky plaza": [
+        "lucky plaza"
+    ],
+    "macritchie reservoir": [
+        "macritchie reservoir"
+    ],
+    "madame tussauds singapore": [
+        "madame tussauds singapore"
+    ],
+    "malay heritage centre": [
+        "malay heritage centre"
+    ],
+    "marina barrage": [
+        "marina barrage"
+    ],
+    "marina bay financial centre": [
+        "marina bay financial centre"
+    ],
+    "marina bay floating platform": [
+        "marina bay floating platform"
+    ],
+    "marina bay sands": [
+        "marina bay sands"
+    ],
+    "marina square": [
+        "marina square"
+    ],
+    "maritime experiential museum & aquarium": [
+        "maritime experiential museum & aquarium"
+    ],
+    "max atria": [
+        "max atria"
+    ],
+    "merlion park": [
+        "merlion park"
+    ],
+    "millenia walk": [
+        "millenia walk"
+    ],
+    "mint museum of toys": [
+        "mint museum of toys"
+    ],
+    "mount alvernia hospital": [
+        "mount alvernia hospital"
+    ],
+    "mount elizabeth hospital": [
+        "mount elizabeth hospital"
+    ],
+    "mount elizabeth novena hospital": [
+        "mount elizabeth novena hospital"
+    ],
+    "mount faber park": [
+        "mount faber park"
+    ],
+    "mustafa centre": [
+        "mustafa centre"
+    ],
+    "musuem": [
+        "musuem"
+    ],
+    "nanyang girls' high school": [
+        "nanyang girls' high school"
+    ],
+    "nanyang junior college": [
+        "nanyang junior college"
+    ],
+    "nanyang polytechnic": [
+        "nanyang polytechnic"
+    ],
+    "national gallery singapore": [
+        "national gallery singapore"
+    ],
+    "national museum of singapore": [
+        "national museum of singapore"
+    ],
+    "national neuroscience institute": [
+        "national neuroscience institute"
+    ],
+    "national university hospital": [
+        "national university hospital"
+    ],
+    "national university of singapore": [
+        "national university of singapore"
+    ],
+    "newton food centre": [
+        "newton food centre"
+    ],
+    "nex singapore": [
+        "nex singapore"
+    ],
+    "ngee ann city": [
+        "ngee ann city"
+    ],
+    "ngee ann polytechnic": [
+        "ngee ann polytechnic"
+    ],
+    "night safari": [
+        "night safari"
+    ],
+    "novena square": [
+        "novena square"
+    ],
+    "one raffles place": [
+        "one raffles place"
+    ],
+    "open_now": [
+        "open now"
+    ],
+    "orchard central": [
+        "orchard central"
+    ],
+    "orchard plaza": [
+        "orchard plaza"
+    ],
+    "order": [
+        "order"
+    ],
+    "palawan beach": [
+        "palawan beach"
+    ],
+    "paragon shopping centre": [
+        "paragon shopping centre"
+    ],
+    "park": [
+        "park"
+    ],
+    "parking lot": [
+        "parking lot"
+    ],
+    "pasir panjang ferry terminal": [
+        "pasir panjang ferry terminal"
+    ],
+    "pasir ris polyclinic": [
+        "pasir ris polyclinic"
+    ],
+    "pasir ris town park": [
+        "pasir ris town park"
+    ],
+    "people's park complex": [
+        "people's park complex"
+    ],
+    "peranakan museum": [
+        "peranakan museum"
+    ],
+    "petrol station": [
+        "petrol station"
+    ],
+    "place_address": [
+        "address"
+    ],
+    "place_ratings": [
+        "ratings"
+    ],
+    "place_search_keyword": [
+        "place search keyword"
+    ],
+    "plaza singapura": [
+        "plaza singapura"
+    ],
+    "post office": [
+        "post office"
+    ],
+    "pub": [
+        "pub"
+    ],
+    "punggol park": [
+        "punggol park"
+    ],
+    "qian hu fish farm": [
+        "qian hu fish farm"
+    ],
+    "queensway shopping centre": [
+        "queensway shopping centre"
+    ],
+    "raffles city convention centre": [
+        "raffles city convention centre"
+    ],
+    "raffles city shopping centre": [
+        "raffles city shopping centre"
+    ],
+    "raffles girls' school": [
+        "raffles girls' school"
+    ],
+    "raffles xchange": [
+        "raffles xchange"
+    ],
+    "ren ci hospital": [
+        "ren ci hospital"
+    ],
+    "resorts world sentosa": [
+        "resorts world sentosa"
+    ],
+    "restaurant": [
+        "restaurant"
+    ],
+    "river safari": [
+        "river safari"
+    ],
+    "rochor beancurd house": [
+        "rochor beancurd house"
+    ],
+    "s.e.a aquarium": [
+        "s.e.a aquarium"
+    ],
+    "safra toa payoh": [
+        "safra toa payoh"
+    ],
+    "school of the arts singapore": [
+        "school of the arts singapore"
+    ],
+    "science centre singapore": [
+        "science centre singapore"
+    ],
+    "search_place_ratings": [
+        "ratings"
+    ],
+    "serangoon junior college": [
+        "serangoon junior college"
+    ],
+    "serangoon stadium": [
+        "serangoon stadium"
+    ],
+    "shopping centre": [
+        "shopping centre"
+    ],
+    "siloso beach": [
+        "siloso beach"
+    ],
+    "sim lim square": [
+        "sim lim square"
+    ],
+    "singapore art museum": [
+        "singapore art museum"
+    ],
+    "singapore chinese girls' school": [
+        "singapore chinese girls' school"
+    ],
+    "singapore discovery centre": [
+        "singapore discovery centre"
+    ],
+    "singapore flyer": [
+        "singapore flyer"
+    ],
+    "singapore general hospital": [
+        "singapore general hospital"
+    ],
+    "singapore indoor stadium": [
+        "singapore indoor stadium"
+    ],
+    "singapore management university": [
+        "singapore management university"
+    ],
+    "singapore mint coin gallery": [
+        "singapore mint coin gallery"
+    ],
+    "singapore national stadium": [
+        "singapore national stadium"
+    ],
+    "singapore polytecnic": [
+        "singapore polytecnic"
+    ],
+    "singapore red cross society": [
+        "singapore red cross society"
+    ],
+    "singapore soka association": [
+        "singapore soka association"
+    ],
+    "singapore sports school": [
+        "singapore sports school"
+    ],
+    "singapore zoo": [
+        "singapore zoo"
+    ],
+    "sota concert hall": [
+        "sota concert hall"
+    ],
+    "st andrew's community hospital": [
+        "st andrew's community hospital"
+    ],
+    "st. andrew's junior school": [
+        "st. andrew's junior school"
+    ],
+    "star performing arts centre": [
+        "star performing arts centre"
+    ],
+    "strictly pancakes": [
+        "strictly pancakes"
+    ],
+    "sun yat sen nanyang memorial hall": [
+        "sun yat sen nanyang memorial hall"
+    ],
+    "sungei buloh nature park": [
+        "sungei buloh nature park"
+    ],
+    "sungei buloh wetland reserve": [
+        "sungei buloh wetland reserve"
+    ],
+    "suntec city mall": [
+        "suntec city mall"
+    ],
+    "suntec convention centre": [
+        "suntec convention centre"
+    ],
+    "supermarket": [
+        "supermarket"
+    ],
+    "tampines mall": [
+        "tampines mall"
+    ],
+    "tampines stadium": [
+        "tampines stadium"
+    ],
+    "tan tock seng hospital": [
+        "tan tock seng hospital"
+    ],
+    "tanah merah ferry terminal": [
+        "tanah merah ferry terminal"
+    ],
+    "tanglin mall": [
+        "tanglin mall"
+    ],
+    "tanglin shopping centre": [
+        "tanglin shopping centre"
+    ],
+    "tanjong beach": [
+        "tanjong beach"
+    ],
+    "tanjong beach club": [
+        "tanjong beach club"
+    ],
+    "tekka centre": [
+        "tekka centre"
+    ],
+    "telok blangah hill park": [
+        "telok blangah hill park"
+    ],
+    "temasek polytechnic": [
+        "temasek polytechnic"
+    ],
+    "the southern ridges": [
+        "the southern ridges"
+    ],
+    "thian hock keng temple": [
+        "thian hock keng temple"
+    ],
+    "thomson medical centre": [
+        "thomson medical centre"
+    ],
+    "tiong bahru plaza": [
+        "tiong bahru plaza"
+    ],
+    "toa payoh stadium": [
+        "toa payoh stadium"
+    ],
+    "tripleone somerset": [
+        "tripleone somerset"
+    ],
+    "universal studios singapore": [
+        "universal studios singapore"
+    ],
+    "university cultural centre": [
+        "university cultural centre"
+    ],
+    "upper peirce reservoir": [
+        "upper peirce reservoir"
+    ],
+    "upper seletar reservoir": [
+        "upper seletar reservoir"
+    ],
+    "victoria concert hall": [
+        "victoria concert hall"
+    ],
+    "victoria theatre and concert hall": [
+        "victoria theatre and concert hall"
+    ],
+    "wave house sentosa": [
+        "wave house sentosa"
+    ],
+    "waypoints": [
+        "waypoints"
+    ],
+    "west coast park": [
+        "west coast park"
+    ],
+    "wheelock place": [
+        "wheelock place"
+    ],
+    "wild wild wet": [
+        "wild wild wet"
+    ],
+    "wisma atria": [
+        "wisma atria"
+    ],
+    "woodlands stadium": [
+        "woodlands stadium"
+    ],
+    "woodlands swimming complex": [
+        "woodlands swimming complex"
+    ],
+    "woodlands town garden": [
+        "woodlands town garden"
+    ],
+    "yio chu kang stadium": [
+        "yio chu kang stadium"
+    ],
+    "yishun stadium": [
+        "yishun stadium"
+    ],
+    "zepp@bigbox": [
+        "zepp@bigbox"
+    ]
+}
