@@ -16,7 +16,7 @@ from basic   import *
 from encoder import *
 from tracker import *
 from decoder import *
-from policy  import *
+from nav_policy  import *
 from utils.adam import adam
 
 
@@ -76,11 +76,12 @@ class NNSDS(BaseNNModule):
                 self.reqtrackers.append(t)
                 self.params['reqtrk'].extend(t.params)
 
+            # removed change trackers
             # offer change tracker
-            print '\tinit OfferChange tracker ...'
-            self.changeTracker = CNNRequestableTracker(
-                    voc_size,ih_size,voc_size,oh_size)
-            self.params['reqtrk'].extend(self.changeTracker.params)
+            #print '\tinit OfferChange tracker ...'
+            #self.changeTracker = CNNRequestableTracker(
+            #        voc_size,ih_size,voc_size,oh_size)
+            #self.params['reqtrk'].extend(self.changeTracker.params)
 
         # init informable tracker
         if trk=='rnn' and inf==True: # track informable slots
@@ -96,17 +97,19 @@ class NNSDS(BaseNNModule):
 
         ##############################################################
         # init policy network
+        degree_size = 2  # previously 6
+        self.degree_size = degree_size
         belief_size = computeBeleifDim(trk, inf, req, bef, self.iseg, self.rseg)
         if self.ply=='attention':
             print '\tinit attentive policy network ...'
-            self.policy = AttentivePolicy( belief_size, 6, ih_size, oh_size )
+            self.policy = AttentivePolicy( belief_size, degree_size, ih_size, oh_size )
         elif self.ply=='normal':
             print '\tinit normal policy network ...'
-            self.policy = Policy( belief_size, 6, ih_size, oh_size )
+            self.policy = Policy( belief_size, degree_size, ih_size, oh_size )
         elif self.ply=='latent':
             print '\tinit latent policy network ...'
             self.policy = LatentPolicy(
-                    latent_size, learn_mode, belief_size, 6, ih_size, oh_size,
+                    latent_size, learn_mode, belief_size, degree_size, ih_size, oh_size,
                     LSTMEncoder(voc_size, ih_size), LSTMEncoder(voc_size, ih_size),
                     LSTMEncoder(voc_size, ih_size), LSTMEncoder(voc_size, ih_size))
 
@@ -279,22 +282,22 @@ class NNSDS(BaseNNModule):
                         belief_t.append(tmp)
 
                 # offer-change tracker
-                minus1 = -T.ones((1),dtype='int32')
-                cur_belief_t = self.changeTracker.recur(
-                        masked_source_t, masked_target_tm1,
-                        masked_source_len_t, masked_target_len_tm1,
-                        minus1, minus1, minus1, minus1)
+                #minus1 = -T.ones((1),dtype='int32')
+                #cur_belief_t = self.changeTracker.recur(
+                #        masked_source_t, masked_target_tm1,
+                #        masked_source_len_t, masked_target_len_tm1,
+                #        minus1, minus1, minus1, minus1)
                 # cost function
-                if self.learn_mode=='trk' or self.learn_mode=='all':
-                    print '\t\tincluding OfferChange tracker loss ...'
-                    loss_t += -T.sum( change_label_t*T.log10(cur_belief_t+epsln) )
+                #if self.learn_mode=='trk' or self.learn_mode=='all':
+                #    print '\t\tincluding OfferChange tracker loss ...'
+                #    loss_t += -T.sum( change_label_t*T.log10(cur_belief_t+epsln) )
                 # accumulate belief vector
-                if self.bef=='full':
-                    belief_t.append(change_label_t)
-                else:
-                    tmp = change_label_t[:1] if self.bef=='simplified' \
-                            else change_label_t
-                    belief_t.append(tmp)
+                #if self.bef=='full':
+                #    belief_t.append(change_label_t)
+                #else:
+                #    tmp = change_label_t[:1] if self.bef=='simplified' \
+                #            else change_label_t
+                #    belief_t.append(tmp)
 
             ##############################################################
             ######################## LSTM decoder ########################
@@ -306,7 +309,7 @@ class NNSDS(BaseNNModule):
                     self.decoder.decode(
                         masked_source_t, masked_source_len_t,
                         masked_target_t, masked_target_len_t,
-                        masked_intent_t, belief_t, db_degree_t[-6:],   # why only the last 6 ones?
+                        masked_intent_t, belief_t, db_degree_t, # [-6:],   # why only the last 6 ones?
                         utt_group_t, snapshot_t, sample_t)
                 debug_t = prior_t
 

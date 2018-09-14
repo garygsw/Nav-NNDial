@@ -53,7 +53,7 @@ class DataReader(object):
     idx2ngs = []
 
     def __init__(self,
-            corpusfile, dbfile, semifile, s2vfile,
+            corpusfile, semifile, s2vfile,  # remove 2nd db file
             split, lengthen, percent, shuffle,
             trkenc, verbose, mode, att=False, latent_size=1):
 
@@ -75,14 +75,14 @@ class DataReader(object):
             self.stopwords.add(w)
 
         # loading files
-        self.db       = self.loadjson(dbfile)  # TODO: remove db and parse it tgt with dialog
+        #self.db       = self.loadjson(dbfile)  # TODO: remove db and parse it tgt with dialog
         self.s2v      = self.loadjson(s2vfile)
         self.semidict = self.loadjson(semifile)
         self.dialog   = self.loadjson(corpusfile)
 
         # producing slot value templates and db represetation
         self.prepareSlotValues()
-        self.structureDB()              # TODO: remove db and parse it together with dialog
+        #self.structureDB()    # TODO: remove db and parse it together with dialog
 
         # load dialog
         self.loadVocab()
@@ -178,9 +178,12 @@ class DataReader(object):
                 tcount += 1
                 turn = d['dial'][t]
                 # extract system side sentence feature
-                sent = turn['sys']['sent']
-                mtar, tar, spos, vpos, venues \
-                    = self.extractSeq(sent,type='target')
+                #sent = turn['sys']['sent']
+                #mtar, tar, spos, vpos, venues \
+                #    = self.extractSeq(sent,type='target')
+
+                mtar, tar, spos, vpos, venues = self.extractSeq(turn['sys']['tokens'], slotpos=turn['sys']['slotpos'],\
+                    type='target',index=True, split=True)
                 # by default, index=True, normalize=False
                 # Output:
                 # mtar: masked indexes [i1, i2, i3, ..., iN]
@@ -281,8 +284,11 @@ class DataReader(object):
                 targetutt.append(tar)
 
                 # usr responses
-                sent = turn['usr']['transcript']
-                msrc, src, spos, vpos, _ = self.extractSeq(sent,type='source')
+                #sent = turn['usr']['transcript']
+                #msrc, src, spos, vpos, _ = self.extractSeq(sent,type='source')
+
+                msrc, src, spos, vpos, _ = self.extractSeq(turn['usr']['tokens'], slotpos=turn['usr']['slotpos'],\
+                    type='source',index=True, split=True)
 
                 # repeats the same as sys
                 # except that now, no need for changes, offers, snapshot vector,
@@ -396,7 +402,7 @@ class DataReader(object):
         sumvec      = np.array([0 for x in range(self.infoseg[-1])])
         # for each dialogue
         dcount = 0.0
-        for dx in range(len(self.dialog)):
+        for dx in range(len(self.dialog)):  # for every dialog
             d = self.dialog[dx]
             # print loading msgs
             dcount += 1.0
@@ -415,7 +421,9 @@ class DataReader(object):
                 turn = d['dial'][t]
 
                 # read informable semi
-                semi = sorted(['pricerange=none','food=none','area=none']) \
+                #reqnones = ['pricerange=none','food=none','area=none']
+                infones = [str(x)+'=none' for x in self.s2v['informable']]
+                semi = sorted(infones) \
                         if len(info_semi)==0 else deepcopy(info_semi[-1])       # TODO: update informable semi
                 for da in turn['usr']['slu']:  # updates semi based on usr slu
                     for s2v in da['slots']:
@@ -423,6 +431,7 @@ class DataReader(object):
                         if len(s2v)!=2 or s2v[0]=='slot':   # means it's a request
                             continue                        # ignore
                         s,v = s2v
+                        v = str(v).lower()  # added this
 
                         toreplace = None
                         for sem in semi:
@@ -439,7 +448,6 @@ class DataReader(object):
                         self.changes[dx][t] = [0,1]     # if different, then set the change back to no change
 
                 info_semi.append(sorted(semi))  # this variable is USELESS!
-
                 # info_semi: [[pricerange=none, food=none, area=none], x T...]
 
                 # indexing semi and DB
@@ -460,36 +468,53 @@ class DataReader(object):
                 infosemi = semi
 
                 # check db match
-                match = [len(filter(lambda x: x in constraints, sub)) \
-                        for sub in self.db2inf]
+                #match = [len(filter(lambda x: x in constraints, sub)) \
+                #        for sub in self.db2inf]
+                        # TODO: find a workaround
                         # obtain a list of matches for all combinations
                         # [3, 2, 1, 0, 1, 0, 0 ,...]
-                venue_logic = [int(x>=len(constraints)) for x in match]
+
+                #venue_logic = [int(x>=len(constraints)) for x in match]
                         # vector of 1s and 0
                         # [0, 1, 0, 1, 0, 1, ...]
                         # 1 if x in match is >= len(constraints)
                 vcount = 0
-                for midx in range(len(venue_logic)):
-                    if venue_logic[midx]==1:
-                        vcount += len(self.idx2db[midx])
+                #for midx in range(len(venue_logic)):
+                #    if venue_logic[midx]==1:
+                #        vcount += len(self.idx2db[midx])
+                        # TODO: find a workaround db
                         # increment with the len of the number of places in
                         # that combination / all matched combinations
-                if vcount<=3:
-                    dummy = [0 for x in range(6)]   # ?? Why 6?
-                    dummy[vcount] = 1
-                    venue_logic.extend(dummy)
-
-                    # venue_logic: [0, 1, 0, 1, 0, ...., 0, 0, 0, 0, 0, 1]
-                elif vcount<=5:
-                    venue_logic.extend([0,0,0,0,1,0])
+                        # vcount = total matched venues
+                if 'places' in turn['state']:
+                    venue_logic = [0, 1]  # have place
                 else:
-                    venue_logic.extend([0,0,0,0,0,1])
+                    venue_logic = [1, 0]  # no place
+                    #vcount = len(turn['state']['places'])
+                # if vcount<=3:
+                #     dummy = [0 for x in range(6)]   # ?? Why 6?
+                #     dummy[vcount] = 1
+                #     venue_logic.extend(dummy)
+                #
+                #     # venue_logic: [0, 1, 0, 1, 0, ...., 0, 0, 0, 0, 0, 1]
+                # elif vcount<=5:
+                #     venue_logic.extend([0,0,0,0,1,0])
+                # else:
+                #     venue_logic.extend([0,0,0,0,0,1])
+
+                # [0, 1, 2, 3] number of matches
+                #venue_logic = [0 for x in range(4)]  # maximum only 3 locations
+                #venue_logic[vcount] = 1
+                #venue_logic.extend(dummy)
+
+
                 db_logic.append(venue_logic)
                 # db_logic: [ [0, 0, 1, 0, ..., 0,0,0,0,0,1], ... xT]
 
                 # read requestable semi
-                semi =  sorted(['food','pricerange','area'])+\
-                        sorted(['phone','address','postcode'])  # TODO: remove informables as requestables
+                semi = self.s2v['requestable'].keys()
+                #semi =  sorted(['food','pricerange','area'])+\
+                #        sorted(['phone','address','postcode'])  # TODO: remove informables as requestables
                 for da in turn['usr']['slu']:
                     for s2v in da['slots']:
                         if s2v[0]=='slot':  # it is a request action
@@ -510,25 +535,29 @@ class DataReader(object):
             self.db_logics.append(db_logic)
         print
 
-    def extractSeq(self,sent,type='source',normalise=False,index=True, debug=False):
+    def extractSeq(self,sent,type='source',normalise=False,index=True, split=False, slotpos=None):
 
         # setup vocab
         if type=='source':  vocab = self.vocab
         elif type=='target':vocab = self.vocab
 
         # standardise sentences
-        if normalise:
-            sent = normalize(sent)
+        #if normalise:
+        #    sent = normalize(sent)
 
         #if debug:
         #    print sent
 
         # preporcessing
-        words = sent.split()
+        if not split:
+            words = sent.split()
+        else:
+            words = sent
         if type=='source':
             if len(words)==0: words = ['<unk>']
         elif type=='target':
             words = ['</s>'] + words + ['</s>']
+        words = [x.lower() for x in words]  # added lower case here
 
         # indexing, non-delexicalised
         if index:
@@ -536,16 +565,17 @@ class DataReader(object):
         else:
             idx = words
 
+        #print words
+
         # delexicalise all
-        sent = self.delexicalise(' '.join(words),mode='all')
+        sent = self.delexicalise(' '.join(words),slotpos,type,mode='all')
         # convert all values found in self.values into the format of
         # [SLOT_<name>]::supervalue('-' as space) or
         # [VALUE]_<name>]::supervalue('-' as space)
         sent = re.sub(digitpat,'[VALUE_COUNT]',sent)
         words= sent.split()
 
-        #if debug:
-        #    print words
+        #print words
 
         # formulate delex positions
         allvs = self.infovs+self.reqs   # all value-slot pairs
@@ -556,14 +586,18 @@ class DataReader(object):
             if '::' not in words[i]:
                 continue
             # handling offer changing
-            if words[i].startswith('[VALUE_NAME]'):
-                name = words[i].replace('[VALUE_NAME]::','')
+            if words[i].startswith('[VALUE_PLACE]'):  # change name to place
+                name = words[i].replace('[VALUE_PLACE]::','')
                 names.append(name)
             # remove pos identifier
             tok, ID = words[i].split("::")
             words[i] = tok
             # record position
-            mytok,sov = tok[1:-1].lower().split('_')
+            #print tok, ID  # remove outer brackets
+            splits = tok[1:-1].lower().split('_')
+            mytok,sov = splits[0], '_'.join(splits[1:])
+            #mytok,sov = tok[1:-1].lower().split('_')
+
             ID = ID.replace('-',' ')
             mylist = sltpos if mytok=='slot' else valpos
             for j in range(len(allvs)):
@@ -586,15 +620,39 @@ class DataReader(object):
         #     list of names
         return midx, idx, sltpos, valpos, names
 
-    def delexicalise(self,utt,mode='all'):
+    def delexicalise(self,utt,slotpos=None,type=None,mode='all'):
         inftoks =   ['[VALUE_'+s.upper()+']' for s in self.s2v['informable'].keys()] + \
                     ['[SLOT_' +s.upper()+']' for s in self.s2v['informable'].keys()] + \
-                    ['[VALUE_DONTCARE]','[VALUE_NAME]'] +\
-                    ['[SLOT_' +s.upper()+']' for s in self.s2v['requestable'].keys()]
+                    ['VALUE_ANY]','[VALUE_PLACE]'] # +\
+                    #['[SLOT_' +s.upper()+']' for s in self.s2v['requestable'].keys()]
         reqtoks =   ['[VALUE_'+s.upper()+']' for s in self.s2v['requestable'].keys()]
         # TODO: remove requestable as inf tokens?
         # TODO: standardize Dont care?
 
+        #print 'before lexicalise:', utt
+
+        if slotpos is not None:
+            utt = utt.split()
+            originals = []
+            replacements = []
+            for slot in slotpos:
+                value = '[VALUE_' + slot['slot'].upper() + ']'
+                start, end = slot['start'], slot['exclusive_end']
+                if type == 'target':
+                    start += 1
+                    end += 1
+                if start < len(utt):
+                    originals.append(' '.join(utt[start:end]))
+                    replacements.append(value + '::')
+                #utt[start:end] = [value + '::' + ' '.join(utt[start:end]).replace(' ', '-')]
+            utt = ' '.join(utt)
+            #for i in range(len(originals)):
+            #    print originals[i], replacements[i]
+            for i in range(len(originals)):
+                utt = (' '+utt+' ').replace(' '+originals[i]+' ', ' '+replacements[i]+originals[i].replace(' ', '-')+' ')
+                utt = utt[1:-1]
+
+        #print 'intermediate lexicalise:', utt
         for i in range(len(self.values)):
             # informable mode, preserving location information
             if mode=='informable'and self.slots[i] in inftoks:
@@ -611,6 +669,9 @@ class DataReader(object):
                 utt = (' '+utt+' ').replace(' '+self.values[i]+' ',' '+tok+' ')
                 utt = utt[1:-1]
         utt = re.sub(digitpat,'[VALUE_COUNT]',utt)
+
+        #print 'after lexicalise:', utt
+        #print
         return utt
 
     def prepareSlotValues(self):
@@ -618,13 +679,40 @@ class DataReader(object):
         print '\tprepare slot value templates ...'
         # put db requestable values into s2v
 
-        for e in self.db:
-            for s,v in e.iteritems():
-                if self.s2v['requestable'].has_key(s):
-                    self.s2v['requestable'][s].append(v.lower())
-                if self.s2v['other'].has_key(s):
-                    self.s2v['other'][s].append(v.lower())
-        # sort values
+        # Originally, go through every DB, and add each value
+        # into the requestables, and other
+        #for e in self.db:
+        #    for s,v in e.iteritems():
+        #        if self.s2v['requestable'].has_key(s):
+        #            self.s2v['requestable'][s].append(v.lower())
+        #        if self.s2v['other'].has_key(s):
+        #            self.s2v['other'][s].append(v.lower())
+        print '\t\treading inf and req values from dialogues  ...'
+        for data in self.dialog:
+            dialog = data['dial']
+            for turn in dialog:
+                route_states = turn['state']['route']
+                for state in route_states:
+                    slot, value = state['slot'], state['value']
+                    if slot in self.s2v['requestable']:
+                        if not isinstance(value, list):
+                            self.s2v['requestable'][slot].append(value.lower())
+                        # if isinstance(value, list):
+                        #     value = ' ==> '.join(value)  # waypoints
+                        # if value != '':
+                        #     self.s2v['requestable'][slot].append(value.lower())
+                if 'places' in turn['state']:
+                    place_states = turn['state']['places']
+                    for place in place_states:
+                        self.s2v['other']['place'].append(place['place'].lower())
+                        for state in place['state']:
+                            slot, value = state['slot'], state['value']
+                            value = str(value)
+                            if slot in self.s2v['requestable']:
+                                self.s2v['requestable'][slot].append(value.lower())
+
+        # sort and set values
+        print '\t\tget unique and sort them ...'
         for s,vs in self.s2v['informable'].iteritems():
             self.s2v['informable'][s] = sorted(list(set(vs)))
         for s,vs in self.s2v['requestable'].iteritems():
@@ -632,41 +720,71 @@ class DataReader(object):
         for s,vs in self.s2v['other'].iteritems():
             self.s2v['other'][s] = sorted(list(set(vs)))
 
-        #print self.s2v
+        # Debug s2v
+        print
+        print '\t\t\tDebugging self.s2v values'
+        for inf, values in self.s2v['informable'].iteritems():
+            print '\t\t\t', inf, ':', ', '.join(values[:3]), '...', 'len:', len(values)
+        for req, values in self.s2v['requestable'].iteritems():
+            print '\t\t\t', req, ':', ', '.join(values[:3]), '...', 'len:', len(values)
+        for ot, values in self.s2v['other'].iteritems():
+            print '\t\t\t', ot, ':', ', '.join(values[:3]), '...', 'len:', len(values)
+        print
 
         # make a 1-on-1 mapping for delexicalisation
+        print '\t\tcreate 1-1 mapping for delexicatization ...'
         self.supervalues = []
         self.values = []
         self.slots  = []
-
+        print '\t\t\tcreate 1-1 mapping for informables ...'
         for s,vs in self.s2v['informable'].iteritems():
              # adding slot delexicalisation
             self.supervalues.extend([s for x in self.semidict[s]])
-            self.values.extend([normalize(x) for x in self.semidict[s]])
+            #self.values.extend([normalize(x) for x in self.semidict[s]])
+            self.values.extend([x for x in self.semidict[s]])
             self.slots.extend(['[SLOT_'+s.upper()+']' for x in self.semidict[s]])
             # adding value delexicalisation
             for v in vs:
                 self.supervalues.extend([v for x in self.semidict[v]])
-                self.values.extend([normalize(x) for x in self.semidict[v]])
+                #self.values.extend([normalize(x) for x in self.semidict[v]])
+                self.values.extend([x for x in self.semidict[v]])
                 self.slots.extend(['[VALUE_'+s.upper()+']' for x in self.semidict[v]])
-        for s,vs in self.s2v['requestable'].items()+self.s2v['other'].items():
+
+        print '\t\t\tcreate 1-1 mapping for requestables and other ...'
+        for s,vs in self.s2v['requestable'].items() + self.s2v['other'].items():
             # adding value delexicalisation
-            self.values.extend([normalize(v) for v in vs])
+            #self.values.extend([normalize(v) for v in vs])
+            self.values.extend([v for v in vs])
             self.supervalues.extend([v for v in vs])
             self.slots.extend(['[VALUE_'+s.upper()+']' for v in vs])
             # adding slot delexicalisation
             self.supervalues.extend([s for x in self.semidict[s]])
-            self.values.extend([normalize(x) for x in self.semidict[s]])
+            #self.values.extend([normalize(x) for x in self.semidict[s]])
+            self.values.extend([x for x in self.semidict[s]])
             self.slots.extend(['[SLOT_'+s.upper()+']' for x in self.semidict[s]])
+
+        #print '\t\t\tcreate 1-1 mapping for dont care values ...'
         # incorporate dontcare values
-        self.values.extend([normalize(v) for v in self.semidict['any']])
-        self.supervalues.extend(['dontcare' for v in self.semidict['any']])
-        self.slots.extend(['[VALUE_DONTCARE]' for v in self.semidict['any']])
+        #self.values.extend([normalize(v) for v in self.semidict['any']])
+        self.values.extend([v for v in self.semidict['any']])
+        self.supervalues.extend(['any' for v in self.semidict['any']])
+        self.slots.extend(['[VALUE_ANY]' for v in self.semidict['any']])
 
         # sorting according to length
+        print '\t\t\tsorting values, super values and slots according to length ...'
         self.values, self.supervalues, self.slots = zip(*sorted(\
                 zip(self.values,self.supervalues,self.slots),\
                 key=lambda x: len(x[0]),reverse=True))
+
+        print
+        print '\t\t\tDebugging delexicalized labels'
+        print '\t\t\tself.values:', ', '.join(self.values[:3]), '...', 'len:', len(self.values)
+        print '\t\t\tself.supervalues:', ', '.join(self.supervalues[:3]), '...', 'len:', len(self.supervalues)
+        print '\t\t\tself.slots:', ', '.join(self.slots[:3]), '...', 'len:', len(self.slots)
+        print
+
+        #for i, value in enumerate(self.supervalues):
+        #    print self.slots[i], self.supervalues[i], '\t', self.values[i]
 
         # for generating semantic labels
         self.infovs = []
@@ -675,22 +793,34 @@ class DataReader(object):
         self.reqseg = [0]
         self.dontcare = []
 
+        print '\t\t\tgenerating informables semantic labels ...'
         for s in sorted(self.s2v['informable'].keys()):
             self.infovs.extend([s+'='+v for v in self.s2v['informable'][s]])
-            self.infovs.append(s+'=dontcare')   # TODO: standardize to just any?
+            self.infovs.append(s+'=any')    # changed dontcare to any
             self.infovs.append(s+'=none')
             self.infoseg.append(len(self.infovs))
-            # dont care values
+            # dont care values and none values
             self.dontcare.append(len(self.infovs)-1)
             self.dontcare.append(len(self.infovs)-2)
-        for s in sorted(self.s2v['informable'].keys()):   # TODO: remove informables as requestables too?
-            self.reqs.extend([s+'=exist',s+'=none'])
-            self.reqseg.append(len(self.reqs))
+        #for s in sorted(self.s2v['informable'].keys()):   # TODO: remove informables as requestables too?
+        #    self.reqs.extend([s+'=exist',s+'=none'])
+        #    self.reqseg.append(len(self.reqs))
         for s in sorted(self.s2v['requestable'].keys()):
             self.reqs.extend([s+'=exist',s+'=none'])
             self.reqseg.append(len(self.reqs))
 
+        # Debug
+        print
+        print '\t\t\tDebugging semantic labels'
+        print '\t\t\tself.infovs:', ', '.join(self.infovs[:3]), '...', ', '.join(self.infovs[-3:]), 'len:', len(self.infovs)
+        print '\t\t\tself.infoseg:', self.infoseg
+        print '\t\t\tself.dontcare:', self.dontcare
+        print '\t\t\tself.reqs:', ', '.join(self.reqs[:3]), '...', ', '.join(self.reqs[-3:]), 'len:', len(self.reqs)
+        print '\t\t\tself.reqseg:', self.reqseg
+        print
+
         # for ngram indexing
+        print '\t\t\tgenerating ngram indexes ...'
         self.ngs2v = []
         for s in sorted(self.s2v['informable'].keys()):
             self.ngs2v.append( (s, self.s2v['informable'][s] + ['any','none']) )
@@ -701,8 +831,8 @@ class DataReader(object):
 
     def loadjson(self,filename):
         with open(filename) as data_file:
-            for i in range(5):
-                data_file.readline()
+            #for i in range(5):
+            #    data_file.readline()
             data = json.load(data_file)
         return data
 
@@ -720,9 +850,9 @@ class DataReader(object):
             print 'triGram: : %d' % len(self.trigrams)
         if self.trkenc=='ng':
             print 'All Ngram: %d' % len(self.ngrams)
-        print '==============='
-        print 'Venue    : %d' % len(self.db2inf)  # TODO: remove?
-        print '==============='
+        #print '==============='
+        #print 'Venue    : %d' % len(self.db2inf)  # TODO: remove?
+        #print '==============='
 
     def _setupData(self,percent):
 
@@ -884,8 +1014,8 @@ class DataReader(object):
     def loadVocab(self):
 
         # iterate through dialog and make vocab
-        self.inputvocab = ['[VALUE_DONTCARE]','[VALUE_COUNT]']
-        self.outputvocab= ['[VALUE_DONTCARE]','[VALUE_COUNT]']
+        self.inputvocab = ['[VALUE_ANY]','[VALUE_COUNT]']  # changed DONTCARE to ANY
+        self.outputvocab= ['[VALUE_ANY]','[VALUE_COUNT]']
         self.vocab = []
 
         # init inputvocab with informable values
@@ -926,10 +1056,10 @@ class DataReader(object):
             # parsing dialog
             for j in range(len(self.dialog[i]['dial'])):
                 # text normalisation
-                self.dialog[i]['dial'][j]['sys']['sent'] = normalize(
-                        self.dialog[i]['dial'][j]['sys']['sent'])
-                self.dialog[i]['dial'][j]['usr']['transcript'] = normalize(
-                        self.dialog[i]['dial'][j]['usr']['transcript'])
+                #self.dialog[i]['dial'][j]['sys']['sent'] = normalize(
+                #        self.dialog[i]['dial'][j]['sys']['sent'])
+                #self.dialog[i]['dial'][j]['usr']['transcript'] = normalize(
+                #        self.dialog[i]['dial'][j]['usr']['transcript'])
                 # this turn
                 turn = self.dialog[i]['dial'][j]
 
@@ -938,8 +1068,8 @@ class DataReader(object):
 
                 # print turn['sys']['sent']
 
-                words,_,_,_,_ = self.extractSeq(turn['sys']['sent'],\
-                    type='target',index=False, debug=True)
+                words,_,_,_,_ = self.extractSeq(turn['sys']['tokens'], slotpos=turn['sys']['slotpos'],\
+                    type='target',index=False, split=True)
                 # add </s> to the front and back
                 # delexicalise all words, values into [SLOT_<name]::supervalue
                 # replace numbers with [VALUE_COUNT]
@@ -964,9 +1094,9 @@ class DataReader(object):
                 # this dialogue's root-sentence for every response
 
                 # user side
-                words = self.delexicalise(turn['usr']['transcript']).split()
-                mwords,words,_,_,_ = self.extractSeq(turn['usr']['transcript'],\
-                    type='source',index=False)
+                # words = self.delexicalise(turn['usr']['transcript'], turn['usr']['slotpos']).split()
+                mwords,words,_,_,_ = self.extractSeq(turn['usr']['tokens'], slotpos=turn['usr']['slotpos'],\
+                    type='source',index=False, split=True)
                 # CHANGED the turn from sys to usr, bug here
                 # mworlds: delexicalised
                 # words: lexicalised
@@ -1040,12 +1170,14 @@ class DataReader(object):
                 sorted(list(set(self.outputvocab+['thank','you','goodbye']+\
                 [w for w,c in sorted(counts.iteritems(),key=operator.itemgetter(1))])))
 
-        print len(self.inputvocab)
-        print len(self.outputvocab)
+        print '\t\t\tinput vocab len:', len(self.inputvocab)
+        print '\t\t\toutput vocab len:', len(self.outputvocab)
 
         # the whole vocab
         self.vocab = ['<unk>','</s>','<slot>','<value>'] + \
                 list(set(self.inputvocab[4:]).union(self.outputvocab[2:]))
+
+        print '\t\t\toverall vocab len:', len(self.vocab)
 
         # create snapshot dimension
         self.snapshots = ['OFFERED','CHANGED']
@@ -1058,55 +1190,85 @@ class DataReader(object):
         # parse goal into dict format
         self.goals = []
         # for computing corpus success
-        requestables = ['phone','address','postcode','food','area','pricerange']  # TODO: edit requestables
+        requestables = self.s2v['requestable'].keys()
+        #requestables = ['phone','address','postcode','food','area','pricerange']  # TODO: edit requestables
         vmc, success = 0., 0.
         # for each dialog
         for i in range(len(self.dialog)):
             d = self.dialog[i]
-            goal = [np.zeros(self.infoseg[-1]),
-                    np.zeros(self.reqseg[-1])]
-            # tuple (size(infovs), size(reqs))
-            for s2v in d['goal']['constraints']:
-                s,v = s2v
-                s2v = s+'='+v
-                if v!='dontcare' and v!='none':
-                    #goal['inf'].append( self.infovs.index(s2v) )
-                    goal[0][self.infovs.index(s2v)] = 1
+            dialog_goals = []
+            for j in range(len(d['goal']['constraints'])):  # j number of tasks
+                goal = [np.zeros(self.infoseg[-1]),
+                        np.zeros(self.reqseg[-1])]
+                # tuple (size(infovs), size(reqs))
+                for s2v in d['goal']['constraints'][j]:
+                    s,v = s2v
+                    v = str(v).lower()
+                    s2v = s+'='+v
+                    if v!='any' and v!='none':
+                        #goal['inf'].append( self.infovs.index(s2v) )
+                        goal[0][self.infovs.index(s2v)] = 1
 
-            # goal[0]:  [0, 0, 0, 1, 0, ... ]
-            for s in d['goal']['request-slots']:
-                if s=='pricerange' or s=='area' or s=='food':
-                    continue
-                #goal['req'].append(self.reqs.index(s+'=exist'))
-                goal[1][self.reqs.index(s+'=exist')] = 1
+                # goal[0]:  [0, 0, 0, 1, 0, ... ]
+                for s in d['goal']['request_slots'][j]:
+                    #if s=='pricerange' or s=='area' or s=='food':
+                    #    continue
+                    #goal['req'].append(self.reqs.index(s+'=exist'))
+                    s = s.split(':')[0]  # remove the value
+                    goal[1][self.reqs.index(s+'=exist')] = 1
+                dialog_goals.append(goal)
 
             # goal[1]: [0, 0, 1, 0, ...]
-            self.goals.append(goal)
+            # now dialog goal is a list of goal, with each goal to each task
+            self.goals.append(dialog_goals)
 
             # compute corpus success
-            m_targetutt = self.masked_targetutts[i]
-            m_targetutt_len = self.masked_targetcutoffs[i]
-            # for computing success
-            offered = False
-            requests= []  # contains index of requestable=exists
-            # iterate each turn
-            for t in range(len(m_targetutt)):
-                sent_t = [self.vocab[w] for w in
-                        m_targetutt[t][:m_targetutt_len[t]]][1:-1]
-                        # remove the </s> front and back
-                if '[VALUE_NAME]' in sent_t: offered=True
-                for requestable in requestables:
-                    if '[VALUE_'+requestable.upper()+']' in sent_t:
-                        requests.append(self.reqs.index(requestable+'=exist'))
-            # compute success
-            if offered:
-                vmc += 1.
-                # if set(index) >= set(goal indexes)
-                if set(requests).issuperset(set(goal[1].nonzero()[0].tolist())):
-                    success += 1.
+            # m_targetutt = self.masked_targetutts[i]
+            # m_targetutt_len = self.masked_targetcutoffs[i]
+            # m_sourceutt = self.masked_sourceutt[i]
+            # new_task = False
+            #
+            # # for computing success
+            # all_offered = []
+            # all_requests = []
+            #
+            #
+            # offered = False
+            # requests= []  # contains index of requestable=exists
+            # # iterate each turn
+            # for t in range(len(m_targetutt)):
+            #
+            #     check = self.vocab[m_sourceutt[t][0]
+            #     if check == 'oh':
+            #         all_offered.append(offered)
+            #         all_requests.append(requests)
+            #         offered = False
+            #         requests = []
+            #
+            #     sent_t = [self.vocab[w] for w in
+            #               m_targetutt[t][:m_targetutt_len[t]]][1:-1]
+            #             # remove the </s> front and back
+            #     print sent_t
+            #
+            #     if '[VALUE_PLACE]' in sent_t: offered=True
+            #     for requestable in requestables:
+            #         if '[VALUE_'+requestable.upper()+']' in sent_t:
+            #             requests.append(self.reqs.index(requestable+'=exist'))
+            # all_offered.append(offered)
+            # all_requests.append(requests)
 
-        print '\tCorpus VMC       : %2.2f%%' % (vmc/float(len(self.dialog))*100)
-        print '\tCorpus Success   : %2.2f%%' % (success/float(len(self.dialog))*100)
+            # compute success
+        #     if all(all_offered):
+        #         vmc += 1.
+        #         # if set(index) >= set(goal indexes)
+        #         for i, request in enumerate(all_requests):
+        #             if set(requests).issuperset(set(dialog_goals[i][1].nonzero()[0].tolist())):
+        #                 success += 1.
+        #
+        # # value match criteria??
+        # # success: match and given requests
+        # print '\tCorpus VMC       : %2.2f%%' % (vmc/float(len(self.dialog))*100)
+        # print '\tCorpus Success   : %2.2f%%' % (success/float(len(self.dialog))*100)
         #print self.goals
         #print
         #print len(self.goals)

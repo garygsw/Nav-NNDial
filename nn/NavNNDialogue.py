@@ -45,19 +45,19 @@ class NNDial(object):
     # by their names
     #######################################################################
     learn_vars  = ['self.lr','self.lr_decay','self.stop_count','self.l2',
-                'self.seed','self.min_impr','self.debug','self.llogp',
-                'self.grad_clip','self.valid_logp','self.params',
-                'self.cur_stop_count','self.learn_mode']
-    file_vars   = ['self.corpusfile','self.dbfile','self.semidictfile',
-                'self.ontologyfile','self.modelfile']
+                   'self.seed','self.min_impr','self.debug','self.llogp',
+                   'self.grad_clip','self.valid_logp','self.params',
+                   'self.cur_stop_count','self.learn_mode']
+    file_vars   = ['self.corpusfile', 'self.semidictfile',
+                   'self.ontologyfile','self.modelfile']
     data_vars   = ['self.split','self.percent','self.shuffle','self.lengthen']
     gen_vars    = ['self.topk','self.beamwidth','self.verbose',
-                'self.repeat_penalty','self.token_reward']
+                   'self.repeat_penalty','self.token_reward']
     n2n_vars    = ['self.enc','self.trk','self.dec']
     enc_vars    = ['self.vocab_size','self.input_hidden']
     dec_vars    = ['self.output_hidden','self.seq_wvec_file','self.dec_struct']
     trk_vars    = ['self.trkinf','self.trkreq','self.belief','self.inf_dimensions',
-                'self.req_dimensions','self.trk_enc','self.trk_wvec_file']
+                   'self.req_dimensions','self.trk_enc','self.trk_wvec_file']
     ply_vars    = ['self.policy','self.latent']
 
     def __init__(self,config=None,opts=None):
@@ -106,7 +106,7 @@ class NNDial(object):
         self.grad_clip      = parser.getfloat('learn','grad_clip')
 
         # Setting file paths
-        self.dbfile         = parser.get('file','db')
+        # self.dbfile         = parser.get('file','db')
         self.ontologyfile   = parser.get('file','ontology')
         self.corpusfile     = parser.get('file','corpus')
         self.semidictfile   = parser.get('file','semidict')
@@ -170,7 +170,7 @@ class NNDial(object):
         # 7. Load the semantics
         # 8. Parse goals
         self.reader = DataReader(
-            self.corpusfile, self.dbfile, self.semidictfile, self.ontologyfile,
+            self.corpusfile, self.semidictfile, self.ontologyfile,  # remove 2nd db file
             self.split, self.lengthen, self.percent,
             self.shuffle, self.trk_enc, self.verbose, opts.mode, self.policy,  # att
             self.latent
@@ -222,11 +222,11 @@ class NNDial(object):
 
         # evaluator
         bscorer = BLEUScorer()
-        parallel_corpus = []
+        # parallel_corpus = []
         best_corpus = []
 
         # load testing data
-        testset = self.reader.iterate(mode=self.mode)
+        testset = self.reader.iterate(mode=self.mode)  # valid or test
 
         # statistics for calulating semi performance
         stats = self._statsTable()
@@ -256,6 +256,7 @@ class NNDial(object):
             flatten_belief_tm1 = np.zeros((self.inf_dimensions[-1]))
             for i in range(len(self.inf_dimensions)-1):
                 flatten_belief_tm1[self.inf_dimensions[i+1]-1] = 1.0
+                # for s = none, set to 1
 
             # for each turn
             reqs = []
@@ -312,7 +313,7 @@ class NNDial(object):
                 for gen in generated:
                     generated_utt = ' '.join([self.reader.vocab[g] for g in gen[0]])
                     generated_utts.append(generated_utt)
-                gennerated_utt = generated_utts[0]
+                gennerated_utt = generated_utts[0]   # ??? why not just get the first one?
 
                 # calculate semantic match rate
                 twords = [self.reader.vocab[w] for w in masked_target_t]
@@ -438,7 +439,8 @@ class NNDial(object):
                 ############################### debugging ############################
                 generated_utt_tm1 = masked_target_utt
 
-                parallel_corpus.append([generated_utts,[masked_target_utt]])
+                # parallel_corpus.append([generated_utts,[masked_target_utt]])
+                # not used at all
                 best_corpus.append([[generated_utt],[masked_target_utt]])
 
             # at the end of the dialog, calculate goal completion rate
@@ -595,11 +597,11 @@ class NNDial(object):
                 print 'VALID entropy:%.2f'%-(self.valid_logp/log10(2)/num_dialog)
 
             # decide to throw/keep weights
-            if self.valid_logp < self.llogp:
-                self.getBackupWeights()
-            else:
-                self.setBackupWeights()
-            self.saveNet()
+            if self.valid_logp < self.llogp:   # if better than previous
+                self.getBackupWeights()        # save params
+            #else:
+            #    self.setBackupWeights()        # else get best params
+            # self.saveNet()  # no need to save, only save when done (optimize)
 
             # learning rate decay
             if self.cur_stop_count>=self.stop_count:
@@ -615,7 +617,7 @@ class NNDial(object):
                     print 'Training completed.'
                     break
 
-            self.llogp = self.valid_logp
+            self.llogp = self.valid_logp    # save lowest logp loss
 
             # garbage collection
             tic = time.time()
@@ -1160,6 +1162,8 @@ class NNDial(object):
 
 
     def _statsTable(self):
+
+                    # Metrics',  'Prec.', 'Recall', 'F-1', 'Acc.')
         return {'informable':{
                     'pricerange': [10e-9, 10e-4, 10e-4, 10e-4],
                     'food'      : [10e-9, 10e-4, 10e-4, 10e-4],
