@@ -550,9 +550,9 @@ class DataReader(object):
 
         # preporcessing
         if not split:
-            words = sent.split()
+            words = [x.lower() for x in sent.split()]
         else:
-            words = sent
+            words = [x.lower() for x in sent]
         if type=='source':
             if len(words)==0: words = ['<unk>']
         elif type=='target':
@@ -623,8 +623,8 @@ class DataReader(object):
     def delexicalise(self,utt,slotpos=None,type=None,mode='all'):
         inftoks =   ['[VALUE_'+s.upper()+']' for s in self.s2v['informable'].keys()] + \
                     ['[SLOT_' +s.upper()+']' for s in self.s2v['informable'].keys()] + \
-                    ['VALUE_ANY]','[VALUE_PLACE]'] # +\
-                    #['[SLOT_' +s.upper()+']' for s in self.s2v['requestable'].keys()]
+                    ['VALUE_ANY]','[VALUE_PLACE]'] + \
+                    ['[SLOT_' +s.upper()+']' for s in self.s2v['requestable'].keys()]
         reqtoks =   ['[VALUE_'+s.upper()+']' for s in self.s2v['requestable'].keys()]
         # TODO: remove requestable as inf tokens?
         # TODO: standardize Dont care?

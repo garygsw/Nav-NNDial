@@ -594,12 +594,12 @@ class NNSDS(BaseNNModule):
                     belief_t.append( tmp )
 
             # offer change tracker
-            cur_belief_t = self.changeTracker.track(
-                    masked_source_t, masked_target_tm1,
-                    [-1],[-1],[-1],[-1])
-            full_belief_t.append(cur_belief_t)
-            tmp = cur_belief_t[:1] if self.bef=='simplified' else cur_belief_t
-            belief_t.append(tmp)
+            #cur_belief_t = self.changeTracker.track(
+            #        masked_source_t, masked_target_tm1,
+            #        [-1],[-1],[-1],[-1])
+            #full_belief_t.append(cur_belief_t)
+            #tmp = cur_belief_t[:1] if self.bef=='simplified' else cur_belief_t
+            #belief_t.append(tmp)
 
         return full_belief_t, belief_t
 
@@ -660,7 +660,7 @@ class NNSDS(BaseNNModule):
 
         if self.trk=='rnn' and self.inf==True:
             for t in self.infotrackers: t.loadConverseParams()
-            self.changeTracker.loadConverseParams()
+            #self.changeTracker.loadConverseParams()
 
         ##############################################################
         # policy

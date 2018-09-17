@@ -291,7 +291,15 @@ class NNDial(object):
                         srcfeat_t, tarfeat_tm1 )
                 flatten_belief_t = np.concatenate(full_belief_t,axis=0)
                 # search DB
-                db_degree_t, query = self._searchDB(flatten_belief_t)
+                # db_degree_t, query = self._searchDB(flatten_belief_t)
+                # based in flatten_belief, retrieve db_degree_t
+                # which is a list of [0, 1, 0, ... x combinations  | 6 OHE vector ]
+                # but now our db_degree is just [0, 1] or [1, 0]
+                # being                          no, and yes
+                # suppose to use API to search, given flatten belief t
+                # but for now, just use the same degree as given in the dataset
+                db_degree_t = db_degree[t]
+
                 # score table
                 scoreTable = self._genScoreTable(full_belief_t)
                 # generation
@@ -300,7 +308,10 @@ class NNDial(object):
                         masked_source_t, masked_target_t, scoreTable)
 
                 # choose venue
-                venues = [i for i, e in enumerate(db_degree_t[:-6]) if e != 0 ]
+                #venues = [i for i, e in enumerate(db_degree_t[:-6]) if e != 0 ]
+                # suppose to get the venues from the api list
+
+                venues = ['test']
                 # keep the current venue
                 if selected_venue in venues: pass
                 else: # choose the first match as default index
@@ -331,13 +342,15 @@ class NNDial(object):
                 flatten_belief_tm1 = flatten_belief_t[:self.inf_dimensions[-1]]
 
                 # for calculating success: check requestable slots match
-                requestables = ['phone','address','postcode','food','area','pricerange']
+                #requestables = ['phone','address','postcode','food','area','pricerange']
+                requestables = self.reader.s2v['requestable'].keys()
                 for requestable in requestables:
                     if '[VALUE_'+requestable.upper()+']' in gennerated_utt:
                         reqs.append(self.reader.reqs.index(requestable+'=exist'))
                 # check offered venue
                 if '[VALUE_NAME]' in generated_utt and selected_venue!=None:
-                    venue_offered = self.reader.db2inf[selected_venue]
+                    #venue_offered = self.reader.db2inf[selected_venue]
+                    venue_offered = 'test'
 
                 ############################### debugging ############################
                 if self.verbose>0:
@@ -347,9 +360,9 @@ class NNDial(object):
                 if self.trk=='rnn' and self.trkinf==True:
                     if self.verbose>1:
                         print 'Belief Tracker :'
-                        print '  | %16s%13s%20s|' % ('','Informable','')
-                        print '  | %16s\t%5s\t%20s |' % ('Prediction','Prob.','Ground Truth')
-                        print '  | %16s\t%5s\t%20s |' % ('------------','-----','------------')
+                        print '  | %25s%13s%20s|' % ('','Informable','')
+                        print '  | %25s\t%5s\t%20s |' % ('Prediction','Prob.','Ground Truth')
+                        print '  | %25s\t%5s\t%20s |' % ('------------','-----','------------')
                     for i in range(len(self.inf_dimensions)-1):
                         bn = self.inf_dimensions[i]
                         psem = self.reader.infovs[np.argmax(np.array(full_belief_t[i]))+bn]
@@ -375,9 +388,9 @@ class NNDial(object):
 
                 if self.trk=='rnn' and self.trkreq==True:
                     if self.verbose>1:
-                        print '  | %16s%13s%20s|' % ('','Requestable','')
-                        print '  | %16s\t%5s\t%20s |' % ('Prediction','Prob.','Ground Truth')
-                        print '  | %16s\t%5s\t%20s |' % ('------------','-----','------------')
+                        print '  | %25s%13s%20s|' % ('','Requestable','')
+                        print '  | %25s\t%5s\t%20s |' % ('Prediction','Prob.','Ground Truth')
+                        print '  | %25s\t%5s\t%20s |' % ('------------','-----','------------')
                     infbn = 3 if self.trkinf else 0
                     for i in range(len(self.req_dimensions)-1):
                         bn = self.req_dimensions[i]
@@ -404,24 +417,24 @@ class NNDial(object):
                                 stats['requestable'][slt][3] += 1.0
 
                     # offer change tracker
-                    bn = self.req_dimensions[-1]
-                    psem = 0 if full_belief_t[-1][0]>=0.5 else 1
-                    ysem = np.argmax(change_label[t])
-                    if ysem==0:
-                        if psem==ysem:
-                            stats['requestable']['change'][0] += 1.0
-                        else:
-                            stats['requestable']['change'][1] += 1.0
-                    else:
-                        if psem==ysem:
-                            stats['requestable']['change'][2] += 1.0
-                        else:
-                            stats['requestable']['change'][3] += 1.0
-                    prdtvenue = 'venue=change' if psem==0 else 'venue=not change'
-                    truevenue = 'venue=change' if ysem==0 else 'venue=not change'
-                    prob      = full_belief_t[-1][0] if psem==0 else 1-full_belief_t[-1][0]
-                    if self.verbose>1:
-                        print '  | %16s\t%.3f\t%20s |' % (prdtvenue,prob,truevenue)
+                    # bn = self.req_dimensions[-1]
+                    # psem = 0 if full_belief_t[-1][0]>=0.5 else 1
+                    # ysem = np.argmax(change_label[t])
+                    # if ysem==0:
+                    #     if psem==ysem:
+                    #         stats['requestable']['change'][0] += 1.0
+                    #     else:
+                    #         stats['requestable']['change'][1] += 1.0
+                    # else:
+                    #     if psem==ysem:
+                    #         stats['requestable']['change'][2] += 1.0
+                    #     else:
+                    #         stats['requestable']['change'][3] += 1.0
+                    #prdtvenue = 'venue=change' if psem==0 else 'venue=not change'
+                    #truevenue = 'venue=change' if ysem==0 else 'venue=not change'
+                    #prob      = full_belief_t[-1][0] if psem==0 else 1-full_belief_t[-1][0]
+                    #if self.verbose>1:
+                    #    print '  | %16s\t%.3f\t%20s |' % (prdtvenue,prob,truevenue)
 
                 if self.verbose>0:
                     match_number = np.argmax(np.array(db_degree_t[-6:]))
@@ -444,18 +457,19 @@ class NNDial(object):
                 best_corpus.append([[generated_utt],[masked_target_utt]])
 
             # at the end of the dialog, calculate goal completion rate
-            if venue_offered!=None and finished:
-                if set(venue_offered).issuperset(set(goal[0].nonzero()[0].tolist())):
-                    stats['vmc'] += 1.0
-                    if set(reqs).issuperset(set(goal[1].nonzero()[0].tolist())):
-                        stats['success'] += 1.0
+            #if venue_offered!=None and finished:
+                # venue offered is a list of
+            #    if set(venue_offered).issuperset(set(goal[0].nonzero()[0].tolist())):
+            #        stats['vmc'] += 1.0
+            #        if set(reqs).issuperset(set(goal[1].nonzero()[0].tolist())):
+            #            stats['success'] += 1.0
 
         # evaluation result
         print 80*'#'
         print 35*'#' + '  Metrics ' + 35*'#'
         print 80*'#'
-        print 'Venue Match Rate     : %.1f%%' % (100*stats['vmc']/float(len(testset)))
-        print 'Task Success Rate    : %.1f%%' % (100*stats['success']/float(len(testset)))
+        #print 'Venue Match Rate     : %.1f%%' % (100*stats['vmc']/float(len(testset)))
+        #print 'Task Success Rate    : %.1f%%' % (100*stats['success']/float(len(testset)))
         if self.dec!='none':
             print 'BLEU                 : %.4f' % (bscorer.score(best_corpus))
             print 'Semantic Match       : %.1f%%' % (100*stats['approp'][0]/stats['approp'][1])
@@ -970,9 +984,10 @@ class NNDial(object):
             for i in range(len(self.inf_dimensions)-1):
                 b_i = b[self.inf_dimensions[i]:self.inf_dimensions[i+1]]
                 idx = np.argmax(np.array(b_i)) + self.inf_dimensions[i]
+                # find the index with the largest belief
                 # ignore dont care case
                 s2v = self.reader.infovs[idx]
-                if '=dontcare' not in s2v and '=none' not in s2v:
+                if '=any' not in s2v and '=none' not in s2v:
                     query.append(idx)
                 q.append(idx)
             # search through db by query
@@ -993,6 +1008,9 @@ class NNDial(object):
                 db_logic.extend([0,0,0,0,0,1])
         else:
             db_logic = [0,0,0,0,0,1]
+        # db_logic is just a 1-hot encoding of 6 vector size
+        # q is a list of index in self.infovs for every infomable that the belief
+        # has the highest probbility for
         return db_logic, q
 
     def initBackupWeights(self):
@@ -1059,7 +1077,7 @@ class NNDial(object):
 
         # load data files from model
         self.corpusfile     = bundle['file']['self.corpusfile']
-        self.dbfile         = bundle['file']['self.dbfile']
+        # self.dbfile         = bundle['file']['self.dbfile']
         self.ontologyfile   = bundle['file']['self.ontologyfile']
         self.semidictfile   = bundle['file']['self.semidictfile']
         # always load model file name from config
@@ -1118,7 +1136,7 @@ class NNDial(object):
 
         # load dataset
         self.reader = DataReader(
-            self.corpusfile, self.dbfile, self.semidictfile, self.ontologyfile,
+            self.corpusfile, self.semidictfile, self.ontologyfile,  # removed 2nd db file
             self.split, self.lengthen, self.percent,
             self.shuffle, self.trk_enc, self.verbose, mode, self.policy,
             self.latent)
@@ -1165,18 +1183,16 @@ class NNDial(object):
 
                     # Metrics',  'Prec.', 'Recall', 'F-1', 'Acc.')
         return {'informable':{
-                    'pricerange': [10e-9, 10e-4, 10e-4, 10e-4],
-                    'food'      : [10e-9, 10e-4, 10e-4, 10e-4],
-                    'area'      : [10e-9, 10e-4, 10e-4, 10e-4]
+                    'place_search_keyword': [10e-9, 10e-4, 10e-4, 10e-4],
+                    'order'      : [10e-9, 10e-4, 10e-4, 10e-4],
+                    'search_place_ratings'      : [10e-9, 10e-4, 10e-4, 10e-4]
             },  'requestable':{
-                    'pricerange': [10e-9, 10e-4, 10e-4, 10e-4],
-                    'area'      : [10e-9, 10e-4, 10e-4, 10e-4],
-                    'food'      : [10e-9, 10e-4, 10e-4, 10e-4],
-                    'postcode'  : [10e-9, 10e-4, 10e-4, 10e-4],
-                    'address'   : [10e-9, 10e-4, 10e-4, 10e-4],
-                    'phone'     : [10e-9, 10e-4, 10e-4, 10e-4],
-                    'name'      : [10e-9, 10e-4, 10e-4, 10e-4],
-                    'change'    : [10e-9, 10e-4, 10e-4, 10e-4]
+                    'place_ratings': [10e-9, 10e-4, 10e-4, 10e-4],
+                    'place_address'      : [10e-9, 10e-4, 10e-4, 10e-4],
+                    'waypoints'      : [10e-9, 10e-4, 10e-4, 10e-4],
+                    'distance'  : [10e-9, 10e-4, 10e-4, 10e-4],
+                    'duration'   : [10e-9, 10e-4, 10e-4, 10e-4],
+                    'open_now'     : [10e-9, 10e-4, 10e-4, 10e-4],
             },
             'vmc': 10e-7, 'success': 10e-7, 'approp': [10e-7,10e-7]
         }

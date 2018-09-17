@@ -15,7 +15,8 @@
         "jurong bird park"
     ],
     "place_address": [
-        "place_address"
+        "place address",
+        "address"
     ],
     "clinic": [
         "clinic"
@@ -90,7 +91,8 @@
         "bishan-ang mo kio park"
     ],
     "open_now": [
-        "open_now"
+        "open now",
+        "opening hours"
     ],
     "assisi hospice": [
         "assisi hospice"
@@ -249,7 +251,8 @@
         "3.0"
     ],
     "duration": [
-        "duration"
+        "duration",
+        "travel time"
     ],
     "plaza singapura": [
         "plaza singapura"
@@ -679,7 +682,8 @@
         "bugis junction"
     ],
     "place_ratings": [
-        "place_ratings"
+        "place ratings",
+        "ratings"
     ],
     "jurong medical centre": [
         "jurong medical centre"
