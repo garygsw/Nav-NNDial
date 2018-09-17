@@ -371,7 +371,7 @@ class NNDial(object):
                         prob = full_belief_t[i][np.argmax(np.array(full_belief_t[i]))]
                         #print '%20s\t%.3f\t%20s' % (psem,prob,ysem)
                         if self.verbose>1:
-                            print '  | %16s\t%.3f\t%20s |' % (psem,prob,ysem)
+                            print '  | %25s\t%.3f\t%20s |' % (psem,prob,ysem)
 
                         # counting stats
                         slt,val = ysem.split('=')
@@ -401,7 +401,7 @@ class NNDial(object):
                             self.req_dimensions[i] ]
                         prob = np.max(np.array(full_belief_t[infbn+i]))
                         if self.verbose>1:
-                            print '  | %16s\t%.3f\t%20s |' % (psem,prob,ysem)
+                            print '  | %25s\t%.3f\t%20s |' % (psem,prob,ysem)
 
                         # counting stats
                         slt,val = ysem.split('=')
@@ -475,7 +475,8 @@ class NNDial(object):
             print 'Semantic Match       : %.1f%%' % (100*stats['approp'][0]/stats['approp'][1])
         print 35*'#' + ' Trackers ' + 35*'#'
         print '---- Informable  '+ 63*'-'
-        infslots = ['area','food','pricerange']
+        #infslots = ['area','food','pricerange']
+        infslots = self.reader.s2v['informable'].keys()
         joint = [0.0 for x in range(4)]
         for i in range(len(infslots)):
             s = infslots[i]
@@ -494,7 +495,8 @@ class NNDial(object):
         print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
                 ('joint', p, r, 2*p*r/(p+r), ac)
         print '---- Requestable '+ 63*'-'
-        reqslots = ['area','food','pricerange','address','postcode','phone']#,'change']
+        reqslots = self.reader.s2v['requestable'].keys()
+        #reqslots = ['area','food','pricerange','address','postcode','phone']#,'change']
         joint = [0.0 for x in range(4)]
         for i in range(len(reqslots)):
             s = reqslots[i]
