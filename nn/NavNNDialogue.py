@@ -360,18 +360,19 @@ class NNDial(object):
                 if self.trk=='rnn' and self.trkinf==True:
                     if self.verbose>1:
                         print 'Belief Tracker :'
-                        print '  | %25s%13s%20s|' % ('','Informable','')
-                        print '  | %25s\t%5s\t%20s |' % ('Prediction','Prob.','Ground Truth')
-                        print '  | %25s\t%5s\t%20s |' % ('------------','-----','------------')
+                        print '  | %25s%13s%35s|' % ('','Informable','')
+                        print '  | %25s\t%5s\t%35s |' % ('Prediction','Prob.','Ground Truth')
+                        print '  | %25s\t%5s\t%35s |' % ('------------','-----','------------')
                     for i in range(len(self.inf_dimensions)-1):
                         bn = self.inf_dimensions[i]
-                        psem = self.reader.infovs[np.argmax(np.array(full_belief_t[i]))+bn]
-                        ysem = self.reader.infovs[np.argmax(np.array(\
-                                inf_trk_label[t][bn:self.inf_dimensions[i+1]+bn]))+bn]
+                        bidx = np.argmax(np.array(full_belief_t[i]))+bn
+                        yidx = np.argmax(np.array(inf_trk_label[t][bn:self.inf_dimensions[i+1]+bn]))+bn
+                        psem = self.reader.infovs[bidx]
+                        ysem = self.reader.infovs[yidx]
                         prob = full_belief_t[i][np.argmax(np.array(full_belief_t[i]))]
                         #print '%20s\t%.3f\t%20s' % (psem,prob,ysem)
                         if self.verbose>1:
-                            print '  | %25s\t%.3f\t%20s |' % (psem,prob,ysem)
+                            print '  | %25s\t%.3f\t%35s |' % (psem,prob,ysem)
 
                         # counting stats
                         slt,val = ysem.split('=')
@@ -388,9 +389,9 @@ class NNDial(object):
 
                 if self.trk=='rnn' and self.trkreq==True:
                     if self.verbose>1:
-                        print '  | %25s%13s%20s|' % ('','Requestable','')
-                        print '  | %25s\t%5s\t%20s |' % ('Prediction','Prob.','Ground Truth')
-                        print '  | %25s\t%5s\t%20s |' % ('------------','-----','------------')
+                        print '  | %25s%13s%35s|' % ('','Requestable','')
+                        print '  | %25s\t%5s\t%35s |' % ('Prediction','Prob.','Ground Truth')
+                        print '  | %25s\t%5s\t%35s |' % ('------------','-----','------------')
                     infbn = 3 if self.trkinf else 0
                     for i in range(len(self.req_dimensions)-1):
                         bn = self.req_dimensions[i]
@@ -401,7 +402,7 @@ class NNDial(object):
                             self.req_dimensions[i] ]
                         prob = np.max(np.array(full_belief_t[infbn+i]))
                         if self.verbose>1:
-                            print '  | %25s\t%.3f\t%20s |' % (psem,prob,ysem)
+                            print '  | %25s\t%.3f\t%35s |' % (psem,prob,ysem)
 
                         # counting stats
                         slt,val = ysem.split('=')
@@ -437,8 +438,9 @@ class NNDial(object):
                     #    print '  | %16s\t%.3f\t%20s |' % (prdtvenue,prob,truevenue)
 
                 if self.verbose>0:
-                    match_number = np.argmax(np.array(db_degree_t[-6:]))
-                    match_number = str(match_number) if match_number<5 else '>5'
+                    match_number = str(db_degree_t[1])
+                    #match_number = np.argmax(np.array(db_degree_t[-6:]))
+                    #match_number = str(match_number) if match_number<5 else '>5'
                     print
                     print 'DB Match     : %s' % match_number
                     print
