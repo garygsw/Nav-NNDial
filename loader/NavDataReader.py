@@ -631,14 +631,20 @@ class DataReader(object):
 
         #print 'before lexicalise:', utt
 
+        # delexicalise based on slu values first
         if slotpos is not None:
             utt = utt.split()
             originals = []
             replacements = []
             for slot in slotpos:
-                value = '[VALUE_' + slot['slot'].upper() + ']'
+                if slot['slot'].startswith('order'):
+                    #type = slot['slot'][6:-1]
+                    name = 'order'
+                else:
+                    name = slot['slot']
+                value = '[VALUE_' + name.upper() + ']'
                 start, end = slot['start'], slot['exclusive_end']
-                if type == 'target':
+                if type == 'target':  # means it's a system response, and have </s>
                     start += 1
                     end += 1
                 if start < len(utt):

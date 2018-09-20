@@ -487,14 +487,14 @@ class NNDial(object):
             p = tp/(tp+fp)*100
             r = tp/(tp+fn)*100
             ac= (tp+tn)/(tp+tn+fp+fn)*100
-            print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
+            print '%25s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
                 (s, p, r, 2*p*r/(p+r), ac)
         tp, fn, tn, fp = joint
         p = tp/(tp+fp)*100
         r = tp/(tp+fn)*100
         ac= (tp+tn)/(tp+tn+fp+fn)*100
         print 80*'-'
-        print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
+        print '%25s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
                 ('joint', p, r, 2*p*r/(p+r), ac)
         print '---- Requestable '+ 63*'-'
         reqslots = self.reader.s2v['requestable'].keys()
@@ -507,17 +507,17 @@ class NNDial(object):
             p = tp/(tp+fp)*100
             r = tp/(tp+fn)*100
             ac= (tp+tn)/(tp+tn+fp+fn)*100
-            print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
+            print '%25s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
                 (s, p, r, 2*p*r/(p+r), ac)
         tp, fn, tn, fp = joint
         p = tp/(tp+fp)*100
         r = tp/(tp+fn)*100
         ac= (tp+tn)/(tp+tn+fp+fn)*100
         print 80*'-'
-        print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
+        print '%25s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
                 ('joint', p, r, 2*p*r/(p+r), ac)
         print 80*'-'
-        print '%12s :\t| %7s\t| %7s\t| %7s\t| %7s\t|' %\
+        print '%25s :\t| %7s\t| %7s\t| %7s\t| %7s\t|' %\
                 ('Metrics', 'Prec.', 'Recall', 'F-1', 'Acc.')
         print 80*'#'
 
