@@ -22,8 +22,8 @@
             "bishan-ang mo kio park", "macritchie reservoir", "people's park complex", "wild wild wet", "night safari", "festive grand theatre", "labrador park", "malay heritage centre", "raffles city convention centre", "peranakan museum", "mustafa centre", "star performing arts centre",
             "changi exhibition centre", "liang court", "science centre singapore", "suntec convention centre", "novena square", "singapore polytecnic", "bras basah complex", "beauty world centre", "bugis street", "changi airport terminal 1", "changi airport terminal 2", "changi airport terminal 3",
             "changi airport terminal 4", "ica building", "gardens by the bay", "holland village market", "tanah merah ferry terminal", "botanic gardens", "chinese garden", "bedok reservoir", "army museum of singapore", "gillman barracks", "mint museum of toys", "changi village", "bukit timah nature reserve", "sungei buloh nature park"],
-        "search_place_ratings" : ["3.0", "3.5", "4.0", "4.5"],
-        "order" : ["0", "1", "2", "3", "4"]
+        "search_place_ratings" : ["3.0 stars", "3.5 stars", "4.0 stars", "4.5 stars"],
+        "order" : ["0", "1", "2", "3", "4", "any order"]
     },
     "requestable" : {
         "distance" : [],

@@ -8,8 +8,14 @@
     "gardens by the bay": [
         "gardens by the bay"
     ],
+    "3.0 stars": [
+        "3.0 stars"
+    ],
     "yishun stadium": [
         "yishun stadium"
+    ],
+    "none": [
+        "NONE"
     ],
     "jurong bird park": [
         "jurong bird park"
@@ -54,6 +60,9 @@
     "ion orchard": [
         "ion orchard"
     ],
+    "3.5 stars": [
+        "3.5 stars"
+    ],
     "home team academy": [
         "home team academy"
     ],
@@ -90,6 +99,9 @@
     "bishan-ang mo kio park": [
         "bishan-ang mo kio park"
     ],
+    "4.0 stars": [
+        "4.0 stars"
+    ],
     "open_now": [
         "open now",
         "opening hours"
@@ -115,8 +127,8 @@
     "mount elizabeth hospital": [
         "mount elizabeth hospital"
     ],
-    "none": [
-        "NONE"
+    "4.5 stars": [
+        "4.5 stars"
     ],
     "keppel club": [
         "keppel club"
@@ -238,17 +250,11 @@
     "far east plaza": [
         "far east plaza"
     ],
-    "3.5": [
-        "3.5"
-    ],
     "people's park complex": [
         "people's park complex"
     ],
     "national neuroscience institute": [
         "national neuroscience institute"
-    ],
-    "3.0": [
-        "3.0"
     ],
     "duration": [
         "duration",
@@ -343,6 +349,9 @@
     ],
     "raffles xchange": [
         "raffles xchange"
+    ],
+    "any order": [
+        "any order"
     ],
     "balestier plaza": [
         "balestier plaza"
@@ -725,15 +734,8 @@
     "pasir ris polyclinic": [
         "pasir ris polyclinic"
     ],
-    "4.5": [
-        "4.5"
-    ],
     "tanglin shopping centre": [
         "tanglin shopping centre"
-    ],
-    "place": [
-        "place",
-        "location"
     ],
     "east shore hospital": [
         "east shore hospital"
@@ -768,8 +770,9 @@
     "place_search_keyword": [
         "place_search_keyword"
     ],
-    "4.0": [
-        "4.0"
+    "place": [
+        "place",
+        "location"
     ],
     "maritime experiential museum & aquarium": [
         "maritime experiential museum & aquarium"

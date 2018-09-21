@@ -422,7 +422,7 @@ class DataReader(object):
 
                 # read informable semi
                 #reqnones = ['pricerange=none','food=none','area=none']
-                infones = [str(x)+'=none' for x in self.s2v['informable']]
+                infones = [str(x)+'=none' for x in self.s2v['informable']] # initially everything is None
                 semi = sorted(infones) \
                         if len(info_semi)==0 else deepcopy(info_semi[-1])       # TODO: update informable semi
                 for da in turn['usr']['slu']:  # updates semi based on usr slu
@@ -456,9 +456,10 @@ class DataReader(object):
                 for sem in semi:
                     if 'name=' in sem:   # name shouldn't be in there
                         continue
-                    vec[self.infovs.index(sem)] = 1
-                    if self.infovs.index(sem) not in self.dontcare:
-                        constraints.append(self.infovs.index(sem))
+                    sem_idx = self.infovs.index(sem)
+                    vec[sem_idx] = 1
+                    if sem_idx not in self.dontcare:
+                        constraints.append(sem_idx)
 
                 # vec = [0, 1, 0, ....  x len(self.infovs)]
                 # constraints = [<indexes of constraints>...]
@@ -512,7 +513,7 @@ class DataReader(object):
                 # db_logic: [ [0, 0, 1, 0, ..., 0,0,0,0,0,1], ... xT]
 
                 # read requestable semi
-                semi = self.s2v['requestable'].keys()
+                semi = sorted(self.s2v['requestable'].keys())
                 #semi =  sorted(['food','pricerange','area'])+\
                 #        sorted(['phone','address','postcode'])  # TODO: remove informables as requestables
                 for da in turn['usr']['slu']:
@@ -591,23 +592,33 @@ class DataReader(object):
                 names.append(name)
             # remove pos identifier
             tok, ID = words[i].split("::")
-            words[i] = tok
+            words[i] = tok   # overwrite with just the [SLOT/VALUE]
             # record position
             #print tok, ID  # remove outer brackets
             splits = tok[1:-1].lower().split('_')
+            # remove the square bracket, then lower case it, then split by '_'
             mytok,sov = splits[0], '_'.join(splits[1:])
             #mytok,sov = tok[1:-1].lower().split('_')
+            # mytok is either SLOT or VALUE
+            # sov is one of the INF or REQ keys
 
-            ID = ID.replace('-',' ')
-            mylist = sltpos if mytok=='slot' else valpos
-            for j in range(len(allvs)):
+            ID = ID.replace('-',' ')  # revert back the spaces of the actual value
+            #mylist = sltpos if mytok=='slot' else valpos  # unused
+
+            # go through every allvs
+            for j in range(len(allvs)):  # allvs = self.infovs+self.reqs   # all value-slot pairs
                 s,v = allvs[j].split('=')
                 comp = s if mytok=='slot' else v
                 if comp==ID:
-                    if mytok=='slot':
+                    #print 'comparing:', comp, '   with    ', ID
+                    if mytok=='slot':  # if slot match
                         sltpos[j].append(i)
-                    else:
+                    else:              # if value match
                         valpos[j].append(i)
+            # print sent
+            # print 'slotpos:', sltpos[-len(self.reqs):]
+            # print 'valpos:', valpos[-len(self.reqs):]
+            # print
 
         # indexing, delexicalised
         if index:
@@ -628,6 +639,9 @@ class DataReader(object):
         reqtoks =   ['[VALUE_'+s.upper()+']' for s in self.s2v['requestable'].keys()]
         # TODO: remove requestable as inf tokens?
         # TODO: standardize Dont care?
+
+        if utt == '* gibberish *':
+            return '<unk>'
 
         #print 'before lexicalise:', utt
 
@@ -650,15 +664,19 @@ class DataReader(object):
                 if start < len(utt):
                     originals.append(' '.join(utt[start:end]))
                     replacements.append(value + '::')
-                #utt[start:end] = [value + '::' + ' '.join(utt[start:end]).replace(' ', '-')]
             utt = ' '.join(utt)
-            #for i in range(len(originals)):
-            #    print originals[i], replacements[i]
             for i in range(len(originals)):
                 utt = (' '+utt+' ').replace(' '+originals[i]+' ', ' '+replacements[i]+originals[i].replace(' ', '-')+' ')
                 utt = utt[1:-1]
 
+        # Problem with
+        # ORDER, which the order is not explicitly stated in the utterance
+        # so we need to preprocess the order first to contain the actual value
         #print 'intermediate lexicalise:', utt
+
+        # for every value in self.values  ( which is a list of all values )
+        # find the tokens to replace, which is [SLOT/VALUE_X]::exact-value
+        # do a string match based on value
         for i in range(len(self.values)):
             # informable mode, preserving location information
             if mode=='informable'and self.slots[i] in inftoks:
@@ -703,6 +721,9 @@ class DataReader(object):
                     if slot in self.s2v['requestable']:
                         if not isinstance(value, list):
                             self.s2v['requestable'][slot].append(value.lower())
+                        #else:
+                            # for waypoints
+                        #    self.s2v['requestable'][slot].append(' ==> '.join([x.lower() for x in value]))
                         # if isinstance(value, list):
                         #     value = ' ==> '.join(value)  # waypoints
                         # if value != '':
