@@ -15,7 +15,7 @@ from copy import deepcopy
 from basic   import *
 from encoder import *
 from tracker import *
-from decoder import *
+from nav_decoder import *
 from nav_policy  import *
 from utils.adam import adam
 
@@ -183,8 +183,8 @@ class NNSDS(BaseNNModule):
                     utt_group_t, snapshot_t, success_reward_t, sample_t,
                     change_label_t, db_degree_t,
                     inf_label_t, req_label_t, source_feat_t, target_feat_t,
-                    belief_tm1, masked_target_tm1, masked_target_len_tm1,
-                    target_feat_tm1, posterior_tm1):
+                    belief_tm1, masked_target_tm1, masked_target_len_tm1,  # not in use
+                    target_feat_tm1, posterior_tm1):                       # dummy inputs
 
             ##############################################################
             ##################### Intent encoder #########################
@@ -216,10 +216,15 @@ class NNSDS(BaseNNModule):
             belief_t = []
 
             if self.trk=='rnn' and self.inf==True:
-                for i in range(len(self.infotrackers)):
+                for i in range(len(self.infotrackers)):  # for every informable
                     # slice the current belief tracker output
                     cur_belief_tm1  = belief_tm1[self.iseg[i]:self.iseg[i+1]]
+                    # get the current belief list for this informable
                     if self.trkenc=='cnn': # cnn, position features
+                        # first index: 0 --> slot pos
+                        #              1 --> value pos
+                        # 2nd   index: of infovs + reqs
+                        # 3rd   index: just 1 dimension, showing the maximum size
                         ssrcpos_js  = source_feat_t[0,self.iseg[i]:self.iseg[i+1],:]
                         vsrcpos_js  = source_feat_t[1,self.iseg[i]:self.iseg[i+1],:]
                         starpos_jm1s= target_feat_tm1[0,self.iseg[i]:self.iseg[i+1],:]
@@ -404,7 +409,7 @@ class NNSDS(BaseNNModule):
                            utt_group, snapshot, success_rewards, samples,
                            change_label, db_degrees,
                            inf_trk_labels, req_trk_labels,
-                           srcfeat, tarfeat],\
+                           srcfeat, tarfeat],  # srcfeat, tarfeat:
                 outputs_info=[belief_0,masked_target_tm1,masked_target_len_tm1,tarfeat_tm1,
                         posterior_0,None,None,None,None,None,None,None,None,None])
 
@@ -558,15 +563,22 @@ class NNSDS(BaseNNModule):
                             masked_source_t, masked_target_tm1,
                             ssrcpos_ts, vsrcpos_ts, starpos_tm1s, vtarpos_tm1s)
 
+                    # print 'cur_belief_t:', cur_belief_t
+                    # print len(cur_belief_t)
+                    # print
+
                 # accumulating belief states
                 full_belief_t.append(cur_belief_t)
+                # (inf_belief=all_states)
                 if self.bef=='full':
                     belief_t.append(cur_belief_t)
-                else:
+                else:  # for summary
+                    # the last two correspond to "any" and "none"
                     tmp = [np.sum(cur_belief_t[:-2],axis=0),cur_belief_t[-2]]
                     tmp = tmp + [cur_belief_t[-1]] if self.bef=='summary' else tmp
                     belief_t.append( np.array(tmp) )
-
+                    # (inf_belief=all_states, =any, =none)
+        #assert(False)
 
         # Requestable slot belief tracker
         if self.trk=='rnn' and self.req==True:
@@ -592,6 +604,7 @@ class NNSDS(BaseNNModule):
                 else:
                     tmp = cur_belief_t if self.bef=='summary' else cur_belief_t[:1]
                     belief_t.append( tmp )
+                # (req_belief=all_states)
 
             # offer change tracker
             #cur_belief_t = self.changeTracker.track(
@@ -612,7 +625,7 @@ class NNSDS(BaseNNModule):
         if self.dec=='lstm' and self.learn_mode!='trk':
             if self.trk!='none': # include tracker
                 responses, sample, prob = self.decoder.talk(
-                        masked_intent_t,belief_t,degree_t[-6:],
+                        masked_intent_t,belief_t,degree_t,  # change the [:6] to nothing
                         masked_source_t, masked_target_t,
                         scoreTable, forced_sample)
         else: # no decoder

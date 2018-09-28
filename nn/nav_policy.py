@@ -32,7 +32,7 @@ def computeBeleifDim(trk, inf, req, bef, iseg, rseg):
         if bef=='full':
             belief_size += iseg[-1]
         elif bef=='summary':
-            belief_size += 3*(len(iseg)-1)
+            belief_size += 3*(len(iseg)-1)  # =value, =dontcare, =none
         elif bef=='simplified':
             belief_size += 2*(len(iseg)-1)
     return belief_size
@@ -70,6 +70,7 @@ class Policy(BaseNNModule):
                     np.dot(belief_t,self.Ws1_backup)+
                     np.dot(degree_t,self.Ws2_backup)+
                     np.dot(intent_t,self.Ws3_backup)    ),axis=0)
+
     def loadConverseParams(self):
         self.Ws1_backup  = self.params[0].get_value()
         self.Ws2_backup  = self.params[1].get_value()

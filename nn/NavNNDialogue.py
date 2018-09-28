@@ -253,14 +253,16 @@ class NNDial(object):
             venue_offered   = None
 
             # initial belief
+            #print 'initial belief size:', self.inf_dimensions[-1]
             flatten_belief_tm1 = np.zeros((self.inf_dimensions[-1]))
             for i in range(len(self.inf_dimensions)-1):
                 flatten_belief_tm1[self.inf_dimensions[i+1]-1] = 1.0
-                # for s = none, set to 1
+                #print 'setting belief of', self.reader.infovs[self.inf_dimensions[i+1]-1], ' to 1'
+                # for s = none, set to 1, for all informable
 
             # for each turn
             reqs = []
-            generated_utt_tm1 = ''
+            generated_utt_tm1 = ''  # previous maksed generated utterance
             for t in range(len(source)):
                 if self.verbose>0:
                     print '-'*28 + ' Turn '+ str(t) +' '+ '-'*28
@@ -285,10 +287,10 @@ class NNDial(object):
                         for w in masked_target_t])
 
                 # read and understand user sentence
-                masked_intent_t = self.model.read( masked_source_t )
+                masked_intent_t = self.model.read(masked_source_t) # bidirectional encode context
                 full_belief_t, belief_t = self.model.track(
                         flatten_belief_tm1, masked_source_t, masked_target_tm1,
-                        srcfeat_t, tarfeat_tm1 )
+                        srcfeat_t, tarfeat_tm1)
                 flatten_belief_t = np.concatenate(full_belief_t,axis=0)
                 # search DB
                 # db_degree_t, query = self._searchDB(flatten_belief_t)
@@ -299,7 +301,6 @@ class NNDial(object):
                 # suppose to use API to search, given flatten belief t
                 # but for now, just use the same degree as given in the dataset
                 db_degree_t = db_degree[t]
-
                 # score table
                 scoreTable = self._genScoreTable(full_belief_t)
                 # generation
@@ -310,7 +311,6 @@ class NNDial(object):
                 # choose venue
                 #venues = [i for i, e in enumerate(db_degree_t[:-6]) if e != 0 ]
                 # suppose to get the venues from the api list
-
                 venues = ['test']
                 # keep the current venue
                 if selected_venue in venues: pass
@@ -338,7 +338,7 @@ class NNDial(object):
                     #gstats += np.mean( np.array(gen[2][1:]),axis=0 )
                     num_sent += 1
 
-                # update history belief
+                # update history belief - but only for informables
                 flatten_belief_tm1 = flatten_belief_t[:self.inf_dimensions[-1]]
 
                 # for calculating success: check requestable slots match
@@ -354,9 +354,20 @@ class NNDial(object):
 
                 ############################### debugging ############################
                 if self.verbose>0:
-                    print 'User Input :\t%s'% source_utt
-                    print '           :\t%s'% masked_source_utt
+                    print 'User Input   :\t%s'% source_utt
+                    print 'Masked Input :\t%s'% masked_source_utt
+                    # slot_features, value_features = srcfeat_t
+                    # print slot_features, len(slot_features)
+                    # for sf in slot_features:
+                    #     if sf[0] != -1:
+                    #         print 'slot present :\t%s' % masked_source_utt.split()[sf[0]]
+                    # print value_features, len(value_features)
+                    # for vf in value_features:
+                    #     if vf[0] != -1:
+                    #         print 'value present :\t%s' % masked_source_utt.split()[vf[0]]
+                    # assert(False)
                     print
+
                 if self.trk=='rnn' and self.trkinf==True:
                     if self.verbose>1:
                         print 'Belief Tracker :'
@@ -1215,7 +1226,7 @@ class NNDial(object):
                 #print psem
                 # slot & value
                 s,v = psem.split('=')
-                if s=='name': # skip name slot
+                if s=='place': # skip name slot
                     continue
                 # assign score, if exist, +reward
                 score = -0.05 if v=='none' else 0.2
@@ -1234,7 +1245,7 @@ class NNDial(object):
                 # slot & value
                 s,v = psem.split('=')
                 # if none, discourage gen. if exist, encourage gen
-                score = -0.5 if (v=='none' or v=='dontcare') else 0.05
+                score = -0.5 if (v=='none' or v=='any') else 0.05
                 # slot value indexing
                 vidx = self.reader.vocab.index('[VALUE_'+s.upper()+']')
                 sidx = self.reader.vocab.index('[SLOT_'+s.upper()+']')
