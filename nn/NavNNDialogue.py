@@ -628,9 +628,9 @@ class NNDial(object):
             # decide to throw/keep weights
             if self.valid_logp < self.llogp:   # if better than previous
                 self.getBackupWeights()        # save params
-            #else:
-            #    self.setBackupWeights()        # else get best params
-            # self.saveNet()  # no need to save, only save when done (optimize)
+            else:
+                self.setBackupWeights()        # else get best params
+            self.saveNet()  # no need to save, only save when done (optimize)
 
             # learning rate decay
             if self.cur_stop_count>=self.stop_count:
