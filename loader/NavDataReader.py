@@ -438,10 +438,10 @@ class DataReader(object):
 
                 # read informable semi
                 #reqnones = ['pricerange=none','food=none','area=none']
-                infones = [str(x)+'=none' for x in self.s2v['informable']] # initially everything is None
+                #infones = [str(x)+'=none' for x in self.s2v['informable']] # initially everything is None
                 if d['dial'][t]['new'] or len(info_semi) == 0:
                 #if len(info_semi) == 0:
-                    semi = sorted(infones)
+                    semi = sorted([str(x)+'=none' for x in self.s2v['informable']])
                 else:
                     semi = deepcopy(info_semi[-1])
 
@@ -668,8 +668,8 @@ class DataReader(object):
         # TODO: remove requestable as inf tokens?
         # TODO: standardize Dont care?
 
-        if utt == '* gibberish *':
-            return '<unk>'
+        if utt.startswith('* gibberish *'):
+            utt = '<unk>'
 
         if debug:
             print 'before lexicalise:', utt
