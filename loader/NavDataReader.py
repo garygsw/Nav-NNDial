@@ -439,8 +439,15 @@ class DataReader(object):
                 # read informable semi
                 #reqnones = ['pricerange=none','food=none','area=none']
                 infones = [str(x)+'=none' for x in self.s2v['informable']] # initially everything is None
-                semi = sorted(infones) \
-                        if len(info_semi)==0 else deepcopy(info_semi[-1])       # TODO: update informable semi
+                if d['dial'][t]['new'] or len(info_semi) == 0:
+                #if len(info_semi) == 0:
+                    semi = sorted(infones)
+                else:
+                    semi = deepcopy(info_semi[-1])
+
+                #semi = sorted(infones) \
+                #        if len(info_semi)==0 else deepcopy(info_semi[-1])       # TODO: update informable semi
+
                 for da in turn['usr']['slu']:  # updates semi based on usr slu
                     for s2v in da['slots']:
                         # skip invalid slots
