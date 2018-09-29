@@ -257,8 +257,8 @@ class NNDial(object):
             flatten_belief_tm1 = np.zeros((self.inf_dimensions[-1]))
             for i in range(len(self.inf_dimensions)-1):
                 flatten_belief_tm1[self.inf_dimensions[i+1]-1] = 1.0
-                #print 'setting belief of', self.reader.infovs[self.inf_dimensions[i+1]-1], ' to 1'
-                # for s = none, set to 1, for all informable
+                # print 'setting belief of', self.reader.infovs[self.inf_dimensions[i+1]-1], ' to 1'
+                # for every if s = none, set to 1 initially, for all informable
 
             # for each turn
             reqs = []
@@ -348,7 +348,7 @@ class NNDial(object):
                     if '[VALUE_'+requestable.upper()+']' in gennerated_utt:
                         reqs.append(self.reader.reqs.index(requestable+'=exist'))
                 # check offered venue
-                if '[VALUE_NAME]' in generated_utt and selected_venue!=None:
+                if '[VALUE_PLACE]' in generated_utt and selected_venue!=None:
                     #venue_offered = self.reader.db2inf[selected_venue]
                     venue_offered = 'test'
 
@@ -358,15 +358,15 @@ class NNDial(object):
                     print 'Masked Input :\t%s'% masked_source_utt
                     # slot_features, value_features = srcfeat_t
                     # print slot_features, len(slot_features)
-                    # for sf in slot_features:
+                    # for i, sf in enumerate(slot_features):
                     #     if sf[0] != -1:
-                    #         print 'slot present :\t%s' % masked_source_utt.split()[sf[0]]
-                    # print value_features, len(value_features)
-                    # for vf in value_features:
+                    #         print 'slot present :\t%s' % masked_source_utt.split()[sf[0]], 'for:%s' % self.reader.allvs[i]
+                    # #print value_features, len(value_features)
+                    # for i, vf in enumerate(value_features):
                     #     if vf[0] != -1:
-                    #         print 'value present :\t%s' % masked_source_utt.split()[vf[0]]
+                    #         print 'value present :\t%s' % masked_source_utt.split()[vf[0]], 'for:%s' % self.reader.allvs[i]
                     # assert(False)
-                    print
+                    # print
 
                 if self.trk=='rnn' and self.trkinf==True:
                     if self.verbose>1:
@@ -1216,7 +1216,7 @@ class NNDial(object):
         scoreTable = {}
         # requestable tracker scoreTable
         if self.trk=='rnn' and self.trkreq==True:
-            infbn = 3 if self.trkinf else 0
+            infbn = 3 if self.trkinf else 0   # 3 because, =value, =any, =none
             for i in range(len(self.req_dimensions)-1):
                 bn = self.req_dimensions[i]
                 # prediction for this req tracker

@@ -183,7 +183,7 @@ class DataReader(object):
                 #    = self.extractSeq(sent,type='target')
 
                 mtar, tar, spos, vpos, venues = self.extractSeq(turn['sys']['tokens'], slotpos=turn['sys']['slotpos'],\
-                    type='target',index=True, split=True)
+                    type='target',index=True, split=True, debug=False)
                 # by default, index=True, normalize=False
                 # Output:
                 # mtar: masked indexes [i1, i2, i3, ..., iN]
@@ -276,6 +276,15 @@ class DataReader(object):
                 tarpos.append([spos,vpos])
                 # [spos: [[], [1, 2], [], [], ... x self.infovs+self.reqs],
                 #  vpos: [[], [1, 2], [], [], ... x self.infovs+self.reqs]]
+                # print 'sys output   :\t%s' % ' '.join(self.vocab[x] for x in tar)
+                # print 'masked target:\t%s' % ' '.join(self.vocab[x] for x in mtar)
+                # for i, sf in enumerate(spos):
+                #     if len(sf) > 0:
+                #         print 'slot present:\t%s' % self.vocab[mtar[sf[0]]], 'for: %s' % self.allvs[i]
+                # for i, vf in enumerate(vpos):
+                #     if len(vf) > 0:
+                #         print 'value present:\t%s' % self.vocab[mtar[vf[0]]], 'for: %s' % self.allvs[i]
+                # print
 
 
                 # non delexicalised
@@ -288,7 +297,7 @@ class DataReader(object):
                 #msrc, src, spos, vpos, _ = self.extractSeq(sent,type='source')
 
                 msrc, src, spos, vpos, _ = self.extractSeq(turn['usr']['tokens'], slotpos=turn['usr']['slotpos'],\
-                    type='source',index=True, split=True)
+                    type='source',index=True, split=True, debug=False)
 
                 # repeats the same as sys
                 # except that now, no need for changes, offers, snapshot vector,
@@ -307,13 +316,20 @@ class DataReader(object):
                         maxfeat = len(f)
                 srcpos.append([spos,vpos])
 
+                # print 'user input   :\t%s' % ' '.join(self.vocab[x] for x in src)
+                # print 'masked source:\t%s' % ' '.join(self.vocab[x] for x in msrc)
+                # for i, sf in enumerate(spos):
+                #     if len(sf) > 0:
+                #         print 'slot present:\t%s' % self.vocab[msrc[sf[0]]], 'for: %s' % self.allvs[i]
+                # for i, vf in enumerate(vpos):
+                #     if len(vf) > 0:
+                #         print 'value present:\t%s' % self.vocab[msrc[vf[0]]], 'for: %s' % self.allvs[i]
+                # print
+
                 # non delexicalised
                 if len(src)>maxmsrc:
                     maxmsrc = len(src)
                 sourceutt.append(src)
-
-
-
 
             # sentence group
             self.sentGroupIndex.append(utt_group)
@@ -365,7 +381,7 @@ class DataReader(object):
             #   x T ...
             # ]
 
-
+            # Padding semantic info
             for i in range(len(tarpos)): # for every dialog
                 for j in range(len(tarpos[i])): # for spos, and vpos
                     for k in range(len(tarpos[i][j])):  # for every index
@@ -536,7 +552,7 @@ class DataReader(object):
             self.db_logics.append(db_logic)
         print
 
-    def extractSeq(self,sent,type='source',normalise=False,index=True, split=False, slotpos=None):
+    def extractSeq(self,sent,type='source',normalise=False,index=True, split=False, slotpos=None, debug=False):
 
         # setup vocab
         if type=='source':  vocab = self.vocab
@@ -569,11 +585,11 @@ class DataReader(object):
         #print words
 
         # delexicalise all
-        sent = self.delexicalise(' '.join(words),slotpos,type,mode='all')
+        sent = self.delexicalise(' '.join(words),slotpos,type,mode='all', debug=debug)
         # convert all values found in self.values into the format of
         # [SLOT_<name>]::supervalue('-' as space) or
         # [VALUE]_<name>]::supervalue('-' as space)
-        sent = re.sub(digitpat,'[VALUE_COUNT]',sent)
+        #sent = re.sub(digitpat,'[VALUE_COUNT]',sent)
         words= sent.split()
 
         #print words
@@ -597,7 +613,12 @@ class DataReader(object):
             #print tok, ID  # remove outer brackets
             splits = tok[1:-1].lower().split('_')
             # remove the square bracket, then lower case it, then split by '_'
-            mytok,sov = splits[0], '_'.join(splits[1:])
+            mytok = splits[0]
+            # if mytok == 'slot':
+            #     sov = '_'.join(splits[1:])
+            # else:
+            #     sov = splits[1]
+            #mytok,sov = splits[0], '_'.join(splits[1:])
             #mytok,sov = tok[1:-1].lower().split('_')
             # mytok is either SLOT or VALUE
             # sov is one of the INF or REQ keys
@@ -631,7 +652,7 @@ class DataReader(object):
         #     list of names
         return midx, idx, sltpos, valpos, names
 
-    def delexicalise(self,utt,slotpos=None,type=None,mode='all'):
+    def delexicalise(self,utt,slotpos=None,type=None,mode='all',debug=False):
         inftoks =   ['[VALUE_'+s.upper()+']' for s in self.s2v['informable'].keys()] + \
                     ['[SLOT_' +s.upper()+']' for s in self.s2v['informable'].keys()] + \
                     ['VALUE_ANY]','[VALUE_PLACE]'] + \
@@ -643,16 +664,18 @@ class DataReader(object):
         if utt == '* gibberish *':
             return '<unk>'
 
-        #print 'before lexicalise:', utt
+        if debug:
+            print 'before lexicalise:', utt
 
         # delexicalise based on slu values first
+        # reason: ?
         if slotpos is not None:
             utt = utt.split()
             originals = []
             replacements = []
             for slot in slotpos:
                 if slot['slot'].startswith('order'):
-                    #type = slot['slot'][6:-1]
+                    #type = slot['slot'][6:-1]  # order(before/after)
                     name = 'order'
                 else:
                     name = slot['slot']
@@ -672,7 +695,8 @@ class DataReader(object):
         # Problem with
         # ORDER, which the order is not explicitly stated in the utterance
         # so we need to preprocess the order first to contain the actual value
-        #print 'intermediate lexicalise:', utt
+        if debug:
+            print 'intermediate lexicalise:', utt
 
         # for every value in self.values  ( which is a list of all values )
         # find the tokens to replace, which is [SLOT/VALUE_X]::exact-value
@@ -692,10 +716,10 @@ class DataReader(object):
                         if self.slots[i] in inftoks else self.slots[i]
                 utt = (' '+utt+' ').replace(' '+self.values[i]+' ',' '+tok+' ')
                 utt = utt[1:-1]
-        utt = re.sub(digitpat,'[VALUE_COUNT]',utt)
-
-        #print 'after lexicalise:', utt
-        #print
+        #utt = re.sub(digitpat,'[VALUE_COUNT]',utt)
+        if debug:
+            print 'after lexicalise:', utt
+            print
         return utt
 
     def prepareSlotValues(self):
@@ -836,13 +860,15 @@ class DataReader(object):
             self.reqs.extend([s+'=exist',s+'=none'])
             self.reqseg.append(len(self.reqs))
 
+        self.allvs = self.infovs + self.reqs
+
         # Debug
         print
         print '\t\t\tDebugging semantic labels'
-        print '\t\t\tself.infovs:', ', '.join(self.infovs[:3]), '...', ', '.join(self.infovs[-3:]), 'len:', len(self.infovs)
+        print '\t\t\tself.infovs:', self.infovs  #', '.join(self.infovs[:3]), '...', ', '.join(self.infovs[-3:]), 'len:', len(self.infovs)
         print '\t\t\tself.infoseg:', self.infoseg
         print '\t\t\tself.dontcare:', self.dontcare
-        print '\t\t\tself.reqs:', ', '.join(self.reqs[:3]), '...', ', '.join(self.reqs[-3:]), 'len:', len(self.reqs)
+        print '\t\t\tself.reqs:', self.reqs  #', '.join(self.reqs[:3]), '...', ', '.join(self.reqs[-3:]), 'len:', len(self.reqs)
         print '\t\t\tself.reqseg:', self.reqseg
         print
 
