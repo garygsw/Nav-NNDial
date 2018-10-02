@@ -443,7 +443,7 @@ class DataReader(object):
                 #if len(info_semi) == 0:
                     semi = sorted([str(x)+'=none' for x in self.s2v['informable']])
                 else:
-                    semi = deepcopy(info_semi[-1])
+                    semi = deepcopy(info_semi[-1])  # copy the last one
 
                 #semi = sorted(infones) \
                 #        if len(info_semi)==0 else deepcopy(info_semi[-1])       # TODO: update informable semi
@@ -470,7 +470,7 @@ class DataReader(object):
                     if info_semi[-1] != sorted(semi):   # check the last one, and the current is it the same
                         self.changes[dx][t] = [0,1]     # if different, then set the change back to no change
 
-                info_semi.append(sorted(semi))  # this variable is USELESS!
+                info_semi.append(sorted(semi))
                 # info_semi: [[pricerange=none, food=none, area=none], x T...]
 
                 # indexing semi and DB
@@ -694,6 +694,29 @@ class DataReader(object):
                 if start < len(utt):
                     originals.append(' '.join(utt[start:end]))
                     replacements.append(value + '::')
+                else:
+                    print '%s start index %s is out of range' % (value, start)
+                    print ' '.join(utt)
+
+                # special case for [SLOT_SEARCH_PLACE_RATINGS]
+                if type == 'source' and name == 'search_place_ratings':
+                    value = '[SLOT_' + 'search_place_ratings'.upper() + ']'
+                    start = None
+                    end = None
+                    for i, token in enumerate(utt):
+                        if token == 'ratings':
+                            start = i
+                            end = i + 1
+                    assert(start)
+                    assert(end)
+                    if start < len(utt):
+                        originals.append(' '.join(utt[start:end]))
+                        replacements.append(value + '::')
+                    else:
+                        print '%s start index %s is out of range' % (value, start)
+                        print ' '.join(utt)
+
+
             utt = ' '.join(utt)
             for i in range(len(originals)):
                 utt = (' '+utt+' ').replace(' '+originals[i]+' ', ' '+replacements[i]+originals[i].replace(' ', '-')+' ')
@@ -751,7 +774,7 @@ class DataReader(object):
                     slot, value = state['slot'], state['value']
                     if slot in self.s2v['requestable']:
                         if not isinstance(value, list):
-                            self.s2v['requestable'][slot].append(value.lower())
+                            self.s2v['requestable'][slot].append(str(value).lower())
                         #else:
                             # for waypoints
                         #    self.s2v['requestable'][slot].append(' ==> '.join([x.lower() for x in value]))
@@ -1155,6 +1178,8 @@ class DataReader(object):
 
                 # user side
                 # words = self.delexicalise(turn['usr']['transcript'], turn['usr']['slotpos']).split()
+                if 'usr' not in turn:
+                    print turn
                 mwords,words,_,_,_ = self.extractSeq(turn['usr']['tokens'], slotpos=turn['usr']['slotpos'],\
                     type='source',index=False, split=True)
                 # CHANGED the turn from sys to usr, bug here
