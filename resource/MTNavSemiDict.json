@@ -536,11 +536,11 @@
     "club": [
         "club"
     ],
-    "bedok town park": [
-        "bedok town park"
+    "lower peirce reservoir": [
+        "lower peirce reservoir"
     ],
-    "gym": [
-        "gym"
+    "st. andrew 's junior college": [
+        "st. andrew 's junior college"
     ],
     "hotel": [
         "hotel"
@@ -553,9 +553,6 @@
     ],
     "bukit batok town park": [
         "bukit batok town park"
-    ],
-    "st. andrew 's junior school": [
-        "st. andrew 's junior school"
     ],
     "singapore general hospital": [
         "singapore general hospital"
@@ -636,6 +633,9 @@
     "exist": [
         "NONE"
     ],
+    "bedok town park": [
+        "bedok town park"
+    ],
     "singapore chinese girls ' school": [
         "singapore chinese girls ' school"
     ],
@@ -672,8 +672,8 @@
     "marina bay sands": [
         "marina bay sands"
     ],
-    "lower peirce reservoir": [
-        "lower peirce reservoir"
+    "tampines stadium": [
+        "tampines stadium"
     ],
     "woodlands town garden": [
         "woodlands town garden"
@@ -775,8 +775,8 @@
     "beach": [
         "beach"
     ],
-    "tampines stadium": [
-        "tampines stadium"
+    "gym": [
+        "gym"
     ],
     "ren ci hospital": [
         "ren ci hospital"
