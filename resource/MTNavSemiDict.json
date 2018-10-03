@@ -57,6 +57,9 @@
     "marina square": [
         "marina square"
     ],
+    "st. andrew ' s junior school": [
+        "st. andrew ' s junior school"
+    ],
     "ion orchard": [
         "ion orchard"
     ],
@@ -181,6 +184,9 @@
     "suntec city mall": [
         "suntec city mall"
     ],
+    "esplanade theatre": [
+        "esplanade theatre"
+    ],
     "alkaff mansion": [
         "alkaff mansion"
     ],
@@ -238,6 +244,9 @@
     "library": [
         "library"
     ],
+    "st andrew ' s community hospital": [
+        "st andrew ' s community hospital"
+    ],
     "supermarket": [
         "supermarket"
     ],
@@ -247,8 +256,8 @@
     "far east plaza": [
         "far east plaza"
     ],
-    "people's park complex": [
-        "people's park complex"
+    "people ' s park complex": [
+        "people ' s park complex"
     ],
     "national neuroscience institute": [
         "national neuroscience institute"
@@ -281,8 +290,8 @@
     "changi airport terminal 4": [
         "changi airport terminal 4"
     ],
-    "kk women's and children's hospital": [
-        "kk women's and children's hospital"
+    "changi airport terminal 2": [
+        "changi airport terminal 2"
     ],
     "changi airport terminal 3": [
         "changi airport terminal 3"
@@ -343,9 +352,6 @@
     ],
     "raffles xchange": [
         "raffles xchange"
-    ],
-    "any order": [
-        "any order"
     ],
     "balestier plaza": [
         "balestier plaza"
@@ -461,14 +467,11 @@
     "singapore sports school": [
         "singapore sports school"
     ],
-    "esplanade theatre": [
-        "esplanade theatre"
+    "raffles girls ' school": [
+        "raffles girls ' school"
     ],
     "victoria theatre and concert hall": [
         "victoria theatre and concert hall"
-    ],
-    "st. andrew's junior school": [
-        "st. andrew's junior school"
     ],
     "shopping centre": [
         "shopping centre"
@@ -560,9 +563,6 @@
     "bukit batok town park": [
         "bukit batok town park"
     ],
-    "singapore chinese girls' school": [
-        "singapore chinese girls' school"
-    ],
     "singapore general hospital": [
         "singapore general hospital"
     ],
@@ -639,14 +639,14 @@
     "exist": [
         "NONE"
     ],
-    "mustafa centre": [
-        "mustafa centre"
+    "singapore chinese girls ' school": [
+        "singapore chinese girls ' school"
     ],
     "insead singapore": [
         "insead singapore"
     ],
-    "musuem": [
-        "musuem"
+    "nanyang girls ' high school": [
+        "nanyang girls ' high school"
     ],
     "everton food place": [
         "everton food place"
@@ -666,9 +666,6 @@
     "cinema": [
         "cinema"
     ],
-    "raffles girls' school": [
-        "raffles girls' school"
-    ],
     "marina bay sands": [
         "marina bay sands"
     ],
@@ -686,11 +683,6 @@
     ],
     "bugis junction": [
         "bugis junction"
-    ],
-    "place_ratings": [
-        "place ratings",
-        "ratings",
-        "stars"
     ],
     "jurong medical centre": [
         "jurong medical centre"
@@ -737,6 +729,9 @@
     "east shore hospital": [
         "east shore hospital"
     ],
+    "kk women ' s and children ' s hospital": [
+        "kk women ' s and children ' s hospital"
+    ],
     "suntec convention centre": [
         "suntec convention centre"
     ],
@@ -748,6 +743,9 @@
     ],
     "hong lim park": [
         "hong lim park"
+    ],
+    "mustafa centre": [
+        "mustafa centre"
     ],
     "merlion park": [
         "merlion park"
@@ -795,8 +793,10 @@
     "jurong west stadium": [
         "jurong west stadium"
     ],
-    "st andrew's community hospital": [
-        "st andrew's community hospital"
+    "place_ratings": [
+        "place ratings",
+        "ratings",
+        "stars"
     ],
     "bright vision hospital": [
         "bright vision hospital"
@@ -809,9 +809,6 @@
     ],
     "bras basah complex": [
         "bras basah complex"
-    ],
-    "changi airport terminal 2": [
-        "changi airport terminal 2"
     ],
     "singapore management university": [
         "singapore management university"
@@ -837,8 +834,8 @@
     "tripleone somerset": [
         "tripleone somerset"
     ],
-    "nanyang girls' high school": [
-        "nanyang girls' high school"
+    "musuem": [
+        "musuem"
     ],
     "raffles city shopping centre": [
         "raffles city shopping centre"
