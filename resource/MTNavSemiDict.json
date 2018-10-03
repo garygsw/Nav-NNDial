@@ -57,9 +57,6 @@
     "marina square": [
         "marina square"
     ],
-    "st. andrew ' s junior school": [
-        "st. andrew ' s junior school"
-    ],
     "ion orchard": [
         "ion orchard"
     ],
@@ -118,8 +115,8 @@
     "citylink mall": [
         "citylink mall"
     ],
-    "distance": [
-        "distance"
+    "hougang mall": [
+        "hougang mall"
     ],
     "institute of mental health": [
         "institute of mental health"
@@ -160,8 +157,8 @@
     "coronation plaza": [
         "coronation plaza"
     ],
-    "hougang mall": [
-        "hougang mall"
+    "orchard plaza": [
+        "orchard plaza"
     ],
     "mint museum of toys": [
         "mint museum of toys"
@@ -244,9 +241,6 @@
     "library": [
         "library"
     ],
-    "st andrew ' s community hospital": [
-        "st andrew ' s community hospital"
-    ],
     "supermarket": [
         "supermarket"
     ],
@@ -255,9 +249,6 @@
     ],
     "far east plaza": [
         "far east plaza"
-    ],
-    "people ' s park complex": [
-        "people ' s park complex"
     ],
     "national neuroscience institute": [
         "national neuroscience institute"
@@ -278,8 +269,8 @@
     "changi business park": [
         "changi business park"
     ],
-    "ngee ann polytechnic": [
-        "ngee ann polytechnic"
+    "st andrew 's community hospital": [
+        "st andrew 's community hospital"
     ],
     "food court": [
         "food court"
@@ -356,6 +347,9 @@
     "balestier plaza": [
         "balestier plaza"
     ],
+    "people 's park complex": [
+        "people 's park complex"
+    ],
     "fountain of wealth": [
         "fountain of wealth"
     ],
@@ -418,9 +412,6 @@
     ],
     "marina bay floating platform": [
         "marina bay floating platform"
-    ],
-    "science centre singapore": [
-        "science centre singapore"
     ],
     "sungei buloh nature park": [
         "sungei buloh nature park"
@@ -497,8 +488,8 @@
     "mount faber park": [
         "mount faber park"
     ],
-    "paragon shopping centre": [
-        "paragon shopping centre"
+    "science centre singapore": [
+        "science centre singapore"
     ],
     "hospital": [
         "hospital"
@@ -524,8 +515,8 @@
     "changi sailing club": [
         "changi sailing club"
     ],
-    "ngee ann city": [
-        "ngee ann city"
+    "kk women 's and children 's hospital": [
+        "kk women 's and children 's hospital"
     ],
     "cathay cineleisure": [
         "cathay cineleisure"
@@ -554,14 +545,17 @@
     "hotel": [
         "hotel"
     ],
-    "park": [
-        "park"
+    "paragon shopping centre": [
+        "paragon shopping centre"
     ],
     "bukit batok driving centre": [
         "bukit batok driving centre"
     ],
     "bukit batok town park": [
         "bukit batok town park"
+    ],
+    "st. andrew 's junior school": [
+        "st. andrew 's junior school"
     ],
     "singapore general hospital": [
         "singapore general hospital"
@@ -627,6 +621,9 @@
     "313 somerset": [
         "313 somerset"
     ],
+    "ngee ann city": [
+        "ngee ann city"
+    ],
     "chinese garden": [
         "chinese garden"
     ],
@@ -651,6 +648,9 @@
     "everton food place": [
         "everton food place"
     ],
+    "distance": [
+        "distance"
+    ],
     "clementi woods park": [
         "clementi woods park"
     ],
@@ -665,6 +665,9 @@
     ],
     "cinema": [
         "cinema"
+    ],
+    "park": [
+        "park"
     ],
     "marina bay sands": [
         "marina bay sands"
@@ -729,9 +732,6 @@
     "east shore hospital": [
         "east shore hospital"
     ],
-    "kk women ' s and children ' s hospital": [
-        "kk women ' s and children ' s hospital"
-    ],
     "suntec convention centre": [
         "suntec convention centre"
     ],
@@ -753,8 +753,8 @@
     "henderson waves": [
         "henderson waves"
     ],
-    "orchard plaza": [
-        "orchard plaza"
+    "ngee ann polytechnic": [
+        "ngee ann polytechnic"
     ],
     "fourth": [
         "fourth"
