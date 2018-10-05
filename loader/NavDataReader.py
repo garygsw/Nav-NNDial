@@ -167,6 +167,7 @@ class DataReader(object):
             offers  = []      # list of tuple (1,0) - offer or (0,1)- no offer
             changes = []      # list of tuple (1,0) - change or (0,1)- no change
             prevoffer = set()    # set of previous offers
+            offered = False
 
             snapshot_vecs = []   # list of snapshot vectors that contain snapshots
                                  # order by the last word in the masked target first
