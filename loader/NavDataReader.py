@@ -166,8 +166,7 @@ class DataReader(object):
 
             offers  = []      # list of tuple (1,0) - offer or (0,1)- no offer
             changes = []      # list of tuple (1,0) - change or (0,1)- no change
-            prevoffer = []    # list of previous offers
-            offered = False
+            prevoffer = set()    # set of previous offers
 
             snapshot_vecs = []   # list of snapshot vectors that contain snapshots
                                  # order by the last word in the masked target first
@@ -177,20 +176,15 @@ class DataReader(object):
             for t in range(len(d['dial'])):
                 tcount += 1
                 turn = d['dial'][t]
-                # extract system side sentence feature
-                #sent = turn['sys']['sent']
-                #mtar, tar, spos, vpos, venues \
-                #    = self.extractSeq(sent,type='target')
 
                 mtar, tar, spos, vpos, venues = self.extractSeq(turn['sys']['tokens'], slotpos=turn['sys']['slotpos'],\
                     type='target',index=True, split=True, debug=False)
-                # by default, index=True, normalize=False
                 # Output:
                 # mtar: masked indexes [i1, i2, i3, ..., iN]
                 # tar: original indexe [i1, i2, i3, ..., iN]
                 # spos: [list of slot positions according to [self.infovs + self.regs]]
                 # vpos: [list of value positions, ""]
-                # names: list of names mentioned
+                # venues: list of names mentioned
 
                 # store sentence group
                 utt_group.append(self.sentGroup[groupidx])
@@ -199,15 +193,20 @@ class DataReader(object):
                 # changing offer label
                 # if at least some name is mentioned and first name is not prevoffer
                 # not matching in previous offers
-                if len(venues)!=0 and venues[0] not in prevoffer: # not matching
-                    if prevoffer==[]: # new offer
-                        change = [0,1]
-                    else: # changing offer
-                        change = [1,0]
-                    prevoffer = venues   # TODO: shall we include prevoffer as all other offered?
-                                         # have to investigate what's the need for this first
+                if turn['new']:
+                    change = [1, 0]   # means new task
+                    offered = False
                 else:
-                    change = [0,1]
+                    change = [0, 1]   # means no new task
+                # if len(venues)!=0 and venues[0] not in prevoffer: # not matching
+                #     if prevoffer==[]: # new offer
+                #         change = [0,1]
+                #     else: # changing offer
+                #         change = [1,0]
+                #     prevoffer = venues   # TODO: shall we include prevoffer as all other offered?
+                #                          # have to investigate what's the need for this first
+                # else:
+                #     change = [0,1]
 
                 # what does the tuple [x1, x2] represent?
                 # it seems that if it's a new offer or no names mentioened, or first venue is in pref offer
@@ -219,12 +218,12 @@ class DataReader(object):
 
                 # offer label
                 if offered or len(venues)!=0: # offer has happened
-                    offer = [1,0]
+                    offer = [1, 0]
                     offered = True
                     # now offer = [1,0]
                     # OHE also? where x1: offer? x2: no offer?
                 else:
-                    offer = [0,1]
+                    offer = [0, 1]
                     # No offer
                 offers.append(offer)
 
@@ -286,7 +285,6 @@ class DataReader(object):
                 #         print 'value present:\t%s' % self.vocab[mtar[vf[0]]], 'for: %s' % self.allvs[i]
                 # print
 
-
                 # non delexicalised
                 if len(tar)>maxmtar:
                     maxmtar = len(tar)    # udpates maximum length of original
@@ -342,8 +340,7 @@ class DataReader(object):
             # e.g. [ssvec 1, ssvec2, ssvec3, ssvec1, ssvec1]
             # e.g. maxtar = 5
             for i in range(len(m_targetutt)):
-                snapshot_vecs[i].extend(
-                        [snapshot_vecs[i][0]]*(maxtar-len(m_targetutt[i])))
+                snapshot_vecs[i].extend([snapshot_vecs[i][0]]*(maxtar-len(m_targetutt[i])))
 
             # padding unk tok
             m_sourcecutoff = []
@@ -431,6 +428,7 @@ class DataReader(object):
             req_semi    = []
             semi_idxs   = []
             db_logic    = []
+            offered = set()
 
             # for each turn in a dialogue
             for t in range(len(d['dial'])):
@@ -510,10 +508,18 @@ class DataReader(object):
                         # increment with the len of the number of places in
                         # that combination / all matched combinations
                         # vcount = total matched venues
-                if 'places' in turn['state']:
-                    venue_logic = [0, 1]  # have place
+
+                if turn['new']:
+                    venue_logic = [1, 0]  # no place
+                elif 'places' in turn['state']:
+                    venue_logic = [1, 0]  # initially no plac
+                    for place in turn['state']['places']['place']:
+                        if place not in offered:
+                            venue_logic = [0, 1]  # have new place
+                            offered.add(place)
                 else:
                     venue_logic = [1, 0]  # no place
+
                     #vcount = len(turn['state']['places'])
                 # if vcount<=3:
                 #     dummy = [0 for x in range(6)]   # ?? Why 6?
@@ -707,8 +713,9 @@ class DataReader(object):
                         if token == 'ratings':
                             start = i
                             end = i + 1
-                    assert(start)
-                    assert(end)
+                    if start is None:
+                        print utt
+                        assert(start)
                     if start < len(utt):
                         originals.append(' '.join(utt[start:end]))
                         replacements.append(value + '::')
@@ -785,6 +792,8 @@ class DataReader(object):
                 if 'places' in turn['state']:
                     place_states = turn['state']['places']
                     for place in place_states:
+                        if 'place' not in place:
+                            print place
                         self.s2v['other']['place'].append(place['place'].lower())
                         for state in place['state']:
                             slot, value = state['slot'], state['value']
