@@ -514,10 +514,10 @@ class DataReader(object):
                     venue_logic = [1, 0]  # no place
                 elif 'places' in turn['state']:
                     venue_logic = [1, 0]  # initially no plac
-                    for place in turn['state']['places']['place']:
-                        if place not in offered:
+                    for place in turn['state']['places']:
+                        if place['place'] not in offered:
                             venue_logic = [0, 1]  # have new place
-                            offered.add(place)
+                            offered.add(place['place'])
                 else:
                     venue_logic = [1, 0]  # no place
 
