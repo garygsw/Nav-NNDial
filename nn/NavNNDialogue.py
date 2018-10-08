@@ -1208,7 +1208,7 @@ class NNDial(object):
                     'distance'  : [10e-9, 10e-4, 10e-4, 10e-4],
                     'duration'   : [10e-9, 10e-4, 10e-4, 10e-4],
                     'open_now'     : [10e-9, 10e-4, 10e-4, 10e-4],
-                    'change'    : [10e-9, 10e-4, 10e-4, 10e-4]
+                    'new'    : [10e-9, 10e-4, 10e-4, 10e-4]
             },
             'vmc': 10e-7, 'success': 10e-7, 'approp': [10e-7,10e-7]
         }
