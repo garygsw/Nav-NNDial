@@ -465,9 +465,9 @@ class DataReader(object):
                         semi.append(s+'='+v)
 
                 # if goal changes not venue changes  # TODO: can goal change?
-                if self.changes[dx][t]==[1,0]:  # if it changes
-                    if info_semi[-1] != sorted(semi):   # check the last one, and the current is it the same
-                        self.changes[dx][t] = [0,1]     # if different, then set the change back to no change
+                #if self.changes[dx][t]==[1,0]:  # if it changes
+                #    if info_semi[-1] != sorted(semi):   # check the last one, and the current is it the same
+                #        self.changes[dx][t] = [0,1]     # if different, then set the change back to no change
 
                 info_semi.append(sorted(semi))
                 # info_semi: [[pricerange=none, food=none, area=none], x T...]
