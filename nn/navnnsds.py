@@ -79,10 +79,9 @@ class NNSDS(BaseNNModule):
             # removed change trackers
             # offer change tracker
             #print '\tinit OfferChange tracker ...'
-            print '\tinit NewTask tracker ...'
-            self.newTaskTracker = CNNRequestableTracker(
-                    voc_size,ih_size,voc_size,oh_size)
-            self.params['reqtrk'].extend(self.newTaskTracker.params)
+            #self.changeTracker = CNNRequestableTracker(
+            #        voc_size,ih_size,voc_size,oh_size)
+            #self.params['reqtrk'].extend(self.changeTracker.params)
 
         # init informable tracker
         if trk=='rnn' and inf==True: # track informable slots
@@ -287,23 +286,23 @@ class NNSDS(BaseNNModule):
                         tmp = cur_label_t if self.bef=='summary' else cur_label_t[:1]
                         belief_t.append(tmp)
 
-                # offer-change tracker / new task tracker
-                minus1 = -T.ones((1),dtype='int32')
-                cur_belief_t = self.newTaskTracker.recur(
-                       masked_source_t, masked_target_tm1,
-                       masked_source_len_t, masked_target_len_tm1,
-                       minus1, minus1, minus1, minus1)
+                # offer-change tracker
+                #minus1 = -T.ones((1),dtype='int32')
+                #cur_belief_t = self.changeTracker.recur(
+                #        masked_source_t, masked_target_tm1,
+                #        masked_source_len_t, masked_target_len_tm1,
+                #        minus1, minus1, minus1, minus1)
                 # cost function
-                if self.learn_mode=='trk' or self.learn_mode=='all':
-                   print '\t\tincluding NewTask tracker loss ...'
-                   loss_t += -T.sum( change_label_t*T.log10(cur_belief_t+epsln) )
+                #if self.learn_mode=='trk' or self.learn_mode=='all':
+                #    print '\t\tincluding OfferChange tracker loss ...'
+                #    loss_t += -T.sum( change_label_t*T.log10(cur_belief_t+epsln) )
                 # accumulate belief vector
-                if self.bef=='full':
-                   belief_t.append(change_label_t)
-                else:
-                   tmp = change_label_t[:1] if self.bef=='simplified' \
-                           else change_label_t
-                   belief_t.append(tmp)
+                #if self.bef=='full':
+                #    belief_t.append(change_label_t)
+                #else:
+                #    tmp = change_label_t[:1] if self.bef=='simplified' \
+                #            else change_label_t
+                #    belief_t.append(tmp)
 
             ##############################################################
             ######################## LSTM decoder ########################
@@ -608,12 +607,12 @@ class NNSDS(BaseNNModule):
                 # (req_belief=all_states)
 
             # offer change tracker
-            cur_belief_t = self.newTaskTracker.track(
-                   masked_source_t, masked_target_tm1,
-                   [-1],[-1],[-1],[-1])
-            full_belief_t.append(cur_belief_t)
-            tmp = cur_belief_t[:1] if self.bef=='simplified' else cur_belief_t
-            belief_t.append(tmp)
+            #cur_belief_t = self.changeTracker.track(
+            #        masked_source_t, masked_target_tm1,
+            #        [-1],[-1],[-1],[-1])
+            #full_belief_t.append(cur_belief_t)
+            #tmp = cur_belief_t[:1] if self.bef=='simplified' else cur_belief_t
+            #belief_t.append(tmp)
 
         return full_belief_t, belief_t
 
@@ -674,7 +673,7 @@ class NNSDS(BaseNNModule):
 
         if self.trk=='rnn' and self.inf==True:
             for t in self.infotrackers: t.loadConverseParams()
-            self.newTaskTracker.loadConverseParams()
+            #self.changeTracker.loadConverseParams()
 
         ##############################################################
         # policy

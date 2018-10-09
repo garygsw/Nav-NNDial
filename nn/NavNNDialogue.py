@@ -429,24 +429,24 @@ class NNDial(object):
                                 stats['requestable'][slt][3] += 1.0
 
                     # offer change tracker
-                    bn = self.req_dimensions[-1]
-                    psem = 0 if full_belief_t[-1][0]>=0.5 else 1
-                    ysem = np.argmax(change_label[t])
-                    if ysem==0:
-                        if psem==ysem:
-                            stats['requestable']['new'][0] += 1.0
-                        else:
-                            stats['requestable']['new'][1] += 1.0
-                    else:
-                        if psem==ysem:
-                            stats['requestable']['new'][2] += 1.0
-                        else:
-                            stats['requestable']['new'][3] += 1.0
-                    prdtvenue = 'task=new' if psem==0 else 'task=not new'
-                    truevenue = 'task=new' if ysem==0 else 'task=not new'
-                    prob      = full_belief_t[-1][0] if psem==0 else 1-full_belief_t[-1][0]
-                    if self.verbose>1:
-                       print '  | %16s\t%.3f\t%20s |' % (prdtvenue,prob,truevenue)
+                    # bn = self.req_dimensions[-1]
+                    # psem = 0 if full_belief_t[-1][0]>=0.5 else 1
+                    # ysem = np.argmax(change_label[t])
+                    # if ysem==0:
+                    #     if psem==ysem:
+                    #         stats['requestable']['change'][0] += 1.0
+                    #     else:
+                    #         stats['requestable']['change'][1] += 1.0
+                    # else:
+                    #     if psem==ysem:
+                    #         stats['requestable']['change'][2] += 1.0
+                    #     else:
+                    #         stats['requestable']['change'][3] += 1.0
+                    #prdtvenue = 'venue=change' if psem==0 else 'venue=not change'
+                    #truevenue = 'venue=change' if ysem==0 else 'venue=not change'
+                    #prob      = full_belief_t[-1][0] if psem==0 else 1-full_belief_t[-1][0]
+                    #if self.verbose>1:
+                    #    print '  | %16s\t%.3f\t%20s |' % (prdtvenue,prob,truevenue)
 
                 if self.verbose>0:
                     match_number = str(db_degree_t[1])
@@ -937,7 +937,7 @@ class NNDial(object):
 
             # offer change tracker
             psem = 0 if full_belief_t[-1][0]>=0.5 else 1
-            prdtvenue = 'task=new' if psem==0 else 'task=not new'
+            prdtvenue = 'venue=change' if psem==0 else 'venue=not change'
             prob      = full_belief_t[-1][0] if psem==0 else 1-full_belief_t[-1][0]
             print '%20s\t%.3f' % (prdtvenue,prob)
 
@@ -1208,7 +1208,6 @@ class NNDial(object):
                     'distance'  : [10e-9, 10e-4, 10e-4, 10e-4],
                     'duration'   : [10e-9, 10e-4, 10e-4, 10e-4],
                     'open_now'     : [10e-9, 10e-4, 10e-4, 10e-4],
-                    'new'    : [10e-9, 10e-4, 10e-4, 10e-4]
             },
             'vmc': 10e-7, 'success': 10e-7, 'approp': [10e-7,10e-7]
         }
