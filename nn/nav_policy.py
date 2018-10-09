@@ -24,7 +24,7 @@ def computeBeleifDim(trk, inf, req, bef, iseg, rseg):
     if trk=='rnn' and req==True: # requestable
         if bef=='full' or bef=='summary':
             belief_size += 2*(len(rseg)-1)
-            belief_size += 2  # new task tracker
+            # belief_size += 2  # removed change tracker
         elif bef=='simplified':
             belief_size += len(rseg)-1
             belief_size += 1
