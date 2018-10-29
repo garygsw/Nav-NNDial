@@ -112,8 +112,8 @@
     "choa chu kang stadium": [
         "choa chu kang stadium"
     ],
-    "citylink mall": [
-        "citylink mall"
+    "singapore polytecnic": [
+        "singapore polytecnic"
     ],
     "hougang mall": [
         "hougang mall"
@@ -147,9 +147,6 @@
     ],
     "bar": [
         "bar"
-    ],
-    "singapore polytecnic": [
-        "singapore polytecnic"
     ],
     "bank": [
         "bank"
@@ -252,7 +249,8 @@
     ],
     "duration": [
         "duration",
-        "travel time"
+        "travel time",
+        "eta"
     ],
     "plaza singapura": [
         "plaza singapura"
@@ -336,7 +334,8 @@
         "asian civilisations museum"
     ],
     "laundry shop": [
-        "laundry shop"
+        "laundry shop",
+        "laundromat"
     ],
     "raffles xchange": [
         "raffles xchange"
@@ -384,7 +383,8 @@
         "victoria concert hall"
     ],
     "nanyang junior college": [
-        "nanyang junior college"
+        "nanyang junior college",
+        "nanyang JC"
     ],
     "coffee shop": [
         "coffee shop"
@@ -393,7 +393,8 @@
         "ang mo kio town garden west"
     ],
     "restaurant": [
-        "restaurant"
+        "restaurant",
+        "diner"
     ],
     "jurong east stadium": [
         "jurong east stadium"
@@ -424,6 +425,9 @@
     ],
     "rochor beancurd house": [
         "rochor beancurd house"
+    ],
+    "hospital": [
+        "hospital"
     ],
     "first": [
         "first"
@@ -462,7 +466,10 @@
         "victoria theatre and concert hall"
     ],
     "shopping centre": [
-        "shopping centre"
+        "shopping centre",
+        "shopping mall",
+        "mall",
+        "shopping center"
     ],
     "singapore red cross society": [
         "singapore red cross society"
@@ -488,8 +495,8 @@
     "science centre singapore": [
         "science centre singapore"
     ],
-    "hospital": [
-        "hospital"
+    "museum": [
+        "museum"
     ],
     "amk hub": [
         "amk hub"
@@ -525,7 +532,8 @@
         "jurong stadium"
     ],
     "dental clinic": [
-        "dental clinic"
+        "dental clinic",
+        "dentist"
     ],
     "punggol park": [
         "punggol park"
@@ -576,14 +584,15 @@
     "112 katong mall": [
         "112 katong mall"
     ],
-    "chong pang food": [
-        "chong pang food"
+    "citylink mall": [
+        "citylink mall"
     ],
     "barber shop": [
         "barber shop"
     ],
     "thian hock keng temple": [
-        "thian hock keng temple"
+        "thian hock keng temple",
+        "thk temple"
     ],
     "woodlands stadium": [
         "woodlands stadium"
@@ -664,7 +673,9 @@
         "gillman barracks"
     ],
     "cinema": [
-        "cinema"
+        "cinema",
+        "movie",
+        "movies"
     ],
     "park": [
         "park"
@@ -837,8 +848,8 @@
     "tripleone somerset": [
         "tripleone somerset"
     ],
-    "musuem": [
-        "musuem"
+    "chong pang food": [
+        "chong pang food"
     ],
     "raffles city shopping centre": [
         "raffles city shopping centre"
@@ -853,7 +864,9 @@
         "post office"
     ],
     "bakery": [
-        "bakery"
+        "bakery",
+        "pastries",
+        "bakeries"
     ],
     "bukit panjang plaza": [
         "bukit panjang plaza"

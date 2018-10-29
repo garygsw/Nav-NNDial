@@ -25,10 +25,21 @@ semidict["exist"] = ["NONE"]
 semidict["place"] = ["place", "location"]
 semidict["waypoints"].append("current list of destinations")
 semidict["duration"].append("travel time")
+semidict["duration"].append('eta')
 
 semidict["place_ratings"] += ["ratings", "stars"]
 semidict["place_address"].append("address")
 semidict["open_now"].append("opening hours")
+
+semidict["laundry shop"].append("laundromat")
+semidict["bakery"] += ["pastries", "bakeries"]
+semidict["thian hock keng temple"].append('thk temple')
+semidict["dental clinic"].append('dentist')
+semidict["restaurant"].append('diner')
+#semidict["do not know"] += ['unsure', 'unknown', 'not sure']
+semidict["cinema"] += ['movie', 'movies']
+semidict["shopping centre"] += ['shopping mall', 'mall', 'shopping center']
+semidict["nanyang junior college"] += ["nanyang JC"]
 
 
 with open('MTNavSemiDict.json', 'w') as data_file:
