@@ -709,8 +709,10 @@ class DataReader(object):
                         if token == 'ratings':
                             start = i
                             end = i + 1
-                    assert(start)
-                    assert(end)
+                    if start is None:
+                        continue
+                    #assert(start)
+                    #assert(end)
                     if start < len(utt):
                         originals.append(' '.join(utt[start:end]))
                         replacements.append(value + '::')
