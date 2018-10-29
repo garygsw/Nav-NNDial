@@ -688,6 +688,8 @@ class DataReader(object):
                     name = slot['slot']
                 value = '[VALUE_' + name.upper() + ']'
                 start, end = slot['start'], slot['exclusive_end']
+                if start is None:
+                    continue
                 if type == 'target':  # means it's a system response, and have </s>
                     start += 1
                     end += 1
