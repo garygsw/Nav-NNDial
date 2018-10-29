@@ -1181,6 +1181,7 @@ class DataReader(object):
                 # user side
                 # words = self.delexicalise(turn['usr']['transcript'], turn['usr']['slotpos']).split()
                 if 'usr' not in turn:
+                    print self.dialog[i]['dialogue_id']
                     print turn
                 mwords,words,_,_,_ = self.extractSeq(turn['usr']['tokens'], slotpos=turn['usr']['slotpos'],\
                     type='source',index=False, split=True)
