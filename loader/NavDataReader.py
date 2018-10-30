@@ -1250,7 +1250,7 @@ class DataReader(object):
             counts[w] = counts.get(w, 0) + 1
         self.inputvocab = ['<unk>','</s>'] + \
                 sorted(list(set(self.inputvocab+\
-                [w for w,c in sorted(counts.iteritems(),key=operator.itemgetter(1)) if c>1])))
+                [w for w,c in sorted(counts.iteritems(),key=operator.itemgetter(1)) if c>2])))
         #print '\t\t\t"wonder in input?"', self.inputvocab.index('wonder')
 
         # set threshold for output vocab
@@ -1259,7 +1259,7 @@ class DataReader(object):
             counts[w] = counts.get(w, 0) + 1
         self.outputvocab = ['<unk>','</s>'] + \
                 sorted(list(set(self.outputvocab+['thank','you','goodbye']+\
-                [w for w,c in sorted(counts.iteritems(),key=operator.itemgetter(1))])))
+                [w for w,c in sorted(counts.iteritems(),key=operator.itemgetter(1)) if c > 1])))
         #print '\t\t\t"wonder in output?"', self.inputvocab.index('wonder')
 
         print '\t\t\tinput vocab len:', len(self.inputvocab)
