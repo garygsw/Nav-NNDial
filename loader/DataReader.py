@@ -53,22 +53,22 @@ class DataReader(object):
     idx2ngs = []
 
     def __init__(self,
-            corpusfile, dbfile, semifile, s2vfile, 
+            corpusfile, dbfile, semifile, s2vfile,
             split, lengthen, percent, shuffle,
             trkenc, verbose, mode, att=False, latent_size=1):
-        
+
         self.att = True if att=='attention' else False
         self.dl  = latent_size
         self.data  = {'train':[],'valid':[],'test':[]} # container for data
         self.mode = 'train'     # mode  for accessing data
         self.index = 0          # index for accessing data
-        
-        # data manipulators 
+
+        # data manipulators
         self.split  = DataSplit(split)  # split helper
         self.trkenc = trkenc
         self.lengthen = lengthen
         self.shuffle= shuffle
-        
+
         # NLTK stopword module
         self.stopwords = set(stopwords.words('english'))
         for w in ['!',',','.','?','-s','-ly','</s>','s']:
@@ -83,16 +83,16 @@ class DataReader(object):
         # producing slot value templates and db represetation
         self.prepareSlotValues()
         self.structureDB()
-        
+
         # load dialog
         self.loadVocab()
         if mode!='sds':
             self.loadDialog()
             self.loadSemantics()
-        
+
         # goal
         self.parseGoal()
-        
+
         # split dataset
         if mode!='sds':
             self._setupData(percent)
@@ -134,7 +134,7 @@ class DataReader(object):
         groupidx = 0
 
         for d in self.dialog:
-            
+
             # consider finished flag
             if d.has_key('finished'):
                 self.finished.append(d['finished'])
@@ -147,7 +147,7 @@ class DataReader(object):
                 (100.0*float(dcount)/float(len(self.dialog))),
             sys.stdout.flush()
 
-            # container for each turn 
+            # container for each turn
             sourceutt   = []
             targetutt   = []
             m_sourceutt = []
@@ -156,7 +156,7 @@ class DataReader(object):
 
             srcpos = []
             tarpos = []
-            
+
             maxtar = -1
             maxsrc = -1
             maxmtar= -1
@@ -167,14 +167,14 @@ class DataReader(object):
             changes = []
             prevoffer = []
             offered = False
-            
+
             snapshot_vecs = []
 
             # for each turn in a dialogue
             for t in range(len(d['dial'])):
                 tcount += 1
                 turn = d['dial'][t]
-                # extract system side sentence feature    
+                # extract system side sentence feature
                 sent = turn['sys']['sent']
                 mtar, tar, spos, vpos, venues \
                     = self.extractSeq(sent,type='target')
@@ -182,7 +182,7 @@ class DataReader(object):
                 # store sentence group
                 utt_group.append(self.sentGroup[groupidx])
                 groupidx += 1
-                
+
                 # changing offer label
                 if len(venues)!=0 and venues[0] not in prevoffer: # not matching
                     if prevoffer==[]: # new offer
@@ -201,20 +201,20 @@ class DataReader(object):
                 else:
                     offer = [0,1]
                 offers.append(offer)
-                
+
                 # delexicalised
-                if len(mtar)>maxtar: 
-                    maxtar = len(mtar) 
-                m_targetutt.append(mtar) 
-                
+                if len(mtar)>maxtar:
+                    maxtar = len(mtar)
+                m_targetutt.append(mtar)
+
                 # extract snapshot vectors
                 snapshot_vec = [[0.0 for x in range(len(self.snapshots))]]
                 # add offer and change to snapshot vector
-                if offer==[1,0] : snapshot_vec[0][ 
+                if offer==[1,0] : snapshot_vec[0][
                         self.snapshots.index('OFFERED') ] = 1.0
-                if change==[1,0]: snapshot_vec[0][ 
+                if change==[1,0]: snapshot_vec[0][
                         self.snapshots.index('CHANGED') ] = 1.0
-                
+
                 # attentive snapshot
                 for w in mtar[::-1]:
                     ssvec = deepcopy(snapshot_vec[0])
@@ -226,7 +226,7 @@ class DataReader(object):
                 if self.att==True:
                     snapshot_vecs.append(snapshot_vec[:-1])
                 else:
-                    snapshot_vecs.append([deepcopy(snapshot_vec[0]) 
+                    snapshot_vecs.append([deepcopy(snapshot_vec[0])
                         for x in snapshot_vec[:-1]])
 
                 # handling positional features
@@ -240,7 +240,7 @@ class DataReader(object):
 
                 # non delexicalised
                 if len(tar)>maxmtar:
-                    maxmtar = len(tar) 
+                    maxmtar = len(tar)
                 targetutt.append(tar)
 
                 # usr responses
@@ -249,9 +249,9 @@ class DataReader(object):
 
                 # delexicalised
                 if len(msrc)>maxsrc:
-                    maxsrc = len(msrc) 
+                    maxsrc = len(msrc)
                 m_sourceutt.append(msrc)
-                
+
                 # handling positional features
                 for f in spos:
                     if len(f)>maxfeat:
@@ -264,35 +264,35 @@ class DataReader(object):
                 # non delexicalised
                 if len(src)>maxmsrc:
                     maxmsrc = len(src)
-                sourceutt.append(src) 
-           
+                sourceutt.append(src)
+
             # sentence group
             self.sentGroupIndex.append(utt_group)
 
             # offers
             self.changes.append(changes)
             self.offers.append(offers)
-            
+
             # padding for snapshots
             for i in range(len(m_targetutt)):
-                snapshot_vecs[i].extend( 
+                snapshot_vecs[i].extend(
                         [snapshot_vecs[i][0]]*\
                         (maxtar-len(m_targetutt[i])) )
-            
+
             # padding unk tok
             m_sourcecutoff = []
             m_targetcutoff = []
             for i in range(len(m_targetutt)):
                 m_targetcutoff.append(len(m_targetutt[i]))
-                m_targetutt[i].extend( 
+                m_targetutt[i].extend(
                         [self.vocab.index('<unk>')]*\
                         (maxtar-len(m_targetutt[i])) )
             for i in range(len(m_sourceutt)):
                 m_sourcecutoff.append(len(m_sourceutt[i]))
-                m_sourceutt[i].extend( 
+                m_sourceutt[i].extend(
                         [self.vocab.index('<unk>')]*\
                         (maxsrc-len(m_sourceutt[i])) )
-    
+
             # non delexicalised version
             sourcecutoff = []
             targetcutoff = []
@@ -307,7 +307,7 @@ class DataReader(object):
                 sourceutt[i].extend(
                         [self.vocab.index('<unk>')]*\
                         (maxmsrc-len(sourceutt[i])) )
-            
+
             # padding positional features
             for i in range(len(tarpos)):
                 for j in range(len(tarpos[i])):
@@ -329,20 +329,20 @@ class DataReader(object):
             self.masked_sourceutts.append(m_sourceutt)
             self.masked_targetutts.append(m_targetutt)
             self.masked_sourcecutoffs.append(m_sourcecutoff)
-            self.masked_targetcutoffs.append(m_targetcutoff) 
-            
+            self.masked_targetcutoffs.append(m_targetcutoff)
+
             self.snapshot_vecs.append(snapshot_vecs)
             # positional information
             self.delsrcpos.append(srcpos)
             self.deltarpos.append(tarpos)
-    
+
     def loadSemantics(self):
 
         # sematic labels
         self.info_semis = []
         self.req_semis  = []
         self.db_logics = []
-               
+
         sumvec      = np.array([0 for x in range(self.infoseg[-1])])
         # for each dialogue
         dcount = 0.0
@@ -354,17 +354,17 @@ class DataReader(object):
                 (100.0*float(dcount)/float(len(self.dialog))),
             sys.stdout.flush()
 
-            # container for each turn 
+            # container for each turn
             info_semi   = []
             req_semi    = []
             semi_idxs   = []
             db_logic    = []
-            
+
             # for each turn in a dialogue
             for t in range(len(d['dial'])):
                 turn = d['dial'][t]
 
-                # read informable semi 
+                # read informable semi
                 semi = sorted(['pricerange=none','food=none','area=none']) \
                         if len(info_semi)==0 else deepcopy(info_semi[-1])
                 for da in turn['usr']['slu']:
@@ -389,14 +389,14 @@ class DataReader(object):
                             continue
                         else:
                             if toreplace:
-                                semi.remove(toreplace) 
+                                semi.remove(toreplace)
                             semi.append(s+'='+v)
-                
+
                 # if goal changes not venue changes
                 if self.changes[dx][t]==[1,0]:
                     if info_semi[-1]!=sorted(semi):
                         self.changes[dx][t] = [0,1]
-                
+
                 info_semi.append(sorted(semi))
 
                 # indexing semi and DB
@@ -428,8 +428,8 @@ class DataReader(object):
                     venue_logic.extend([0,0,0,0,1,0])
                 else:
                     venue_logic.extend([0,0,0,0,0,1])
-                db_logic.append(venue_logic) 
-                
+                db_logic.append(venue_logic)
+
                 # read requestable semi
                 semi =  sorted(['food','pricerange','area'])+\
                         sorted(['phone','address','postcode'])
@@ -446,18 +446,18 @@ class DataReader(object):
                 for sem in semi:
                     vec[self.reqs.index(sem)] = 1
                 req_semi.append(vec)
-            
+
             self.info_semis.append(semi_idxs)
             self.req_semis.append( req_semi )
             self.db_logics.append(db_logic)
-        print 
-    
+        print
+
     def extractSeq(self,sent,type='source',normalise=False,index=True):
-    
+
         # setup vocab
         if type=='source':  vocab = self.vocab
         elif type=='target':vocab = self.vocab
-        
+
         # standardise sentences
         if normalise:
             sent = normalize(sent)
@@ -468,18 +468,18 @@ class DataReader(object):
             if len(words)==0: words = ['<unk>']
         elif type=='target':
             words = ['</s>'] + words + ['</s>']
-        
+
         # indexing, non-delexicalised
         if index:
             idx  = map(lambda w: vocab.index(w) if w in vocab else 0, words)
         else:
             idx = words
-        
+
         # delexicalise all
         sent = self.delexicalise(' '.join(words),mode='all')
         sent = re.sub(digitpat,'[VALUE_COUNT]',sent)
         words= sent.split()
-        
+
         # formulate delex positions
         allvs = self.infovs+self.reqs
         sltpos = [[] for x in allvs]
@@ -513,14 +513,14 @@ class DataReader(object):
             midx = map(lambda w: vocab.index(w) if w in vocab else 0, words)
         else:
             midx = words
-                    
+
         return midx, idx, sltpos, valpos, names
 
     def delexicalise(self,utt,mode='all'):
         inftoks =   ['[VALUE_'+s.upper()+']' for s in self.s2v['informable'].keys()] + \
                     ['[SLOT_' +s.upper()+']' for s in self.s2v['informable'].keys()] + \
                     ['[VALUE_DONTCARE]','[VALUE_NAME]'] +\
-                    ['[SLOT_' +s.upper()+']' for s in self.s2v['requestable'].keys()] 
+                    ['[SLOT_' +s.upper()+']' for s in self.s2v['requestable'].keys()]
         reqtoks =   ['[VALUE_'+s.upper()+']' for s in self.s2v['requestable'].keys()]
         for i in range(len(self.values)):
             # informable mode, preserving location information
@@ -539,15 +539,15 @@ class DataReader(object):
                 utt = utt[1:-1]
         utt = re.sub(digitpat,'[VALUE_COUNT]',utt)
         return utt
-    
+
     def delexicaliseOne(self,utt,toks,repl):
         for tok in toks:
             utt = (' '+utt+' ').replace(' '+tok+' ',' '+repl+' ')
             utt = utt[1:-1]
-        return utt    
-    
+        return utt
+
     def prepareSlotValues(self):
-        
+
         print '\tprepare slot value templates ...'
         # put db requestable values into s2v
         for e in self.db:
@@ -568,7 +568,7 @@ class DataReader(object):
         self.supervalues = []
         self.values = []
         self.slots  = []
-        
+
         for s,vs in self.s2v['informable'].iteritems():
              # adding slot delexicalisation
             self.supervalues.extend([s for x in self.semidict[s]])
@@ -597,22 +597,22 @@ class DataReader(object):
         self.values, self.supervalues, self.slots = zip(*sorted(\
                 zip(self.values,self.supervalues,self.slots),\
                 key=lambda x: len(x[0]),reverse=True))
-        
+
         # for generating semantic labels
         self.infovs = []
         self.infoseg = [0]
         self.reqs = []
         self.reqseg = [0]
         self.dontcare = []
-        
+
         for s in sorted(self.s2v['informable'].keys()):
             self.infovs.extend([s+'='+v for v in self.s2v['informable'][s]])
             self.infovs.append(s+'=dontcare')
             self.infovs.append(s+'=none')
-            self.infoseg.append(len(self.infovs)) 
+            self.infoseg.append(len(self.infovs))
             # dont care values
             self.dontcare.append(len(self.infovs)-1)
-            self.dontcare.append(len(self.infovs)-2) 
+            self.dontcare.append(len(self.infovs)-2)
         for s in sorted(self.s2v['informable'].keys()):
             self.reqs.extend([s+'=exist',s+'=none'])
             self.reqseg.append(len(self.reqs))
@@ -628,7 +628,7 @@ class DataReader(object):
             self.ngs2v.append( (s,['exist','none']) )
         for s in sorted(self.s2v['requestable'].keys()):
             self.ngs2v.append( (s,['exist','none']) )
-    
+
     def loadjson(self,filename):
         with open(filename) as data_file:
             for i in range(5):
@@ -653,36 +653,36 @@ class DataReader(object):
         print '==============='
         print 'Venue    : %d' % len(self.db2inf)
         print '==============='
-    
+
     def _setupData(self,percent):
 
         # zip corpus
-        if self.trkenc=='ng': 
+        if self.trkenc=='ng':
             trksrc = self.ngram_source
             trktar = self.ngram_target
         else:
             trksrc = self.delsrcpos
             trktar = self.deltarpos
-        
+
         corpus = [  self.sourceutts,        self.sourcecutoffs,
                     self.masked_sourceutts, self.masked_sourcecutoffs,
                     self.targetutts,        self.targetcutoffs,
                     self.masked_targetutts, self.masked_targetcutoffs,
-                    self.snapshot_vecs,     
+                    self.snapshot_vecs,
                     self.changes,   self.goals,
                     self.info_semis,        self.req_semis,
                     np.array(self.db_logics),
                     trksrc,                 trktar,
                     self.finished,          self.sentGroupIndex]
         corpus = zip(*corpus)
-                
+
         # split out train+valid
         train_valid = self.split.train_valid(corpus)
-        
+
         # cut dataset according to percentage
         percent = float(percent)/float(100)
         train_valid = train_valid[:int(len(train_valid)*percent)]
-        
+
         # split into train/valid/test
         self.data['train'] = self.split.train(train_valid)
         self.data['valid'] = self.split.valid(train_valid)
@@ -698,7 +698,7 @@ class DataReader(object):
         if self.index>=len(self.data[mode]):
             data = None
             self.index = 0
-            
+
             if mode!='test': # train or valid, do shuffling
                 if self.shuffle=='static': # just shuffle current set
                     random.shuffle(self.data[mode])
@@ -717,11 +717,11 @@ class DataReader(object):
                 self.index+lengthen_idx<len(self.data[mode]):
             #lengthen the data by combining two data points
             nextdata = deepcopy(list(self.data[mode][self.index+lengthen_idx]))
-            data = self.lengthenData(data,nextdata,mode) 
-            lengthen_idx += 1 
+            data = self.lengthenData(data,nextdata,mode)
+            lengthen_idx += 1
         self.index += lengthen_idx
         return data
-        
+
     def lengthenData(self,data,addon,mode):
         #for t in range(len(data[10])):
         #    print np.nonzero(np.array(data[10][t]))
@@ -775,13 +775,13 @@ class DataReader(object):
 
     def iterate(self,mode='test',proc=True):
         # default implementation for iterate() function
-        return self.data[mode] 
+        return self.data[mode]
 
     def structureDB(self):
-        
+
         # all informable values
         print '\tformatting DB ...'
-        
+
         # represent each db entry with informable values
         self.db2inf = []
         self.db2idx  = []
@@ -810,14 +810,14 @@ class DataReader(object):
         self.n2db = {}
         for i in range(len(self.db)):
             self.n2db[self.db[i]['name'].lower()] = self.db2idx[i]
-        
+
     def loadVocab(self):
-        
+
         # iterate through dialog and make vocab
         self.inputvocab = ['[VALUE_DONTCARE]','[VALUE_COUNT]']
         self.outputvocab= ['[VALUE_DONTCARE]','[VALUE_COUNT]']
         self.vocab = []
-       
+
         # init inputvocab with informable values
         for s,vs in self.s2v['informable'].iteritems():
             for v in vs:
@@ -830,7 +830,7 @@ class DataReader(object):
         for s in self.semidict.keys():
             for v in self.semidict[s]:
                 self.inputvocab.extend(v.split())
-       
+
         # for grouping sentences
         sentKeys = {}
         self.sentGroup= []
@@ -846,7 +846,7 @@ class DataReader(object):
             print '\tsetting up vocab, finishing ... %.2f%%\r' %\
                 (100.0*float(i)/float(len(self.dialog))),
             sys.stdout.flush()
-            
+
             # parsing dialog
             for j in range(len(self.dialog[i]['dial'])):
                 # text normalisation
@@ -856,13 +856,13 @@ class DataReader(object):
                         self.dialog[i]['dial'][j]['usr']['transcript'])
                 # this turn
                 turn = self.dialog[i]['dial'][j]
-                
+
                 # system side
                 words,_,_,_,_ = self.extractSeq(turn['sys']['sent'],\
                     type='target',index=False)
 
                 ovocab.extend(words)
-                
+
                 # sentence group key
                 key = tuple(set(sorted(
                     [lmtzr.lemmatize(w) for w in words if w not in self.stopwords])))
@@ -872,7 +872,7 @@ class DataReader(object):
                 else:
                     sentKeys[key] = [len(sentKeys),1]
                     self.sentGroup.append( sentKeys[key][0] )
-                
+
                 # user side
                 words = self.delexicalise(turn['usr']['transcript']).split()
                 mwords,words,_,_,_ = self.extractSeq(turn['sys']['sent'],\
@@ -899,14 +899,14 @@ class DataReader(object):
                 (float(cnt)/float(len(self.sentGroup))*100)
         for i in range(len(self.sentGroup)):
             self.sentGroup[i] = min(mapping[self.sentGroup[i]],self.dl-1)
-        
+
         # set threshold for input vocab
         counts = dict()
         for w in ivocab:
             counts[w] = counts.get(w, 0) + 1
         self.inputvocab = ['<unk>','</s>','<slot>','<value>'] + \
                 sorted(list(set(self.inputvocab+\
-                [w for w,c in sorted(counts.iteritems(),key=operator.itemgetter(1)) if c>1])))
+                [w for w,c in sorted(counts.iteritems(),key=operator.itemgetter(1)) if c>2])))
 
         # set threshold for output vocab
         counts = dict()
@@ -914,18 +914,18 @@ class DataReader(object):
             counts[w] = counts.get(w, 0) + 1
         self.outputvocab = ['<unk>','</s>'] + \
                 sorted(list(set(self.outputvocab+['thank','you','goodbye']+\
-                [w for w,c in sorted(counts.iteritems(),key=operator.itemgetter(1))])))
+                [w for w,c in sorted(counts.iteritems(),key=operator.itemgetter(1)) ic c>1])))
 
         # the whole vocab
         self.vocab = ['<unk>','</s>','<slot>','<value>'] + \
                 list(set(self.inputvocab[4:]).union(self.outputvocab[2:]))
-       
+
         # create snapshot dimension
         self.snapshots = ['OFFERED','CHANGED']
         for w in self.outputvocab:
             if w.startswith('[VALUE'):
                 self.snapshots.append(w)
-        self.snapshots = sorted(self.snapshots) 
+        self.snapshots = sorted(self.snapshots)
 
 
     def parseGoal(self):
@@ -951,32 +951,32 @@ class DataReader(object):
                 #goal['req'].append(self.reqs.index(s+'=exist'))
                 goal[1][self.reqs.index(s+'=exist')] = 1
             self.goals.append(goal)
-        
+
             # compute corpus success
             m_targetutt = self.masked_targetutts[i]
             m_targetutt_len = self.masked_targetcutoffs[i]
             # for computing success
             offered = False
             requests= []
-            # iterate each turn 
+            # iterate each turn
             for t in range(len(m_targetutt)):
-                sent_t = [self.vocab[w] for w in 
+                sent_t = [self.vocab[w] for w in
                         m_targetutt[t][:m_targetutt_len[t]]][1:-1]
                 if '[VALUE_NAME]' in sent_t: offered=True
                 for requestable in requestables:
                     if '[VALUE_'+requestable.upper()+']' in sent_t:
                         requests.append(self.reqs.index(requestable+'=exist'))
             # compute success
-            if offered: 
+            if offered:
                 vmc += 1.
                 if set(requests).issuperset(set(goal[1].nonzero()[0].tolist())):
                     success += 1.
 
         print '\tCorpus VMC       : %2.2f%%' % (vmc/float(len(self.dialog))*100)
         print '\tCorpus Success   : %2.2f%%' % (success/float(len(self.dialog))*100)
-        
+
     #########################################################################
-    ############################## Deprecated ############################### 
+    ############################## Deprecated ###############################
     #########################################################################
     """
     def loadNgramVocab(self):
@@ -1018,7 +1018,7 @@ class DataReader(object):
                                 for i in range(len(words)-1)] if x not in lexbi ])
                             self.trigrams.extend([x for x in [(words[i],words[i+1],words[i+2]) \
                                 for i in range(len(words)-2)] if x not in lextri])
-                            
+
                             # delexicalise both slot and value
                             words = self.delexicaliseOne(
                                     self.delexicaliseOne(
@@ -1035,14 +1035,14 @@ class DataReader(object):
             counts[w] = counts.get(w, 0) + 1
         self.bigrams = sorted([w for w,c in \
                 sorted(counts.iteritems(),key=operator.itemgetter(1)) if c>7])
-        
+
         # set threshold for trigram
         counts = dict()
         for w in self.trigrams:
             counts[w] = counts.get(w, 0) + 1
         self.trigrams= sorted([w for w,c in \
                 sorted(counts.iteritems(),key=operator.itemgetter(1)) if c>7])
-        
+
         # ngram features
         self.ngrams = {}
         cnt = 0
@@ -1050,8 +1050,8 @@ class DataReader(object):
             self.ngrams[w] = cnt
             cnt += 1
         self.idx2ngs = self.inputvocab + self.bigrams + self.trigrams
-    
-   
+
+
     def extractNgrams(self,sent):
         # delexicalise requestable values first
         words = self.delexicalise(sent,mode='requestable').split()
@@ -1061,13 +1061,13 @@ class DataReader(object):
         # maximum length
         maxlen = -1
 
-        # extracting ngram features 
+        # extracting ngram features
         nv = []
         l_uni = self.indexNgram(self.ngrams,words)
         l_bi  = self.indexNgram(self.ngrams,zip(words[:-1],words[1:]))
         l_tri = self.indexNgram(self.ngrams,zip(words[:-2],words[1:-1],words[2:]))
         l_f   = l_uni + l_bi + l_tri
-       
+
         for s,vs in self.ngs2v:
             # slot delexicalised features
             words =  self.delexicaliseOne(sent,self.semidict[s],'<slot>').split()
@@ -1082,8 +1082,8 @@ class DataReader(object):
 
             for v in vs:
                 # incorporating all kinds of features
-                fv = l_f + sd_f 
-                #fv = sd_f 
+                fv = l_f + sd_f
+                #fv = sd_f
 
                 # value delexicalised features
                 words =  self.delexicaliseOne(sent,self.semidict[v],'<value>').split()
@@ -1095,9 +1095,9 @@ class DataReader(object):
                 fv.extend([x for x in vd_uni if x not in l_uni])
                 fv.extend([x for x in vd_bi  if x not in l_bi] )
                 fv.extend([x for x in vd_tri if x not in l_tri])
-                
+
                 # slot & value delexicalised features
-                words = self.delexicaliseOne( 
+                words = self.delexicaliseOne(
                         self.delexicaliseOne(
                             sent,self.semidict[v],'<value>'),
                         self.semidict[s],'<slot>').split()
@@ -1109,7 +1109,7 @@ class DataReader(object):
                 fv.extend([x for x in svd_uni if x not in fv])
                 fv.extend([x for x in svd_bi  if x not in fv])
                 fv.extend([x for x in svd_tri if x not in fv])
-                 
+
                 nv.append(fv)
                 if maxlen<len(fv):
                     maxlen = len(fv)
@@ -1120,7 +1120,7 @@ class DataReader(object):
         # user ngrams features
         self.ngram_source = []
         self.ngram_source_cutoffs = []
-        
+
         # previous system response
         self.ngram_target = []
         self.ngram_target_cutoffs = []
@@ -1134,7 +1134,7 @@ class DataReader(object):
                 (100.0*float(dcount)/float(len(self.dialog))),
             sys.stdout.flush()
 
-            # container for each turn 
+            # container for each turn
             ng_src = []
             ng_tar = []
             maxfeat= -1
@@ -1142,23 +1142,23 @@ class DataReader(object):
             # for each turn in a dialogue
             for t in range(len(d['dial'])):
                 turn = d['dial'][t]
-                
+
                 # sys n-grams
                 sent = self.delexicalise(turn['sys']['sent'],mode='requestable')
                 nv,maxlen = self.extractNgrams(sent)
                 ng_tar.append([nv])
                 if maxfeat<maxlen:
                     maxfeat = maxlen
-                 
+
                 # current user n-grams
                 sent = self.delexicalise(turn['usr']['transcript'],mode='requestable')
                 nv,maxlen = self.extractNgrams(sent)
                 ng_src.append([nv])
                 if maxfeat<maxlen:
                     maxfeat = maxlen
-            
+
             # ngram features
-            ng_src_cut = [] 
+            ng_src_cut = []
             for i in range(len(ng_src)):
                 ng_src_cut.append([len(x) for x in ng_src[i][0]])
                 for j in range(len(ng_src[i][0])):
@@ -1167,15 +1167,15 @@ class DataReader(object):
             for i in range(len(ng_tar)):
                 ng_tar_cut.append([len(x) for x in ng_tar[i][0]])
                 for j in range(len(ng_tar[i][0])):
-                    ng_tar[i][0][j].extend( [-1]*(maxfeat-len(ng_tar[i][0][j])) ) 
+                    ng_tar[i][0][j].extend( [-1]*(maxfeat-len(ng_tar[i][0][j])) )
 
             # entire dialogue matrix
             self.ngram_source.append(ng_src)
             self.ngram_source_cutoffs.append(ng_src_cut)
             self.ngram_target.append(ng_tar)
             self.ngram_target_cutoffs.append(ng_tar_cut)
-        
-        print 
+
+        print
         allvoc = self.inputvocab + self.bigrams + self.trigrams + ['']
         for i in range(len(self.ngram_source)):
             for j in range(len(self.ngram_source[i])):
@@ -1194,7 +1194,7 @@ class DataReader(object):
                 raw_input()
                 #print ' '.join([self.outputvocab[x]\
                 #        for x in self.masked_targetutts[i][j][:tcut]])
-        
+
     def indexNgram(self,lookup,ngs):
 
         return [lookup[w] for w in filter(lambda w: \
@@ -1220,7 +1220,7 @@ class DataReader(object):
         turn_preprune = 0
 
         for i in range(len(self.dialog)):
-       
+
             print '\tpreprocessing and filtering dialog data ... finishing %.2f%%\r' %\
                 (100.0*float(i)/float(len(self.dialog))),
             sys.stdout.flush()
@@ -1236,7 +1236,7 @@ class DataReader(object):
                             'sent':'thank you goodbye'}}
                 else:
                     nextturn = self.dialog[i]['dial'][j+1]
-                
+
                 # skip explicit confirmation and null turn
                 if( turn['usr']['slu']==[{'slots': [], 'act': 'negate'}] or\
                     turn['usr']['slu']==[{'slots': [], 'act': 'affirm'}] or\
@@ -1248,11 +1248,11 @@ class DataReader(object):
                     nextturn['sys']['DA']==[{u'slots': [], u'act': u'reqmore'}]:
                     j += 1
                     continue
-                
+
                 # normalising texts
                 newturn = {'usr':turn['usr'],'sys':nextturn['sys']}
                 newturn['usr']['transcript'] = normalize(newturn['usr']['transcript'])
-                newturn['sys']['sent'] = normalize(newturn['sys']['sent'])  
+                newturn['sys']['sent'] = normalize(newturn['sys']['sent'])
 
                 # check mismatch, if yes, discard it
                 mismatch = False
@@ -1280,13 +1280,13 @@ class DataReader(object):
                         dialog.append(newturn)
                 j += 1
             processed_dialog.append(dialog)
-        
+
         # substitute with processed dialog data
         turn_postprune = 0
         for i in range(len(processed_dialog)):
             turn_postprune += len(processed_dialog[i])
             self.dialog[i]['dial'] = processed_dialog[i]
-            
+
         print
         print '\t\tpre-prune  turn number :\t%d' % turn_preprune
         print '\t\tpost-prune turn number :\t%d' % turn_postprune
@@ -1294,4 +1294,3 @@ class DataReader(object):
     #########################################################################
     #########################################################################
     #########################################################################
-
