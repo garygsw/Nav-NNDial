@@ -422,7 +422,7 @@ class AttentivePolicy(BaseNNModule):
                     np.repeat(
                         T.dot(ohidden_tjm1,self.Wa1)+\
                         T.dot(wemb_tj,self.Wa2),
-                    10, axis=0)
+                    9, axis=0)
 
         # attention mechanism
         atten_t= T.nnet.softmax(T.dot(T.nnet.sigmoid(score_t),self.Va1))[0]
