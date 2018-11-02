@@ -663,7 +663,8 @@ class NNDial(object):
         db_degree, srcfeat, tarfeat, finished, utt_group = data
 
         # for calculating success: check requestable slots match
-        requestables = ['phone','address','postcode']
+        #requestables = ['phone','address','postcode']
+        requestables = self.reader.s2v['requestable'].keys()   #
         offer_per_turn  = []
         request_per_turn= []
         target_sents = []
@@ -673,7 +674,7 @@ class NNDial(object):
                     masked_target[t][:masked_target_len[t]]][1:-1]
             target_sents.append(sent_t)
             # decide offer or not
-            if '[VALUE_NAME]' in sent_t: offer_per_turn.append(True)
+            if '[VALUE_PLACE]' in sent_t: offer_per_turn.append(True)
             else: offer_per_turn.append(False)
             # compute requestable matches
             requests = []
@@ -708,7 +709,7 @@ class NNDial(object):
 
             # decide offer or not
             offer = deepcopy(offer_per_turn)
-            if '[VALUE_NAME]' in sent_t: offer[t] = True
+            if '[VALUE_PLACE]' in sent_t: offer[t] = True
             else: offer[t] = False
             # compute requestable matches
             requests = []
