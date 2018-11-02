@@ -686,7 +686,7 @@ class NNDial(object):
         # compute original success
         original_success = sum(offer_per_turn)>0 and \
                 set(np.hstack(np.array(request_per_turn)).tolist()).issuperset(
-                set(np.array(goal)[1].nonzero()[0].tolist()))
+                set(goal[1].nonzero()[0].tolist()))
 
         success_rewards = []
         samples= []
@@ -718,9 +718,10 @@ class NNDial(object):
                     requests.append(self.reader.reqs.index(requestable+'=exist'))
             req = deepcopy(request_per_turn)
             req[t] = requests
+            all_requests = sum([x[1] for x in goal])
             success = sum(offer)>0 and \
                     set(np.hstack(np.array(req)).tolist()).issuperset(
-                    set(goal[1].nonzero()[0].tolist()))
+                    set(all_requests.nonzero()[0].tolist()))
             bleu = sentence_bleu_4(gens[t].split(),[target_sents[t]])
             success_rewards.append(success-original_success+0.5*bleu-0.1)
             samples.append(sample_t[0])
