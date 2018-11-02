@@ -686,7 +686,7 @@ class NNDial(object):
         # compute original success
         original_success = sum(offer_per_turn)>0 and \
                 set(np.hstack(np.array(request_per_turn)).tolist()).issuperset(
-                set(np.array(goal[1]).nonzero()[0].tolist()))
+                set(np.array(goal)[1].nonzero()[0].tolist()))
 
         success_rewards = []
         samples= []
