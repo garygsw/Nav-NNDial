@@ -684,7 +684,7 @@ class NNDial(object):
             request_per_turn.append(requests)
 
         # compute original success
-        all_requests = np.sum(np.array(np.array([x[1]) for x in goal]))
+        all_requests = np.sum(np.array([np.array(x[1]) for x in goal]))
         original_success = sum(offer_per_turn)>0 and \
                 set(np.hstack(np.array(request_per_turn)).tolist()).issuperset(
                 set(all_requests.nonzero()[0].tolist()))
