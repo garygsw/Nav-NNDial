@@ -719,7 +719,7 @@ class NNDial(object):
                     requests.append(self.reader.reqs.index(requestable+'=exist'))
             req = deepcopy(request_per_turn)
             req[t] = requests
-            all_requests = sum([x[1] for x in goal])
+            all_requests = np.sum(np.array([np.array(x[1]) for x in goal]))
             success = sum(offer)>0 and \
                     set(np.hstack(np.array(req)).tolist()).issuperset(
                     set(all_requests.nonzero()[0].tolist()))
