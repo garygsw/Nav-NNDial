@@ -709,9 +709,9 @@ class NNSDS(BaseNNModule):
                 tmp = cur_belief_t if self.bef=='summary' else cur_belief_t[:1]
                 belief_t.append( tmp )
         # change tracker
-        cur_belief_t = change
-        full_belief_t.append(cur_belief_t)
-        tmp = cur_belief_t[:1] if self.bef=='simplified' else cur_belief_t
-        belief_t.append(tmp)
+        #cur_belief_t = change
+        #full_belief_t.append(cur_belief_t)
+        #tmp = cur_belief_t[:1] if self.bef=='simplified' else cur_belief_t
+        #belief_t.append(tmp)
 
         return full_belief_t, belief_t
