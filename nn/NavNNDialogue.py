@@ -475,6 +475,11 @@ class NNDial(object):
             if venue_offered != None: # and finished:
                 stats['vmc'] += 1.0
 
+                print goal[1]
+                print len(goal[1])
+                print goal[1][-1]
+                print len(goal[1][-1])
+
                 truth_req = goal[1][-1].nonzero()[0].tolist()
                 for req in reqs:
                     if req in truth_req:
