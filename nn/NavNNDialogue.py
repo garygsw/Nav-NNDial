@@ -470,19 +470,37 @@ class NNDial(object):
                 best_corpus.append([[generated_utt],[masked_target_utt]])
 
             # at the end of the dialog, calculate goal completion rate
-            #if venue_offered!=None and finished:
-                # venue offered is a list of
-            #    if set(venue_offered).issuperset(set(goal[0].nonzero()[0].tolist())):
-            #        stats['vmc'] += 1.0
-            #        if set(reqs).issuperset(set(goal[1].nonzero()[0].tolist())):
-            #            stats['success'] += 1.0
+            if venue_offered != None: # and finished:
+                stats['vmc'] += 1.0
+
+                truth_req = goal[1].nonzero()[0].tolist()
+                for req in reqs:
+                    if req in truth_req:
+                        stats['success_tp'] += 1.0
+                    else:
+                        stats['success_fp'] += 1.0
+                for req in truth_req:
+                    if req not in reqs:
+                        stats['success_fn'] += 1.0
+
+                if set(reqs).issuperset(set(goal[1].nonzero()[0].tolist())):
+                    stats['success'] += 1.0
+               # if set(venue_offered).issuperset(set(goal[0].nonzero()[0].tolist())):
+               #     stats['vmc'] += 1.0
+               #     if set(reqs).issuperset(set(goal[1].nonzero()[0].tolist())):
+               #         stats['success'] += 1.0
+
+        precision = stats['success_tp'] / (stats['success_tp'] + stats['success_fp'])
+        recall =  stats['success_tp'] / (stats['success_tp'] + stats['success_fn'])
+        success_f1 = 2 * precision * recall / (precision + recall + 1e-8)
 
         # evaluation result
         print 80*'#'
         print 35*'#' + '  Metrics ' + 35*'#'
         print 80*'#'
-        #print 'Venue Match Rate     : %.1f%%' % (100*stats['vmc']/float(len(testset)))
-        #print 'Task Success Rate    : %.1f%%' % (100*stats['success']/float(len(testset)))
+        print 'Venue Match Rate     : %.1f%%' % (100*stats['vmc']/float(len(testset)))
+        print 'Task Success Rate    : %.1f%%' % (100*stats['success']/float(len(testset)))
+        print 'Success F1           : %.2f%%' % (100*success_f1)
         if self.dec!='none':
             print 'BLEU                 : %.4f' % (bscorer.score(best_corpus))
             print 'Semantic Match       : %.1f%%' % (100*stats['approp'][0]/stats['approp'][1])
@@ -1212,7 +1230,8 @@ class NNDial(object):
                     'duration'   : [10e-9, 10e-4, 10e-4, 10e-4],
                     'open_now'     : [10e-9, 10e-4, 10e-4, 10e-4],
             },
-            'vmc': 10e-7, 'success': 10e-7, 'approp': [10e-7,10e-7]
+            'vmc': 10e-7, 'success': 10e-7, 'approp': [10e-7,10e-7],
+            'success_tp': 10e-7, 'success_fp': 10e-7, 'success_fn': 10e-7
         }
 
     def _genScoreTable(self, sem_j):
