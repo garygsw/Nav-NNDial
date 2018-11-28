@@ -470,15 +470,12 @@ class NNDial(object):
                 best_corpus.append([[generated_utt],[masked_target_utt]])
 
             # at the end of the dialog, calculate goal completion rate
+            # for now, just calculate the last task
+            # TODO: do an average for all tasks; need to add in the 'new' param
             if venue_offered != None: # and finished:
                 stats['vmc'] += 1.0
 
-                print goal
-                print len(goal)
-                print len(goal[0])
-                print len(goal[1])
-
-                truth_req = goal[1].nonzero()[0].tolist()
+                truth_req = goal[1][-1].nonzero()[0].tolist()
                 for req in reqs:
                     if req in truth_req:
                         stats['success_tp'] += 1.0
@@ -488,7 +485,7 @@ class NNDial(object):
                     if req not in reqs:
                         stats['success_fn'] += 1.0
 
-                if set(reqs).issuperset(set(goal[1].nonzero()[0].tolist())):
+                if set(reqs).issuperset(set(goal[1][-1].nonzero()[0].tolist())):
                     stats['success'] += 1.0
                # if set(venue_offered).issuperset(set(goal[0].nonzero()[0].tolist())):
                #     stats['vmc'] += 1.0
