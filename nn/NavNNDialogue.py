@@ -475,6 +475,8 @@ class NNDial(object):
             if venue_offered != None: # and finished:
                 stats['vmc'] += 1.0
 
+                print goal
+                print len(goal)
                 print goal[1]
                 print len(goal[1])
                 print goal[1][-1]
