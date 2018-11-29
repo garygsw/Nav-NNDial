@@ -435,10 +435,13 @@ class NNDial(object):
                     stats['vmc'] += 1.0
 
                     all_reqs_truth = goal[1].nonzero()[0].tolist()
+                    print 'all:', all_reqs_truth
                     truth_req = []
                     for i in range(len(all_reqs_truth)):
                         if all_reqs_truth[i] == 1:
                             truth_req.append(i)
+                    print 'truth:', truth_req
+                    print 'pred:', reqs
 
                     for req in reqs:
                         if req in truth_req:
