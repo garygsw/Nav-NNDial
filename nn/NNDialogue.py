@@ -434,14 +434,19 @@ class NNDial(object):
                 if set(venue_offered).issuperset(set(goal[0].nonzero()[0].tolist())):
                     stats['vmc'] += 1.0
 
-                    truth_req = goal[1].nonzero()[0].tolist()
+                    all_reqs_truth = goal[-1][1].nonzero()[0].tolist()
+                    truth_req = []
+                    for i in range(len(all_reqs_truth)):
+                        if all_reqs_truth[i] == 1:
+                            truth_req.append(i)
+
                     for req in reqs:
                         if req in truth_req:
                             stats['success_tp'] += 1.0
                         else:
                             stats['success_fp'] += 1.0
                     for req in truth_req:
-                        if req == 1 and req not in reqs:
+                        if req not in reqs:
                             stats['success_fn'] += 1.0
 
                     if set(reqs).issuperset(set(goal[1].nonzero()[0].tolist())):
