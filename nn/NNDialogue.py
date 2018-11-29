@@ -318,7 +318,8 @@ class NNDial(object):
                 flatten_belief_tm1 = flatten_belief_t[:self.inf_dimensions[-1]]
 
                 # for calculating success: check requestable slots match
-                requestables = ['phone','address','postcode','food','area','pricerange']
+                #requestables = ['phone','address','postcode','food','area','pricerange']
+                requestables = ['phone','address','postcode']
                 for requestable in requestables:
                     if '[VALUE_'+requestable.upper()+']' in gennerated_utt:
                         reqs.append(self.reader.reqs.index(requestable+'=exist'))
@@ -434,12 +435,7 @@ class NNDial(object):
                 if set(venue_offered).issuperset(set(goal[0].nonzero()[0].tolist())):
                     stats['vmc'] += 1.0
 
-                    all_reqs_truth = goal[1].nonzero()[0].tolist()
-                    print 'all:', all_reqs_truth
-                    truth_req = []
-                    for i in range(len(all_reqs_truth)):
-                        if all_reqs_truth[i] == 1:
-                            truth_req.append(i)
+                    truth_req = goal[1].nonzero()[0].tolist()
                     print 'truth:', truth_req
                     print 'pred:', reqs
 

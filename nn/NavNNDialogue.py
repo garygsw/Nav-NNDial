@@ -482,11 +482,8 @@ class NNDial(object):
                 # print goal[-1][1]
                 # print len(goal[-1][1])
 
-                all_reqs_truth = goal[-1][1].nonzero()[0].tolist()
-                truth_req = []
-                for i in range(len(all_reqs_truth)):
-                    if all_reqs_truth[i] == 1:
-                        truth_req.append(i)
+                truth_req = goal[-1][1].nonzero()[0].tolist()
+
                 # truth_req is a list of all req: 0 if exist, 1 if not exist
                 # reqs is a list of indexes that exist in the dialogue
                 for req in reqs:
