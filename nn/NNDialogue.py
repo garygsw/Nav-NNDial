@@ -441,7 +441,7 @@ class NNDial(object):
                         else:
                             stats['success_fp'] += 1.0
                     for req in truth_req:
-                        if req not in reqs:
+                        if req == 1 and req not in reqs:
                             stats['success_fn'] += 1.0
 
                     if set(reqs).issuperset(set(goal[1].nonzero()[0].tolist())):
