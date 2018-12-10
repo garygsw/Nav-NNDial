@@ -157,6 +157,7 @@ class NNDial(object):
         random.seed(self.seed)
         np.set_printoptions(precision=4)
 
+        self.split = None
         # setting data reader, processors, and lexicon
         self.reader = DataReader(
             self.corpusfile, self.dbfile, self.semidictfile, self.ontologyfile,
