@@ -877,7 +877,7 @@ class DataReader(object):
 
                 # system side
                 words,_,_,_,_ = self.extractSeq(turn['sys']['sent'],\
-                    slu=type='target',index=False)
+                    type='target',index=False)
 
                 ovocab.extend(words)
 
