@@ -34,14 +34,23 @@
         "avoids all heavy traffic",
         "avoids all traffic"
     ],
+    "3 miles": [
+        "3 miles"
+    ],
     "parking garage": [
         "parking garage"
     ],
     "hospital": [
         "hospital"
     ],
-    "type": [
-        "type"
+    "1 mile": [
+        "1 mile"
+    ],
+    "2 miles": [
+        "2 miles"
+    ],
+    "gas station": [
+        "gas station"
     ],
     "grocery store": [
         "grocery store"
@@ -52,6 +61,15 @@
     "poi_type": [
         "poi_type"
     ],
+    "5 miles": [
+        "5 miles"
+    ],
+    "4 miles": [
+        "4 miles"
+    ],
+    "7 miles": [
+        "7 miles"
+    ],
     "moderate traffic": [
         "moderate traffic"
     ],
@@ -60,6 +78,9 @@
     ],
     "address": [
         "address"
+    ],
+    "8 miles": [
+        "8 miles"
     ],
     "rest stop": [
         "rest stop"
@@ -73,8 +94,8 @@
     "shopping center": [
         "shopping center"
     ],
-    "gas station": [
-        "gas station"
+    "type": [
+        "type"
     ],
     "pizza restaurant": [
         "pizza restaurant"
@@ -84,5 +105,11 @@
     ],
     "chinese restaurant": [
         "chinese restaurant"
+    ],
+    "9 miles": [
+        "9 miles"
+    ],
+    "6 miles": [
+        "6 miles"
     ]
 }

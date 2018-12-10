@@ -17,6 +17,8 @@ for slot in data['informable']:
         semidict[x] = [x.replace('_', ' ')]
 for x in data['requestable']:
     semidict[x] = [x.replace('_', ' ')]
+    for value in data['requestable'][x]:
+        semidict[value] = [value]
 
 # copy
 semidict["any"] = ["no specific","no preference","dont really care","do not care","dont care","does not matter","any"]
