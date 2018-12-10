@@ -86,7 +86,8 @@
         "rest stop"
     ],
     "distance": [
-        "distance"
+        "distance",
+        "nearest"
     ],
     "none": [
         "NONE"

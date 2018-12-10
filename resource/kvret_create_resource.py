@@ -26,6 +26,7 @@ semidict["none"] = ["NONE"]
 semidict["exist"] = ["NONE"]
 semidict["no traffic"] += ["avoids all heavy traffic", "avoids all traffic"]
 semidict['name'] = ['name']
+semidict["distance"] += ['nearest']
 #semidict["car collision nearby"] += [""]
 # semidict["place"] = ["place", "location"]
 # semidict["waypoints"].append("current list of destinations")

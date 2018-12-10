@@ -396,7 +396,8 @@ class DataReader(object):
                                 semi.remove(toreplace)
                             combi = s+'='+v
                             if combi not in self.infovs:
-                                print combi
+                                pass
+                                #print combi
                             else:
                                 semi.append(combi)
 
@@ -982,7 +983,8 @@ class DataReader(object):
                 s2v = s+'='+v
                 if v!='dontcare' and v!='none':
                     #goal['inf'].append( self.infovs.index(s2v) )
-                    goal[0][self.infovs.index(s2v)] = 1
+                    if s2v in self.infovs:
+                        goal[0][self.infovs.index(s2v)] = 1
 
             for s in d['goal']['request-slots']:
                 #if s=='pricerange' or s=='area' or s=='food':
