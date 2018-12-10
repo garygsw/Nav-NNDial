@@ -684,17 +684,21 @@ class DataReader(object):
                     self.finished,          self.sentGroupIndex]
         corpus = zip(*corpus)
 
+        self.data['train'] = corpus[:800]
+        self.data['dev'] = corpus[800:900]
+        self.data['test'] = corpus[900:1000]
+
         # split out train+valid
-        train_valid = self.split.train_valid(corpus)
+        #train_valid = self.split.train_valid(corpus)
 
         # cut dataset according to percentage
-        percent = float(percent)/float(100)
-        train_valid = train_valid[:int(len(train_valid)*percent)]
+        #percent = float(percent)/float(100)
+        #train_valid = train_valid[:int(len(train_valid)*percent)]
 
         # split into train/valid/test
-        self.data['train'] = self.split.train(train_valid)
-        self.data['valid'] = self.split.valid(train_valid)
-        self.data['test']  = self.split.test(corpus)
+        #self.data['train'] = self.split.train(train_valid)
+        #self.data['valid'] = self.split.valid(train_valid)
+        #self.data['test']  = self.split.test(corpus)
 
     def read(self,mode='train'):
         ## default implementation for read() function
