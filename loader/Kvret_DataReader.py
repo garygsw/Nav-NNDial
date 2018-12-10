@@ -497,7 +497,9 @@ class DataReader(object):
             tok, ID = words[i].split("::")
             words[i] = tok
             # record position
-            mytok,sov = '_'.join(tok[1:-1].lower().split('_')[1:])
+            splits = tok[1:-1].lower().split('_')
+            mytok = splits[0]
+            #mytok,sov = '_'.join(tok[1:-1].lower().split('_')[1:])
             ID = ID.replace('-',' ')
             mylist = sltpos if mytok=='slot' else valpos
             for j in range(len(allvs)):
