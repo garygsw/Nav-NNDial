@@ -479,7 +479,7 @@ class DataReader(object):
         sent = self.delexicalise(' '.join(words),mode='all',slu=slu)
         sent = re.sub(digitpat,'[VALUE_COUNT]',sent)
         words= sent.split()
-        print words
+        #print words
 
         # formulate delex positions
         allvs = self.infovs+self.reqs
@@ -497,7 +497,7 @@ class DataReader(object):
             tok, ID = words[i].split("::")
             words[i] = tok
             # record position
-            mytok,sov = tok[1:-1].lower().split('_')
+            mytok,sov = '_'.join(tok[1:-1].lower().split('_')[1:])
             ID = ID.replace('-',' ')
             mylist = sltpos if mytok=='slot' else valpos
             for j in range(len(allvs)):
