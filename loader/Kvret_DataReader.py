@@ -365,8 +365,12 @@ class DataReader(object):
                 turn = d['dial'][t]
 
                 # read informable semi
-                semi = sorted(['pricerange=none','food=none','area=none']) \
-                        if len(info_semi)==0 else deepcopy(info_semi[-1])
+                #semi = sorted(['pricerange=none','food=none','area=none']) \
+                #        if len(info_semi)==0 else deepcopy(info_semi[-1])
+                if len(info_semi) == 0:
+                    semi = sorted([str(x)+'=none' for x in self.s2v['informable']])
+                else:
+                    semi = deepcopy(info_semi[-1])  # copy the last one
                 for da in turn['usr']['slu']:
                     for s2v in da['slots']:
                         # skip invalid slots
@@ -973,8 +977,8 @@ class DataReader(object):
                     #goal['inf'].append( self.infovs.index(s2v) )
                     goal[0][self.infovs.index(s2v)] = 1
             for s in d['goal']['request-slots']:
-                if s=='pricerange' or s=='area' or s=='food':
-                    continue
+                #if s=='pricerange' or s=='area' or s=='food':
+                #    continue
                 #goal['req'].append(self.reqs.index(s+'=exist'))
                 goal[1][self.reqs.index(s+'=exist')] = 1
             self.goals.append(goal)
