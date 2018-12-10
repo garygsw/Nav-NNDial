@@ -479,6 +479,7 @@ class DataReader(object):
         sent = self.delexicalise(' '.join(words),mode='all',slu=slu)
         sent = re.sub(digitpat,'[VALUE_COUNT]',sent)
         words= sent.split()
+        print words
 
         # formulate delex positions
         allvs = self.infovs+self.reqs
