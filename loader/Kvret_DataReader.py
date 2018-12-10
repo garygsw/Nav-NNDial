@@ -516,7 +516,13 @@ class DataReader(object):
 
         return midx, idx, sltpos, valpos, names
 
-    def delexicalise(self,utt,mode='all'):
+    def delexicalise(self,utt,slu=None,mode='all'):
+        if slotpos is not None:
+            for slot, value in slu:
+                del_value = '[VALUE_' + slot.upper() + ']'
+                utt = (' '+utt+' ').replace(' '+value+' ', ' '+del_value+' ')
+                utt = utt[1:-1]
+
         inftoks =   ['[VALUE_'+s.upper()+']' for s in self.s2v['informable'].keys()] + \
                     ['[SLOT_' +s.upper()+']' for s in self.s2v['informable'].keys()] + \
                     ['[VALUE_DONTCARE]','[VALUE_NAME]'] +\
@@ -558,11 +564,11 @@ class DataReader(object):
                     self.s2v['other'][s].append(v.lower())
 
         # Add to informables from dataset
-        for d in self.dialog:
-            inf_slots = d["goal"]["constraints"]
-            for s,v in inf_slots:
-                if s in self.s2v['informable']:
-                    self.s2v['informable'][s].append(v.lower().strip())
+        #for d in self.dialog:
+        #    inf_slots = d["goal"]["constraints"]
+        #    for s,v in inf_slots:
+        #        if s in self.s2v['informable']:
+        #            self.s2v['informable'][s].append(v.lower().strip())
 
         # sort values
         for s,vs in self.s2v['informable'].iteritems():
@@ -871,7 +877,7 @@ class DataReader(object):
 
                 # system side
                 words,_,_,_,_ = self.extractSeq(turn['sys']['sent'],\
-                    type='target',index=False)
+                    slu=type='target',index=False)
 
                 ovocab.extend(words)
 
@@ -886,9 +892,9 @@ class DataReader(object):
                     self.sentGroup.append( sentKeys[key][0] )
 
                 # user side
-                words = self.delexicalise(turn['usr']['transcript']).split()
+                #words = self.delexicalise(turn['usr']['transcript']).split()
                 mwords,words,_,_,_ = self.extractSeq(turn['sys']['sent'],\
-                    type='source',index=False)
+                    slu=turn['usr']['slots'], type='source',index=False)
                 ivocab.extend(mwords)
                 #ivocab.extend(words)
                 """
