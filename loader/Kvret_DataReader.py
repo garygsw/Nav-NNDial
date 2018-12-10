@@ -976,10 +976,14 @@ class DataReader(object):
                     np.zeros(self.reqseg[-1])]
             for s2v in d['goal']['constraints']:
                 s,v = s2v
+                if v in self.values:
+                    idx = self.values.index(v)
+                    v = self.supervalues[idx]
                 s2v = s+'='+v
                 if v!='dontcare' and v!='none':
                     #goal['inf'].append( self.infovs.index(s2v) )
                     goal[0][self.infovs.index(s2v)] = 1
+
             for s in d['goal']['request-slots']:
                 #if s=='pricerange' or s=='area' or s=='food':
                 #    continue
