@@ -245,12 +245,14 @@ class NNDial(object):
             # read one example
             source, source_len, masked_source, masked_source_len,\
             target, target_len, masked_target, masked_target_len,\
-            snapshot, change_label, goal, inf_trk_label, req_trk_label,\
+            snapshot, new_label, goal, inf_trk_label, req_trk_label,\
             db_degree, srcfeat, tarfeat, finished, utt_group = testset[cnt]
 
             # initial selection
             selected_venue  = -1
             venue_offered   = None
+            prev_correct = False
+            task_i = 0
 
             # initial belief
             #print 'initial belief size:', self.inf_dimensions[-1]
@@ -374,6 +376,7 @@ class NNDial(object):
                         print '  | %25s%13s%35s|' % ('','Informable','')
                         print '  | %25s\t%5s\t%35s |' % ('Prediction','Prob.','Ground Truth')
                         print '  | %25s\t%5s\t%35s |' % ('------------','-----','------------')
+                    all_correct = True
                     for i in range(len(self.inf_dimensions)-1):
                         bn = self.inf_dimensions[i]
                         bidx = np.argmax(np.array(full_belief_t[i]))+bn
@@ -392,11 +395,15 @@ class NNDial(object):
                                 stats['informable'][slt][0] += 1.0
                             else: # false negative
                                 stats['informable'][slt][1] += 1.0
+                                if ysem != 'any':
+                                    all_correct = False
                         else:
                             if psem==ysem: # true negative
                                 stats['informable'][slt][2] += 1.0
                             else: # false positive
                                 stats['informable'][slt][3] += 1.0
+                                if ysem != 'any':
+                                    all_correct = False
 
                 if self.trk=='rnn' and self.trkreq==True:
                     if self.verbose>1:
@@ -469,34 +476,52 @@ class NNDial(object):
                 # not used at all
                 best_corpus.append([[generated_utt],[masked_target_utt]])
 
+                new = new_label[t]
+                print 'New Label : %s' % new_label[t]
+                if new:
+                    if venue_offered != None:
+                        if prev_correct:
+                            stats['vmc'] += 1.0
+
+                        truth_req = goal[task_i][1].nonzero()[0].tolist()
+                        # truth_req is a list of all req: 0 if exist, 1 if not exist
+                        # reqs is a list of indexes that exist in the dialogue
+                        for req in reqs:
+                            if req in truth_req:
+                                stats['success_tp'] += 1.0
+                            else:
+                                stats['success_fp'] += 1.0
+                        for req in truth_req:
+                            if req not in reqs:
+                                stats['success_fn'] += 1.0
+
+                        if set(reqs).issuperset(set(goal[task_i][1].nonzero()[0].tolist())):
+                            stats['success'] += 1.0
+
+                    task_i += 1
+                    stats['vmc_total'] += 1.0
+                    venue_offered = None
+                prev_correct = all_correct
+
             # at the end of the dialog, calculate goal completion rate
             # for now, just calculate the last task
             # TODO: do an average for all tasks; need to add in the 'new' param
-            if venue_offered != None: # and finished:
-                stats['vmc'] += 1.0
-
-                # print goal
-                # print len(goal)
-                # print goal[-1]
-                # print len(goal[-1])
-                # print goal[-1][1]
-                # print len(goal[-1][1])
-
-                truth_req = goal[-1][1].nonzero()[0].tolist()
-
-                # truth_req is a list of all req: 0 if exist, 1 if not exist
-                # reqs is a list of indexes that exist in the dialogue
-                for req in reqs:
-                    if req in truth_req:
-                        stats['success_tp'] += 1.0
-                    else:
-                        stats['success_fp'] += 1.0
-                for req in truth_req:
-                    if req not in reqs:
-                        stats['success_fn'] += 1.0
-
-                if set(reqs).issuperset(set(goal[-1][1].nonzero()[0].tolist())):
-                    stats['success'] += 1.0
+            # if venue_offered != None: # and finished:
+            #     #stats['vmc'] += 1.0
+            #     truth_req = goal[-1][1].nonzero()[0].tolist()
+            #     # truth_req is a list of all req: 0 if exist, 1 if not exist
+            #     # reqs is a list of indexes that exist in the dialogue
+            #     for req in reqs:
+            #         if req in truth_req:
+            #             stats['success_tp'] += 1.0
+            #         else:
+            #             stats['success_fp'] += 1.0
+            #     for req in truth_req:
+            #         if req not in reqs:
+            #             stats['success_fn'] += 1.0
+            #
+            #     if set(reqs).issuperset(set(goal[-1][1].nonzero()[0].tolist())):
+            #         stats['success'] += 1.0
                # if set(venue_offered).issuperset(set(goal[0].nonzero()[0].tolist())):
                #     stats['vmc'] += 1.0
                #     if set(reqs).issuperset(set(goal[1].nonzero()[0].tolist())):
@@ -510,7 +535,8 @@ class NNDial(object):
         print 80*'#'
         print 35*'#' + '  Metrics ' + 35*'#'
         print 80*'#'
-        print 'Venue Match Rate     : %.1f%%' % (100*stats['vmc']/float(len(testset)))
+        #print 'Venue Match Rate     : %.1f%%' % (100*stats['vmc']/float(len(testset)))
+        print 'Venue Match Rate     : %.1f%%' % (100*stats['vmc']/stats['vmc_total'])
         print 'Task Success Rate    : %.1f%%' % (100*stats['success']/float(len(testset)))
         print 'Success F1           : %.2f%%' % (100*success_f1)
         if self.dec!='none':
@@ -1242,7 +1268,7 @@ class NNDial(object):
                     'duration'   : [10e-9, 10e-4, 10e-4, 10e-4],
                     'open_now'     : [10e-9, 10e-4, 10e-4, 10e-4],
             },
-            'vmc': 10e-7, 'success': 10e-7, 'approp': [10e-7,10e-7],
+            'vmc': 10e-7, 'vmc_total': 10e-7, 'success': 10e-7, 'approp': [10e-7,10e-7],
             'success_tp': 10e-7, 'success_fp': 10e-7, 'success_fn': 10e-7
         }
 

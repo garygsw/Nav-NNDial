@@ -168,6 +168,7 @@ class DataReader(object):
             changes = []      # list of tuple (1,0) - change or (0,1)- no change
             prevoffer = []    # list of previous offers
             offered = False
+            new = []  # true or false
 
             snapshot_vecs = []   # list of snapshot vectors that contain snapshots
                                  # order by the last word in the masked target first
@@ -215,7 +216,7 @@ class DataReader(object):
                 # but it's a new name mentioned , then change = [1,0]
                 # it's a one-hot encoding?
                 # x1 : change?, x2: no change?
-                changes.append(change)
+                #changes.append(change)
 
                 # offer label
                 if offered or len(venues)!=0: # offer has happened
@@ -331,11 +332,14 @@ class DataReader(object):
                     maxmsrc = len(src)
                 sourceutt.append(src)
 
+                new.append(d['dial'][t]['new'])
+
             # sentence group
             self.sentGroupIndex.append(utt_group)
 
             # offers
-            self.changes.append(changes)
+            #self.changes.append(changes)
+            self.changes.append(new)
             self.offers.append(offers)
 
             # padding for snapshots
