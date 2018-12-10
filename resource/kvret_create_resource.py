@@ -24,9 +24,20 @@ for x in data['requestable']:
 semidict["any"] = ["no specific","no preference","dont really care","do not care","dont care","does not matter","any"]
 semidict["none"] = ["NONE"]
 semidict["exist"] = ["NONE"]
-semidict["no traffic"] += ["avoids all heavy traffic", "avoids all traffic"]
+semidict["no traffic"] += ["without traffic", "avoids all heavy traffic", "avoids all traffic", "fastest", "avoid all traffic", "quickest", 'avoid the heavy traffic', 'avoiding all heavy traffic',
+                           "lease amount of traffic", "fastest route", "least traffic"]
 semidict['name'] = ['name']
-semidict["distance"] += ['nearest']
+semidict["distance"] += ['nearest', 'nearby', 'quickest', 'closest', 'quick', 'shortest', "close to where i am", "near me", "area around me"]
+
+
+semidict["coffee"] += ["coffee shop"]
+semidict["home"] += ["my house"]
+semidict["parking garage"] += ["parking spot"]
+semidict["friends house"] += ["friend", "friends' house", "friend's house"]
+semidict["rest stop"] += ["rest stops", "motel", "motels", "hotel", "hotels", "a place to sleep"]
+semidict["gas station"] += ["fill up"]
+semidict["shopping center"] += ["mall"]
+
 #semidict["car collision nearby"] += [""]
 # semidict["place"] = ["place", "location"]
 # semidict["waypoints"].append("current list of destinations")

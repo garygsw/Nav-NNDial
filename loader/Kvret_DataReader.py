@@ -445,6 +445,9 @@ class DataReader(object):
                 semi = sorted(self.s2v['requestable'].keys())
                 for da in turn['usr']['slu']:
                     for s2v in da['slots']:
+                        #print s2v
+                        #if len(s2v) ==0:
+                        #    print turn
                         if s2v[0]=='slot':
                             for i in range(len(semi)):
                                 if s2v[1]==semi[i]:
@@ -737,8 +740,8 @@ class DataReader(object):
                     # shuffle train + valid together
                     train_valid = self.data['train']+self.data['valid']
                     random.shuffle(train_valid)
-                    self.data['train'] = self.split.train(train_valid)
-                    self.data['valid'] = self.split.valid(train_valid)
+                    self.data['train'] = train_valid[:800]
+                    self.data['valid'] = train_valid[800:]
             return data
 
         # 1 dialog at a time
@@ -971,6 +974,7 @@ class DataReader(object):
         #requestables = ['phone','address','postcode','food','area','pricerange']
         vmc, success = 0., 0.
         # for each dialog
+        missing_semidict = set()
         for i in range(len(self.dialog)):
             d = self.dialog[i]
             goal = [np.zeros(self.infoseg[-1]),
@@ -985,6 +989,8 @@ class DataReader(object):
                     #goal['inf'].append( self.infovs.index(s2v) )
                     if s2v in self.infovs:
                         goal[0][self.infovs.index(s2v)] = 1
+                    else:
+                        missing_semidict.add(s2v)
 
             for s in d['goal']['request-slots']:
                 #if s=='pricerange' or s=='area' or s=='food':
@@ -1015,6 +1021,7 @@ class DataReader(object):
 
         print '\tCorpus VMC       : %2.2f%%' % (vmc/float(len(self.dialog))*100)
         print '\tCorpus Success   : %2.2f%%' % (success/float(len(self.dialog))*100)
+        print missing_semidict
 
     #########################################################################
     ############################## Deprecated ###############################
