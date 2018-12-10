@@ -397,7 +397,8 @@ class DataReader(object):
                             combi = s+'='+v
                             if combi not in self.infovs:
                                 print combi
-                            semi.append(combi)
+                            else:
+                                semi.append(combi)
 
                 # if goal changes not venue changes
                 if self.changes[dx][t]==[1,0]:
