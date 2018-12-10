@@ -893,8 +893,12 @@ class DataReader(object):
 
                 # user side
                 #words = self.delexicalise(turn['usr']['transcript']).split()
+                if 'slots' in turn['usr']:
+                    slu = turn['usr']['slots']
+                else:
+                    slu = None
                 mwords,words,_,_,_ = self.extractSeq(turn['sys']['sent'],\
-                    slu=turn['usr']['slots'], type='source',index=False)
+                    slu=slu, type='source',index=False)
                 ivocab.extend(mwords)
                 #ivocab.extend(words)
                 """
