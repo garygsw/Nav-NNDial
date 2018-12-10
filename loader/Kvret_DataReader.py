@@ -517,7 +517,7 @@ class DataReader(object):
         return midx, idx, sltpos, valpos, names
 
     def delexicalise(self,utt,slu=None,mode='all'):
-        if slotpos is not None:
+        if slu is not None:
             for slot, value in slu:
                 del_value = '[VALUE_' + slot.upper() + ']'
                 utt = (' '+utt+' ').replace(' '+value+' ', ' '+del_value+' ')
