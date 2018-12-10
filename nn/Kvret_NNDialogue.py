@@ -111,7 +111,7 @@ class NNDial(object):
         self.semidictfile   = parser.get('file','semidict')
 
         # setting data manipulations
-        self.split          = literal_eval(parser.get('data','split'))
+        #self.split          = literal_eval(parser.get('data','split'))
         self.lengthen       = parser.getint('data','lengthen')
         self.shuffle        = parser.get('data','shuffle')
         self.percent        = parser.get('data','percent')
