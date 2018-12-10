@@ -559,8 +559,8 @@ class DataReader(object):
 
         # Add to informables from dataset
         for d in self.dialog:
-            inf_slots = d['data']['slots']
-            for s,v in inf_slots.iteritems():
+            inf_slots = d["goal"]["constraints"]
+            for s,v in inf_slots:
                 if s in self.s2v['informable']:
                     self.s2v['informable'][s].append(v.lower().strip())
 
