@@ -1,0 +1,88 @@
+{
+    "heavy traffic": [
+        "heavy traffic"
+    ],
+    "tea": [
+        "tea"
+    ],
+    "certain address": [
+        "certain address"
+    ],
+    "friends house": [
+        "friends house"
+    ],
+    "exist": [
+        "NONE"
+    ],
+    "road block nearby": [
+        "road block nearby"
+    ],
+    "home": [
+        "home"
+    ],
+    "any": [
+        "no specific",
+        "no preference",
+        "dont really care",
+        "do not care",
+        "dont care",
+        "does not matter",
+        "any"
+    ],
+    "no traffic": [
+        "no traffic",
+        "avoids all heavy traffic",
+        "avoids all traffic"
+    ],
+    "parking garage": [
+        "parking garage"
+    ],
+    "hospital": [
+        "hospital"
+    ],
+    "type": [
+        "type"
+    ],
+    "grocery store": [
+        "grocery store"
+    ],
+    "coffee": [
+        "coffee"
+    ],
+    "poi_type": [
+        "poi_type"
+    ],
+    "moderate traffic": [
+        "moderate traffic"
+    ],
+    "car collision nearby": [
+        "car collision nearby"
+    ],
+    "address": [
+        "address"
+    ],
+    "rest stop": [
+        "rest stop"
+    ],
+    "distance": [
+        "distance"
+    ],
+    "none": [
+        "NONE"
+    ],
+    "shopping center": [
+        "shopping center"
+    ],
+    "gas station": [
+        "gas station"
+    ],
+    "pizza restaurant": [
+        "pizza restaurant"
+    ],
+    "traffic_info": [
+        "traffic info"
+    ],
+    "chinese restaurant": [
+        "chinese restaurant"
+    ]
+}
