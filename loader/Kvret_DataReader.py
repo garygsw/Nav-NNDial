@@ -520,7 +520,7 @@ class DataReader(object):
         if slu is not None:
             for slot, value in slu:
                 del_value = '[VALUE_' + slot.upper() + ']'
-                utt = (' '+utt+' ').replace(' '+value+' ', ' '+del_value+' ')
+                utt = (' '+utt+' ').replace(' '+value+' ', ' '+del_value+'::' + value + ' ')
                 utt = utt[1:-1]
 
         inftoks =   ['[VALUE_'+s.upper()+']' for s in self.s2v['informable'].keys()] + \
