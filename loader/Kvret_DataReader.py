@@ -452,7 +452,7 @@ class DataReader(object):
             self.db_logics.append(db_logic)
         print
 
-    def extractSeq(self,sent,type='source',normalise=False,index=True):
+    def extractSeq(self,sent,slu=None,type='source',normalise=False,index=True):
 
         # setup vocab
         if type=='source':  vocab = self.vocab
@@ -476,7 +476,7 @@ class DataReader(object):
             idx = words
 
         # delexicalise all
-        sent = self.delexicalise(' '.join(words),mode='all')
+        sent = self.delexicalise(' '.join(words),mode='all',slu=slu)
         sent = re.sub(digitpat,'[VALUE_COUNT]',sent)
         words= sent.split()
 
