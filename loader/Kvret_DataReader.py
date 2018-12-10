@@ -431,8 +431,9 @@ class DataReader(object):
                 db_logic.append(venue_logic)
 
                 # read requestable semi
-                semi =  sorted(['food','pricerange','area'])+\
-                        sorted(['phone','address','postcode'])
+                #semi =  sorted(['food','pricerange','area'])+\
+                #        sorted(['phone','address','postcode'])
+                semi = sorted(self.s2v['requestable'].keys())
                 for da in turn['usr']['slu']:
                     for s2v in da['slots']:
                         if s2v[0]=='slot':
