@@ -706,9 +706,13 @@ class DataReader(object):
                     self.finished,          self.sentGroupIndex]
         corpus = zip(*corpus)
 
-        self.data['train'] = corpus[:800]
-        self.data['dev'] = corpus[800:900]
-        self.data['test'] = corpus[900:1000]
+        self.data['train'] = corpus[:800]     # first 800 is train
+        self.data['valid'] = corpus[800:900]    # next 100 is dev
+        self.data['test'] = corpus[900:1000]  # next 100 is test
+
+        #print 'train size:', len(self.data['train'])
+        #print 'dev size:', len(self.data['dev'])
+        #print 'test size:', len(self.data['test'])
 
         # split out train+valid
         #train_valid = self.split.train_valid(corpus)
@@ -730,6 +734,7 @@ class DataReader(object):
 
         # end of data , reset index & return None
         if self.index>=len(self.data[mode]):
+            #print 'end of data reached; index:', self.index
             data = None
             self.index = 0
 
