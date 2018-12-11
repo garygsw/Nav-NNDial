@@ -488,7 +488,8 @@ class NNDial(object):
         print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
                 ('joint', p, r, 2*p*r/(p+r), ac)
         print '---- Requestable '+ 63*'-'
-        reqslots = ['area','food','pricerange','address','postcode','phone']#,'change']
+        #reqslots = ['area','food','pricerange','address','postcode','phone']#,'change']
+        reqslots = self.reader.s2v['requestable'].keys()
         joint = [0.0 for x in range(4)]
         for i in range(len(reqslots)):
             s = reqslots[i]
