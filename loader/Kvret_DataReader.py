@@ -919,7 +919,7 @@ class DataReader(object):
             self.inputvocab.extend( ['[SLOT_'+s.upper()+']','[VALUE_'+s.upper()+']'])
             self.outputvocab.extend(['[SLOT_'+s.upper()+']','[VALUE_'+s.upper()+']'])
         for s,vs in self.s2v['requestable'].iteritems():
-            self.inputvocab.extend(['[SLOT_'+s.upper()+']','[VALUE_'+s.upper()+']')
+            self.inputvocab.extend(['[SLOT_'+s.upper()+']','[VALUE_'+s.upper()+']'])
 
         # add every word in semidict into vocab
         for s in self.semidict.keys():
