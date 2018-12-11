@@ -17,7 +17,7 @@ import pickle as pk
 from ast import literal_eval
 import gc
 
-from nnsds import NNSDS
+from kvret_nnsds import NNSDS
 
 from utils.tools import setWordVector
 from utils.nlp import normalize
