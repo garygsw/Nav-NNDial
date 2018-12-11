@@ -1040,7 +1040,7 @@ class NNDial(object):
             self.stop_count = parser.getint('learn','stop_count')
             self.cur_stop_count = parser.getint('learn','cur_stop_count')
             self.l2             = parser.getfloat('learn','l2')
-            self.split          = literal_eval(parser.get('data','split'))
+            #self.split          = literal_eval(parser.get('data','split'))
             self.trk_enc        = parser.get('trk','trkenc')
             self.seed           = parser.getint('learn','random_seed')
         else: # load learning variables from model
@@ -1049,7 +1049,7 @@ class NNDial(object):
             self.cur_stop_count = bundle['learn']['self.cur_stop_count']
             self.stop_count     = bundle['learn']['self.stop_count']
             self.l2             = bundle['learn']['self.l2']
-            self.split          = bundle['data']['self.split']
+            #self.split          = bundle['data']['self.split']
             self.trk_enc        = bundle['trk']['self.trk_enc']
             self.seed           = bundle['learn']['self.seed']
 
@@ -1072,7 +1072,8 @@ class NNDial(object):
         self.modelfile      = parser.get('file','model')
 
         # setting data manipulations from config
-        self.split          = literal_eval(parser.get('data','split'))
+        #self.split          = literal_eval(parser.get('data','split'))
+        self.split = None
         self.lengthen       = parser.getint('data','lengthen')
         self.shuffle        = parser.get('data','shuffle')
         self.percent        = parser.get('data','percent')
