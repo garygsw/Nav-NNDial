@@ -468,7 +468,8 @@ class NNDial(object):
             print 'Semantic Match       : %.1f%%' % (100*stats['approp'][0]/stats['approp'][1])
         print 35*'#' + ' Trackers ' + 35*'#'
         print '---- Informable  '+ 63*'-'
-        infslots = ['area','food','pricerange']
+        #infslots = ['area','food','pricerange']
+        infslots = self.reader.s2v['informable'].keys()
         joint = [0.0 for x in range(4)]
         for i in range(len(infslots)):
             s = infslots[i]
