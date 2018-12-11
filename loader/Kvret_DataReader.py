@@ -618,6 +618,17 @@ class DataReader(object):
         for s,vs in self.s2v['other'].iteritems():
             self.s2v['other'][s] = sorted(list(set(vs)))
 
+        # Debug s2v
+        print
+        print '\t\t\tDebugging self.s2v values'
+        for inf, values in self.s2v['informable'].iteritems():
+            print '\t\t\t', inf, ':', ', '.join(values[:3]), '...', 'len:', len(values)
+        for req, values in self.s2v['requestable'].iteritems():
+            print '\t\t\t', req, ':', ', '.join(values[:3]), '...', 'len:', len(values)
+        for ot, values in self.s2v['other'].iteritems():
+            print '\t\t\t', ot, ':', ', '.join(values[:3]), '...', 'len:', len(values)
+        print
+
         # make a 1-on-1 mapping for delexicalisation
         self.supervalues = []
         self.values = []
@@ -652,6 +663,13 @@ class DataReader(object):
                 zip(self.values,self.supervalues,self.slots),\
                 key=lambda x: len(x[0]),reverse=True))
 
+        print
+        print '\t\t\tDebugging delexicalized labels'
+        print '\t\t\tself.values:', ', '.join(self.values[:3]), '...', 'len:', len(self.values)
+        print '\t\t\tself.supervalues:', ', '.join(self.supervalues[:3]), '...', 'len:', len(self.supervalues)
+        print '\t\t\tself.slots:', ', '.join(self.slots[:3]), '...', 'len:', len(self.slots)
+        print
+
         # for generating semantic labels
         self.infovs = []
         self.infoseg = [0]
@@ -659,6 +677,8 @@ class DataReader(object):
         self.reqseg = [0]
         self.dontcare = []
 
+
+        print '\t\t\tgenerating informables semantic labels ...'
         for s in sorted(self.s2v['informable'].keys()):
             self.infovs.extend([s+'='+v for v in self.s2v['informable'][s]])
             self.infovs.append(s+'=dontcare')
@@ -667,12 +687,22 @@ class DataReader(object):
             # dont care values
             self.dontcare.append(len(self.infovs)-1)
             self.dontcare.append(len(self.infovs)-2)
-        for s in sorted(self.s2v['informable'].keys()):
-            self.reqs.extend([s+'=exist',s+'=none'])
-            self.reqseg.append(len(self.reqs))
+        #for s in sorted(self.s2v['informable'].keys()):
+        #    self.reqs.extend([s+'=exist',s+'=none'])
+        #    self.reqseg.append(len(self.reqs))
         for s in sorted(self.s2v['requestable'].keys()):
             self.reqs.extend([s+'=exist',s+'=none'])
             self.reqseg.append(len(self.reqs))
+
+
+        print
+        print '\t\t\tDebugging semantic labels'
+        print '\t\t\tself.infovs:', self.infovs  #', '.join(self.infovs[:3]), '...', ', '.join(self.infovs[-3:]), 'len:', len(self.infovs)
+        print '\t\t\tself.infoseg:', self.infoseg
+        print '\t\t\tself.dontcare:', self.dontcare
+        print '\t\t\tself.reqs:', self.reqs  #', '.join(self.reqs[:3]), '...', ', '.join(self.reqs[-3:]), 'len:', len(self.reqs)
+        print '\t\t\tself.reqseg:', self.reqseg
+        print
 
         # for ngram indexing
         self.ngs2v = []

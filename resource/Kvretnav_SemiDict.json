@@ -11,7 +11,8 @@
     "friends house": [
         "friends house",
         "friend",
-        "friends' house"
+        "friends' house",
+        "friend's house"
     ],
     "exist": [
         "NONE"
@@ -103,7 +104,8 @@
         "motel",
         "motels",
         "hotel",
-        "hotels"
+        "hotels",
+        "a place to sleep"
     ],
     "distance": [
         "distance",
@@ -113,7 +115,9 @@
         "closest",
         "quick",
         "shortest",
-        "close to where i am"
+        "close to where i am",
+        "near me",
+        "area around me"
     ],
     "none": [
         "NONE"
@@ -122,10 +126,8 @@
         "name"
     ],
     "shopping center": [
-        "shopping center"
-    ],
-    "type": [
-        "type"
+        "shopping center",
+        "mall"
     ],
     "pizza restaurant": [
         "pizza restaurant"
