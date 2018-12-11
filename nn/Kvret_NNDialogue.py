@@ -320,7 +320,8 @@ class NNDial(object):
 
                 # for calculating success: check requestable slots match
                 #requestables = ['phone','address','postcode','food','area','pricerange']
-                requestables = ['phone','address','postcode']
+                #requestables = ['phone','address','postcode']
+                requestables = self.reader.s2v['requestable'].keys()
                 for requestable in requestables:
                     if '[VALUE_'+requestable.upper()+']' in gennerated_utt:
                         reqs.append(self.reader.reqs.index(requestable+'=exist'))
