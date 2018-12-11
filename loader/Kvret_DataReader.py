@@ -918,6 +918,8 @@ class DataReader(object):
                 self.inputvocab.extend(v.split())
             self.inputvocab.extend( ['[SLOT_'+s.upper()+']','[VALUE_'+s.upper()+']'])
             self.outputvocab.extend(['[SLOT_'+s.upper()+']','[VALUE_'+s.upper()+']'])
+        for s,vs in self.s2v['requestable'].iteritems():
+            self.inputvocab.extend(['[SLOT_'+s.upper()+']','[VALUE_'+s.upper()+']')
 
         # add every word in semidict into vocab
         for s in self.semidict.keys():
@@ -1013,11 +1015,15 @@ class DataReader(object):
                 sorted(list(set(self.outputvocab+['thank','you','goodbye']+\
                 [w for w,c in sorted(counts.iteritems(),key=operator.itemgetter(1))])))
 
+        print '\t\t\tinput vocab len:', len(self.inputvocab)
+        print '\t\t\toutput vocab len:', len(self.outputvocab)
+
         # the whole vocab
         self.vocab = ['<unk>','</s>','<slot>','<value>'] + \
                 list(set(self.inputvocab[4:]).union(self.outputvocab[2:]))
 
-        print self.vocab
+        print '\t\t\toverall vocab len:', len(self.vocab)
+        print '\t\t\tvocab:', self.vocab
 
         # create snapshot dimension
         self.snapshots = ['OFFERED','CHANGED']
