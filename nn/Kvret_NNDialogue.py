@@ -1178,7 +1178,9 @@ class NNDial(object):
                     'distance': [10e-9, 10e-4, 10e-4, 10e-4],
                     'traffic_info'      : [10e-9, 10e-4, 10e-4, 10e-4],
                     'type'      : [10e-9, 10e-4, 10e-4, 10e-4],
-                    'address'  : [10e-9, 10e-4, 10e-4, 10e-4]
+                    'address'  : [10e-9, 10e-4, 10e-4, 10e-4],
+                    'name'      : [10e-9, 10e-4, 10e-4, 10e-4],
+                    'change'    : [10e-9, 10e-4, 10e-4, 10e-4]
             },
             'vmc': 10e-7, 'success': 10e-7, 'approp': [10e-7,10e-7],
             'success_tp': 10e-7, 'success_fp': 10e-7, 'success_fn': 10e-7
