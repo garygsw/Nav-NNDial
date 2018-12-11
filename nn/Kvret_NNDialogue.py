@@ -368,7 +368,7 @@ class NNDial(object):
                         print '  | %16s%13s%20s|' % ('','Requestable','')
                         print '  | %16s\t%5s\t%20s |' % ('Prediction','Prob.','Ground Truth')
                         print '  | %16s\t%5s\t%20s |' % ('------------','-----','------------')
-                    infbn = 3 if self.trkinf else 0
+                    infbn = 1 if self.trkinf else 0
                     for i in range(len(self.req_dimensions)-1):
                         bn = self.req_dimensions[i]
                         ysem = self.reader.reqs[np.argmax(np.array(\
@@ -904,7 +904,7 @@ class NNDial(object):
                 print '  | %16s\t%.3f |' % (psem,prob)
                 #print full_belief_t[i]
         if self.trk=='rnn' and self.trkreq==True:
-            infbn = 3 if self.trkinf else 0
+            infbn = 1 if self.trkinf else 0
             print '  | %16s%13s%20s|' % ('','Requestable','')
             print '  | %16s\t%5s\t%20s |' % ('Prediction','Prob.','Ground Truth')
             print '  | %16s\t%5s\t%20s |' % ('------------','-----','------------')
@@ -1191,14 +1191,13 @@ class NNDial(object):
     def _genScoreTable(self, sem_j):
         scoreTable = {}
         # requestable tracker scoreTable
+        #print len(sem_j)
         if self.trk=='rnn' and self.trkreq==True:
-            infbn = 3 if self.trkinf else 0
+            infbn = 1 if self.trkinf else 0
             for i in range(len(self.req_dimensions)-1):
                 bn = self.req_dimensions[i]
                 # prediction for this req tracker
                 argmax_values = np.argmax(np.array(sem_j[infbn+i]))
-                print argmax_values
-                print self.req_dimensions[i]
                 psem = self.reader.reqs[argmax_values + self.req_dimensions[i]]
                 #print psem
                 # slot & value
