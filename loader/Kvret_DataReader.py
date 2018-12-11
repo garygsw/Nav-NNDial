@@ -23,6 +23,22 @@ from nltk.stem.wordnet import WordNetLemmatizer
 
 digitpat = re.compile('\d+')
 
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        pass
+
+    try:
+        import unicodedata
+        unicodedata.numeric(s)
+        return True
+    except (TypeError, ValueError):
+        pass
+
+    return False
+
 class DataSplit(object):
     # data split helper , for split dataset into train/valid/test
     def __init__(self,split):
@@ -490,7 +506,7 @@ class DataReader(object):
 
         # delexicalise all
         sent = self.delexicalise(' '.join(words),mode='all',slu=slu)
-        sent = re.sub(digitpat,'[VALUE_COUNT]',sent)
+        #sent = re.sub(digitpat,'[VALUE_COUNT]',sent)
         words= sent.split()
         #print words
 
@@ -559,7 +575,15 @@ class DataReader(object):
                         if self.slots[i] in inftoks else self.slots[i]
                 utt = (' '+utt+' ').replace(' '+self.values[i]+' ',' '+tok+' ')
                 utt = utt[1:-1]
-        utt = re.sub(digitpat,'[VALUE_COUNT]',utt)
+        #utt = re.sub(digitpat,'[VALUE_COUNT]',utt)
+        new_tokens = []
+        tokens = utt.split(' ')
+        for t in tokens:
+            if is_number(t):
+                new_tokens.append('[VALUE_COUNT]')
+            else:
+                new_tokens.append(t)
+        utt = ' '.join(new_tokens)
         return utt
 
     def delexicaliseOne(self,utt,toks,repl):
@@ -918,7 +942,7 @@ class DataReader(object):
                     slu = turn['usr']['slots']
                 else:
                     slu = None
-                mwords,words,_,_,_ = self.extractSeq(turn['sys']['sent'],\
+                mwords,words,_,_,_ = self.extractSeq(turn['usr']['transcript'],\
                     slu=slu, type='source',index=False)
                 ivocab.extend(mwords)
                 #ivocab.extend(words)
@@ -962,6 +986,8 @@ class DataReader(object):
         # the whole vocab
         self.vocab = ['<unk>','</s>','<slot>','<value>'] + \
                 list(set(self.inputvocab[4:]).union(self.outputvocab[2:]))
+
+        print self.vocab
 
         # create snapshot dimension
         self.snapshots = ['OFFERED','CHANGED']
