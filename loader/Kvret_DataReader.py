@@ -665,9 +665,9 @@ class DataReader(object):
 
         print
         print '\t\t\tDebugging delexicalized labels'
-        print '\t\t\tself.values:', ', '.join(self.values[:3]), '...', 'len:', len(self.values)
-        print '\t\t\tself.supervalues:', ', '.join(self.supervalues[:3]), '...', 'len:', len(self.supervalues)
-        print '\t\t\tself.slots:', ', '.join(self.slots[:3]), '...', 'len:', len(self.slots)
+        print '\t\t\tself.values:', ', '.join(self.values), '...', 'len:', len(self.values)
+        print '\t\t\tself.supervalues:', ', '.join(self.supervalues), '...', 'len:', len(self.supervalues)
+        print '\t\t\tself.slots:', ', '.join(self.slots), '...', 'len:', len(self.slots)
         print
 
         # for generating semantic labels
