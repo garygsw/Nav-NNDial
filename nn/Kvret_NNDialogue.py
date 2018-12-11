@@ -1196,9 +1196,10 @@ class NNDial(object):
             for i in range(len(self.req_dimensions)-1):
                 bn = self.req_dimensions[i]
                 # prediction for this req tracker
-                psem = self.reader.reqs[ \
-                    np.argmax(np.array(sem_j[infbn+i])) +\
-                    self.req_dimensions[i] ]
+                argmax_values = np.argmax(np.array(sem_j[infbn+i]))
+                print argmax_values
+                print self.req_dimensions[i]
+                psem = self.reader.reqs[argmax_values + self.req_dimensions[i]]
                 #print psem
                 # slot & value
                 s,v = psem.split('=')
