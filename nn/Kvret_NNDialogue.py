@@ -1173,13 +1173,13 @@ class NNDial(object):
 
     def _statsTable(self):
         return {'informable':{
-                    'distance': [10e-9, 10e-4, 10e-4, 10e-4],
+                    #'distance': [10e-9, 10e-4, 10e-4, 10e-4],
                     'poi_type'      : [10e-9, 10e-4, 10e-4, 10e-4],
-                    'traffic_info'      : [10e-9, 10e-4, 10e-4, 10e-4]
+                    #'traffic_info'      : [10e-9, 10e-4, 10e-4, 10e-4]
             },  'requestable':{
                     'distance': [10e-9, 10e-4, 10e-4, 10e-4],
                     'traffic_info'      : [10e-9, 10e-4, 10e-4, 10e-4],
-                    'type'      : [10e-9, 10e-4, 10e-4, 10e-4],
+                    #'type'      : [10e-9, 10e-4, 10e-4, 10e-4],
                     'address'  : [10e-9, 10e-4, 10e-4, 10e-4],
                     'name'      : [10e-9, 10e-4, 10e-4, 10e-4],
                     'change'    : [10e-9, 10e-4, 10e-4, 10e-4]
