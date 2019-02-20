@@ -1,102 +1,419 @@
 {
-    "heavy traffic": [
-        "heavy traffic"
+    "mandarin roots": [
+        "mandarin roots"
     ],
-    "tea": [
-        "tea"
+    "willows market": [
+        "willows market",
+        "willows",
+        "willow's",
+        "willow's market",
+        "willow"
     ],
-    "certain address": [
-        "certain address"
+    "145 amherst st": [
+        "145 amherst st"
     ],
-    "friends house": [
-        "friends house",
-        "friend",
-        "friends' house",
-        "friend's house"
+    "10 ames street": [
+        "10 ames street"
     ],
-    "exist": [
-        "NONE"
+    "ravenswood shopping center": [
+        "ravenswood shopping center",
+        "ravenswood"
     ],
-    "road block nearby": [
-        "road block nearby"
+    "434 arastradero rd": [
+        "434 arastradero rd"
     ],
-    "home": [
-        "home",
-        "my house"
-    ],
-    "any": [
-        "no specific",
-        "no preference",
-        "dont really care",
-        "do not care",
-        "dont care",
-        "does not matter",
-        "any"
-    ],
-    "no traffic": [
-        "no traffic",
-        "without traffic",
-        "avoids all heavy traffic",
-        "avoids all traffic",
-        "fastest",
-        "avoid all traffic",
-        "quickest",
-        "avoid the heavy traffic",
-        "avoiding all heavy traffic",
-        "lease amount of traffic",
-        "fastest route",
-        "least traffic"
+    "583 alester ave": [
+        "583 alester ave"
     ],
     "3 miles": [
-        "3 miles"
+        "3 miles",
+        "three miles",
+        "3 mile",
+        "three mile"
     ],
-    "parking garage": [
-        "parking garage",
-        "parking spot"
+    "915 arbol dr": [
+        "915 arbol dr"
     ],
-    "hospital": [
-        "hospital"
+    "pizza hut": [
+        "pizza hut"
     ],
-    "1 mile": [
-        "1 mile"
+    "580 van ness ave": [
+        "580 van ness ave"
+    ],
+    "palo alto medical foundation": [
+        "palo alto medical foundation"
+    ],
+    "midtown shopping center": [
+        "midtown shopping center"
+    ],
+    "113 anton ct": [
+        "113 anton ct"
     ],
     "2 miles": [
-        "2 miles"
+        "2 miles",
+        "two miles",
+        "2 mile",
+        "two mile"
     ],
-    "gas station": [
-        "gas station",
-        "fill up"
+    "110 arastradero rd": [
+        "110 arastradero rd"
+    ],
+    "270 altaire walk": [
+        "270 altaire walk"
     ],
     "grocery store": [
-        "grocery store"
+        "grocery store",
+        "groceries",
+        "grocery stores",
+        "grocery market",
+        "produce stand",
+        "grocery shop",
+        "grocery shops"
+    ],
+    "dish parking": [
+        "dish parking"
+    ],
+    "traffic_pref": [
+        "traffic_pref"
     ],
     "coffee": [
         "coffee",
-        "coffee shop"
+        "coffee shop",
+        "coffee shops",
+        "barista",
+        "coffee place",
+        "cafe",
+        "coffee house"
     ],
-    "poi_type": [
-        "poi_type"
+    "669 el camino real": [
+        "669 el camino real"
+    ],
+    "hotel keen": [
+        "hotel keen",
+        "keen"
+    ],
+    "stanford childrens health": [
+        "stanford childrens health"
+    ],
+    "peets coffee": [
+        "peets coffee"
+    ],
+    "56 cadwell street": [
+        "56 cadwell street"
+    ],
+    "91 el camino real": [
+        "91 el camino real"
+    ],
+    "338 alester ave": [
+        "338 alester ave"
+    ],
+    "333 arbol dr": [
+        "333 arbol dr"
+    ],
+    "name": [
+        "name"
+    ],
+    "5677 southwest 4th street": [
+        "5677 southwest 4th street"
+    ],
+    "409 bollard st": [
+        "409 bollard st"
+    ],
+    "5672 barringer street": [
+        "5672 barringer street"
+    ],
+    "safeway": [
+        "safeway"
+    ],
+    "chinese restaurant": [
+        "chinese restaurant",
+        "chinese restaurants",
+        "chinese",
+        "chinese food",
+        "restaurant",
+        "restaurants",
+        "chinese place",
+        "chinese places",
+        "chinese food restaurant",
+        "chinese food place",
+        "chinese takeout",
+        "place to eat",
+        "chinese spot",
+        "go to eat",
+        "get to eat",
+        "get lunch",
+        "chinese joint"
+    ],
+    "753 university ave": [
+        "753 university ave"
+    ],
+    "880 ames ct": [
+        "880 ames ct"
+    ],
+    "cafe venetia": [
+        "cafe venetia"
+    ],
+    "papa johns": [
+        "papa johns"
+    ],
+    "chevron": [
+        "chevron"
+    ],
+    "the clement hotel": [
+        "the clement hotel"
+    ],
+    "tea": [
+        "tea",
+        "tea shop",
+        "tea shops",
+        "tea place",
+        "tea house"
+    ],
+    "poi": [
+        "poi",
+        "name"
+    ],
+    "whole foods": [
+        "whole foods"
+    ],
+    "sigona farmers market": [
+        "sigona farmers market"
+    ],
+    "638 amherst st": [
+        "638 amherst st"
+    ],
+    "tai pan": [
+        "tai pan"
+    ],
+    "topanga mall": [
+        "topanga mall"
+    ],
+    "783 arcadia pl": [
+        "783 arcadia pl"
+    ],
+    "no traffic": [
+        "no traffic",
+        "isn't any traffic"
+    ],
+    "5677 springer street": [
+        "5677 springer street"
+    ],
+    "comfort inn": [
+        "comfort inn"
+    ],
+    "899 ames ct": [
+        "899 ames ct"
+    ],
+    "830 almanor ln": [
+        "830 almanor ln"
+    ],
+    "1 mile": [
+        "1 mile",
+        "one mile",
+        "1 miles"
+    ],
+    "9981 archuleta ave": [
+        "9981 archuleta ave"
     ],
     "5 miles": [
-        "5 miles"
+        "5 miles",
+        "five miles",
+        "5 mile",
+        "five mile"
     ],
-    "4 miles": [
-        "4 miles"
-    ],
-    "7 miles": [
-        "7 miles"
+    "town and country": [
+        "town and country",
+        "town and country shopping center"
     ],
     "moderate traffic": [
         "moderate traffic"
     ],
-    "car collision nearby": [
-        "car collision nearby"
+    "trader joes": [
+        "trader joes",
+        "trader joe's",
+        "traders joes"
+    ],
+    "hacienda market": [
+        "hacienda market",
+        "hacienda"
+    ],
+    "travelers lodge": [
+        "travelers lodge"
     ],
     "address": [
-        "address"
+        "address",
+        "position",
+        "directions",
+        "details of the location",
+        "details",
+        "located",
+        "where is it",
+        "where is",
+        "where's"
     ],
     "8 miles": [
-        "8 miles"
+        "8 miles",
+        "eight miles",
+        "8 mile",
+        "eight mile"
+    ],
+    "jacks house": [
+        "jacks house",
+        "jack",
+        "jacks",
+        "jack house",
+        "jack's house",
+        "jack's"
+    ],
+    "1313 chester ave": [
+        "1313 chester ave"
+    ],
+    "distance_pref": [
+        "distance_pref"
+    ],
+    "347 alta mesa ave": [
+        "347 alta mesa ave"
+    ],
+    "the westin": [
+        "the westin",
+        "westin",
+        "westin hotel"
+    ],
+    "9 miles": [
+        "9 miles",
+        "nine miles",
+        "9 mile",
+        "nine mile"
+    ],
+    "heavy traffic": [
+        "heavy traffic"
+    ],
+    "452 arcadia pl": [
+        "452 arcadia pl"
+    ],
+    "842 arrowhead way": [
+        "842 arrowhead way"
+    ],
+    "four seasons": [
+        "four seasons"
+    ],
+    "road block nearby": [
+        "road block nearby"
+    ],
+    "383 university ave": [
+        "383 university ave"
+    ],
+    "819 alma st": [
+        "819 alma st"
+    ],
+    "p.f. changs": [
+        "p.f. changs"
+    ],
+    "parking garage": [
+        "parking garage",
+        "parking spot",
+        "parking",
+        "parking lot",
+        "parking lots",
+        "garage",
+        "place to park",
+        "parking area",
+        "somewhere to park",
+        "parking garages",
+        "where i can park",
+        "parking areas",
+        "park"
+    ],
+    "hospital": [
+        "hospital",
+        "hospitals"
+    ],
+    "coupa": [
+        "coupa"
+    ],
+    "611 ames ave": [
+        "611 ames ave"
+    ],
+    "773 alger dr": [
+        "773 alger dr"
+    ],
+    "792 bedoin street": [
+        "792 bedoin street"
+    ],
+    "481 amaranta ave": [
+        "481 amaranta ave"
+    ],
+    "436 alger dr": [
+        "436 alger dr"
+    ],
+    "stanford shopping center": [
+        "stanford shopping center"
+    ],
+    "palo alto garage r": [
+        "palo alto garage r",
+        "palo alto garage"
+    ],
+    "704 el camino real": [
+        "704 el camino real"
+    ],
+    "stanford express care": [
+        "stanford express care",
+        "stanford express"
+    ],
+    "394 van ness ave": [
+        "394 van ness ave"
+    ],
+    "7 miles": [
+        "7 miles",
+        "seven miles",
+        "7 mile",
+        "seven mile"
+    ],
+    "657 ames ave": [
+        "657 ames ave"
+    ],
+    "pizza chicago": [
+        "pizza chicago"
+    ],
+    "593 arrowhead way": [
+        "593 arrowhead way"
+    ],
+    "171 oak rd": [
+        "171 oak rd"
+    ],
+    "408 university ave": [
+        "408 university ave"
+    ],
+    "329 el camino real": [
+        "329 el camino real"
+    ],
+    "610 amarillo ave": [
+        "610 amarillo ave"
+    ],
+    "distance": [
+        "distance",
+        "how far",
+        "how far away",
+        "how close",
+        "how long"
+    ],
+    "webster garage": [
+        "webster garage"
+    ],
+    "pizza my heart": [
+        "pizza my heart"
+    ],
+    "shopping center": [
+        "shopping center",
+        "shopping centers",
+        "shopping mall",
+        "mall",
+        "malls",
+        "place to shop",
+        "shopping"
+    ],
+    "113 arbol dr": [
+        "113 arbol dr"
     ],
     "rest stop": [
         "rest stop",
@@ -105,43 +422,268 @@
         "motels",
         "hotel",
         "hotels",
-        "a place to sleep"
-    ],
-    "distance": [
-        "distance",
-        "nearest",
-        "nearby",
-        "quickest",
-        "closest",
-        "quick",
-        "shortest",
-        "close to where i am",
-        "near me",
-        "area around me"
-    ],
-    "none": [
-        "NONE"
-    ],
-    "name": [
-        "name"
-    ],
-    "shopping center": [
-        "shopping center",
-        "mall"
+        "place to sleep"
     ],
     "pizza restaurant": [
-        "pizza restaurant"
+        "pizza restaurant",
+        "pizza",
+        "fast food",
+        "place to get to eat",
+        "pizza place",
+        "pizza places",
+        "pizza shop",
+        "pizza spot",
+        "fast food restaurant",
+        "fast food place",
+        "fast food restaurants",
+        "something to eat",
+        "pizzeria",
+        "pizza joint"
+    ],
+    "valero": [
+        "valero",
+        "valeros"
+    ],
+    "5671 barringer street": [
+        "5671 barringer street"
+    ],
+    "stanford oval parking": [
+        "stanford oval parking",
+        "stanford oval"
+    ],
+    "nearest": [
+        "nearest",
+        "within 5 miles",
+        "within 4 miles",
+        "within 3 miles",
+        "within 2 miles",
+        "within 1 mile",
+        "around me",
+        "around here",
+        "near me",
+        "near my current location",
+        "in my area",
+        "in the area",
+        "close",
+        "closer",
+        "closest",
+        "close by",
+        "around my current location",
+        "around this area",
+        "nearer",
+        "nearest",
+        "near",
+        "near my location",
+        "around",
+        "near to me",
+        "nearby",
+        "shortest",
+        "shorter",
+        "short",
+        "in the area",
+        "less time to reach"
+    ],
+    "chef chu's": [
+        "chef chu's"
+    ],
+    "starbucks": [
+        "starbucks"
+    ],
+    "round table": [
+        "round table"
+    ],
+    "864 almanor ln": [
+        "864 almanor ln"
+    ],
+    "shell": [
+        "shell"
+    ],
+    "home": [
+        "home",
+        "my house",
+        "my address",
+        "i live",
+        "the house"
+    ],
+    "269 alger dr": [
+        "269 alger dr"
+    ],
+    "panda express": [
+        "panda express",
+        "panda"
+    ],
+    "465 arcadia pl": [
+        "465 arcadia pl"
+    ],
+    "4 miles": [
+        "4 miles",
+        "four miles",
+        "4 mile",
+        "four mile"
+    ],
+    "528 anton ct": [
+        "528 anton ct"
+    ],
+    "53 university av": [
+        "53 university av"
+    ],
+    "200 alester ave": [
+        "200 alester ave"
+    ],
+    "578 arbol dr": [
+        "578 arbol dr"
+    ],
+    "philz": [
+        "philz"
+    ],
+    "214 el camino real": [
+        "214 el camino real"
+    ],
+    "gas station": [
+        "gas station",
+        "fill up",
+        "gas",
+        "gas stations"
+    ],
+    "550 alester ave": [
+        "550 alester ave"
+    ],
+    "teavana": [
+        "teavana"
+    ],
+    "civic center garage": [
+        "civic center garage"
+    ],
+    "least traffic": [
+        "least traffic",
+        "best route",
+        "best possible route",
+        "best available route",
+        "less traffic",
+        "least traffic",
+        "fastest",
+        "faster",
+        "fast",
+        "quickest",
+        "quicker",
+        "quick",
+        "asap",
+        "avoid the traffic",
+        "pronto",
+        "quickly",
+        "fastest route",
+        "no traffic",
+        "no heavy traffic",
+        "avoid heavy traffic",
+        "avoids heavy traffic",
+        "avoid all heavy traffic",
+        "avoids all heavy traffic",
+        "avoid the heavy traffic",
+        "avoid all traffic",
+        "avoids all traffic",
+        "avoiding heavy traffic",
+        "without traffic",
+        "without heavy traffic",
+        "without any traffic",
+        "avoid any traffic",
+        "avoid any heavy traffic",
+        "avoiding all heavy traffic",
+        "avoid traffic",
+        "avoids traffic",
+        "avoid most traffic",
+        "avoids most traffic",
+        "avoiding most traffic",
+        "avoid most heavy traffic",
+        "avoids most heavy traffic",
+        "avoiding most heavy traffic",
+        "avoids as much heavy traffic",
+        "avoid the traffic",
+        "avoids the traffic",
+        "avoid all traffic",
+        "avoid the heavy traffic",
+        "avoids the heavy traffic",
+        "avoid heavy traffic",
+        "avoids heavy traffic",
+        "without any heavy traffic",
+        "least amount of traffic",
+        "around the traffic",
+        "least heavy traffic",
+        "little traffic",
+        "few traffic",
+        "lighter traffic",
+        "doesn't have any traffic"
+    ],
+    "dominos": [
+        "dominos"
+    ],
+    "76": [
+        "76"
+    ],
+    "car collision nearby": [
+        "car collision nearby"
+    ],
+    "jing jing": [
+        "jing jing"
+    ],
+    "friend house": [
+        "friend house",
+        "friend",
+        "friends",
+        "friend's",
+        "friendss'",
+        "friends' house",
+        "friend's house",
+        "friend's home",
+        "friends house",
+        "friend's home"
+    ],
+    "271 springer street": [
+        "271 springer street"
+    ],
+    "776 arastradero rd": [
+        "776 arastradero rd"
+    ],
+    "toms house": [
+        "toms house",
+        "tom's house",
+        "tom's",
+        "tom",
+        "tom house"
     ],
     "traffic_info": [
-        "traffic info"
+        "traffic_info",
+        "route details",
+        "the traffic",
+        "any traffic",
+        "how's the traffic",
+        "is the traffic",
+        "there traffic",
+        "show me traffic",
+        "traffic like",
+        "how is the traffic",
+        "contain traffic",
+        "any traffic",
+        "details about the traffic",
+        "details of the traffic",
+        "is there traffic",
+        "how does the traffic",
+        "traffic nearby"
     ],
-    "chinese restaurant": [
-        "chinese restaurant"
+    "palo alto cafe": [
+        "palo alto cafe",
+        "palo alto"
     ],
-    "9 miles": [
-        "9 miles"
+    "jills house": [
+        "jills house",
+        "jill's house",
+        "jill's",
+        "jill",
+        "jill house"
     ],
     "6 miles": [
-        "6 miles"
+        "6 miles",
+        "six miles",
+        "6 mile",
+        "six mile"
     ]
 }

@@ -1,8 +1,10 @@
 {
     "informable": {
-        "poi_type": ["friends house", "home", "coffee","tea","chinese restaurant",
-                     "pizza restaurant", "grocery store", "rest stop", "shopping center", "parking garage",
-                     "gas station", "hospital", "certain address"]
+        "poi": ["friend house", "home", "coffee","tea", "chinese restaurant",
+                "pizza restaurant", "grocery store", "rest stop", "shopping center", "parking garage",
+                "gas station", "hospital"],
+        "traffic_pref" : ["least traffic"],
+        "distance_pref" : ["nearest"]
     },
     "requestable" : {
         "distance": ["1 mile", "2 miles", "3 miles", "4 miles", "5 miles", "6 miles", "7 miles", "8 miles", "9 miles"],
