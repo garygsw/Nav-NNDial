@@ -643,7 +643,7 @@ class NNDial(object):
         db_degree, srcfeat, tarfeat, finished, utt_group = data
 
         # for calculating success: check requestable slots match
-        requestables = ['phone','address','postcode']
+        requestables = ['distance','traffic_info','address']
         offer_per_turn  = []
         request_per_turn= []
         target_sents = []
@@ -838,14 +838,14 @@ class NNDial(object):
         for cn in range(len(generated_utts)):
             words = generated_utts[cn].split()
             # count special tokens
-            infslots = ['area','food','pricerange']
+            infslots = ['distance_pref','traffic_pref','poi']
             specialtoks = {
-                '[VALUE_FOOD]' :[0,
-                    deepcopy(self.reader.s2v['informable']['food'])],
-                '[VALUE_PRICERANGE]':[0,
-                    deepcopy(self.reader.s2v['informable']['pricerange'])],
-                '[VALUE_AREA]' :[0,
-                    deepcopy(self.reader.s2v['informable']['area'])]}
+                '[VALUE_POI]' :[0,
+                    deepcopy(self.reader.s2v['informable']['poi'])],
+                '[VALUE_DISTANCE_PREF]':[0,
+                    deepcopy(self.reader.s2v['informable']['distance_pref'])],
+                '[VALUE_TRAFFIC_PREF]' :[0,
+                    deepcopy(self.reader.s2v['informable']['traffic_pref'])]}
             for w in words:
                 if specialtoks.has_key(w):
                     specialtoks[w][0] += 1
@@ -1173,15 +1173,15 @@ class NNDial(object):
 
     def _statsTable(self):
         return {'informable':{
-                    #'distance': [10e-9, 10e-4, 10e-4, 10e-4],
-                    'poi_type'      : [10e-9, 10e-4, 10e-4, 10e-4],
-                    #'traffic_info'      : [10e-9, 10e-4, 10e-4, 10e-4]
+                    'poi': [10e-9, 10e-4, 10e-4, 10e-4],
+                    'distance_pref'      : [10e-9, 10e-4, 10e-4, 10e-4],
+                    'traffic_pref'      : [10e-9, 10e-4, 10e-4, 10e-4]
             },  'requestable':{
                     'distance': [10e-9, 10e-4, 10e-4, 10e-4],
                     'traffic_info'      : [10e-9, 10e-4, 10e-4, 10e-4],
                     #'type'      : [10e-9, 10e-4, 10e-4, 10e-4],
                     'address'  : [10e-9, 10e-4, 10e-4, 10e-4],
-                    'name'      : [10e-9, 10e-4, 10e-4, 10e-4],
+                    #'name'      : [10e-9, 10e-4, 10e-4, 10e-4],
                     'change'    : [10e-9, 10e-4, 10e-4, 10e-4]
             },
             'vmc': 10e-7, 'success': 10e-7, 'approp': [10e-7,10e-7],
