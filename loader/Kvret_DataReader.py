@@ -611,7 +611,7 @@ class DataReader(object):
         #             self.s2v['informable'][s].append(v.lower().strip())
         for entry in self.db:
             for s, v in entry.iteritems():
-                if s == 'name' and not v.startswith('home':
+                if s == 'name' and not v.startswith('home'):
                     self.s2v['other']['name'].append(v.lower().strip())
 
         # sort values
@@ -768,7 +768,7 @@ class DataReader(object):
         corpus = zip(*corpus)
 
         self.data['valid'] = corpus[:100]     # first 100 is dev
-        self.data['valid'] = corpus[100:900]    # next 800 is train
+        self.data['train'] = corpus[100:900]    # next 800 is train
         self.data['test'] = corpus[900:1000]  # next 100 is test
 
         #print 'train size:', len(self.data['train'])
