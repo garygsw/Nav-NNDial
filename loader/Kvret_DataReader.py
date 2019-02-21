@@ -611,8 +611,12 @@ class DataReader(object):
         #             self.s2v['informable'][s].append(v.lower().strip())
         for entry in self.db:
             for s, v in entry.iteritems():
-                if s == 'name' and not v.startswith('home'):
-                    self.s2v['other']['name'].append(v.lower().strip())
+                if s == 'name'
+                    if not v.startswith('home'):
+                        self.s2v['other']['name'].append(v.lower().strip())
+                        self.s2v['informable']['poi'].append(v.lower().strip())
+        self.s2v['informable']['poi'].append('home')
+        self.s2v['other']['name'].append('home')
 
         # sort values
         for s,vs in self.s2v['informable'].iteritems():
