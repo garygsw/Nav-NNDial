@@ -613,6 +613,7 @@ class DataReader(object):
             for s, v in entry.iteritems():
                 if s == 'name':
                     self.s2v['other']['name'].append(v.lower().strip())
+                    self.s2v['informable']['poi'].append(v.lower().strip())
 
         # sort values
         for s,vs in self.s2v['informable'].iteritems():
