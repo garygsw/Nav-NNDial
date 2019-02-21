@@ -36,7 +36,7 @@ for slot in data['other']:
         semidict[value] = [value.replace('_', ' ')]
 
 # default
-semidict["any"] = ["no specific","no preference","dont really care","do not care","dont care","does not matter","any"]
+semidict["any"] = ["dont really care"]
 #semidict["none"] = ["NONE"]
 #semidict["exist"] = ["NONE"]
 semidict['poi'] += ['name']

@@ -488,8 +488,8 @@ class DataReader(object):
         elif type=='target':vocab = self.vocab
 
         # standardise sentences
-        if normalise:
-            sent = normalize(sent)
+        #if normalise:
+        #    sent = normalize(sent)
 
         # preporcessing
         words = sent.split()
@@ -604,11 +604,15 @@ class DataReader(object):
                     self.s2v['other'][s].append(v.lower())
 
         # Add to informables from dataset
-        #for d in self.dialog:
-        #    inf_slots = d["goal"]["constraints"]
-        #    for s,v in inf_slots:
-        #        if s in self.s2v['informable']:
-        #            self.s2v['informable'][s].append(v.lower().strip())
+        # for d in self.dialog:
+        #     inf_slots = d["goal"]["constraints"]
+        #     for s,v in inf_slots:
+        #         if s in self.s2v['informable']:
+        #             self.s2v['informable'][s].append(v.lower().strip())
+        for entry in self.db:
+            for s, v in entry.iteritems():
+                if s == 'name':
+                    self.s2v['other']['name'].append(v.lower().strip())
 
         # sort values
         for s,vs in self.s2v['informable'].iteritems():
@@ -654,9 +658,12 @@ class DataReader(object):
             self.values.extend([normalize(x) for x in self.semidict[s]])
             self.slots.extend(['[SLOT_'+s.upper()+']' for x in self.semidict[s]])
         # incorporate dontcare values
-        self.values.extend([normalize(v) for v in self.semidict['any']])
-        self.supervalues.extend(['dontcare' for v in self.semidict['any']])
-        self.slots.extend(['[VALUE_DONTCARE]' for v in self.semidict['any']])
+        #self.values.extend([normalize(v) for v in self.semidict['any']])
+        #self.supervalues.extend(['dontcare' for v in self.semidict['any']])
+        #self.slots.extend(['[VALUE_DONTCARE]' for v in self.semidict['any']])
+        self.values.extend([v for v in self.semidict['any']])
+        self.supervalues.extend(['any' for v in self.semidict['any']])
+        self.slots.extend(['[VALUE_ANY]' for v in self.semidict['any']])
 
         # sorting according to length
         self.values, self.supervalues, self.slots = zip(*sorted(\
@@ -681,7 +688,7 @@ class DataReader(object):
         print '\t\t\tgenerating informables semantic labels ...'
         for s in sorted(self.s2v['informable'].keys()):
             self.infovs.extend([s+'='+v for v in self.s2v['informable'][s]])
-            self.infovs.append(s+'=dontcare')
+            self.infovs.append(s+'=any')
             self.infovs.append(s+'=none')
             self.infoseg.append(len(self.infovs))
             # dont care values
@@ -760,8 +767,8 @@ class DataReader(object):
                     self.finished,          self.sentGroupIndex]
         corpus = zip(*corpus)
 
-        self.data['train'] = corpus[:800]     # first 800 is train
-        self.data['valid'] = corpus[800:900]    # next 100 is dev
+        self.data['valid'] = corpus[:100]     # first 100 is dev
+        self.data['valid'] = corpus[100:900]    # next 800 is train
         self.data['test'] = corpus[900:1000]  # next 100 is test
 
         #print 'train size:', len(self.data['train'])
@@ -885,7 +892,7 @@ class DataReader(object):
             e2inf = []
             for s,v in e.iteritems():
                 if s in self.s2v['informable']:
-                    e2inf.append( self.infovs.index(s+'='+v) )
+                    e2inf.append( self.infovs.index(s+'='+v) )  # only address
             e2inf = sorted(e2inf)
 
             # if not repeat, create new entry

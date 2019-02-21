@@ -1,287 +1,287 @@
 [
     {
-        "poi_type": "chinese restaurant", 
-        "name": "Chef Chu's", 
+        "poi_type": "chinese restaurant",
+        "name": "Chef Chu's",
         "address": "593 Arrowhead Way"
-    }, 
+    },
     {
-        "poi_type": "coffee", 
-        "name": "Coupa", 
+        "poi_type": "coffee",
+        "name": "Coupa",
         "address": "394 Van Ness Ave"
-    }, 
+    },
     {
-        "poi_type": "grocery store", 
-        "name": "Trader Joes", 
+        "poi_type": "grocery store",
+        "name": "Trader Joes",
         "address": "408 University Ave"
-    }, 
+    },
     {
-        "poi_type": "pizza restaurant", 
-        "name": "Round Table", 
+        "poi_type": "pizza restaurant",
+        "name": "Round Table",
         "address": "113 Anton Ct"
-    }, 
+    },
     {
-        "poi_type": "grocery store", 
-        "name": "Hacienda Market", 
+        "poi_type": "grocery store",
+        "name": "Hacienda Market",
         "address": "1313 Chester Ave"
-    }, 
+    },
     {
-        "poi_type": "rest stop", 
-        "name": "Four Seasons", 
+        "poi_type": "rest stop",
+        "name": "Four Seasons",
         "address": "465 Arcadia Pl"
-    }, 
+    },
     {
-        "poi_type": "chinese restaurant", 
-        "name": "tai pan", 
+        "poi_type": "chinese restaurant",
+        "name": "tai pan",
         "address": "830 Almanor Ln"
-    }, 
+    },
     {
-        "poi_type": "shopping center", 
-        "name": "Stanford Shopping Center", 
+        "poi_type": "shopping center",
+        "name": "Stanford Shopping Center",
         "address": "773 Alger Dr"
-    }, 
+    },
     {
-        "poi_type": "gas station", 
-        "name": "Shell", 
+        "poi_type": "gas station",
+        "name": "Shell",
         "address": "53 University Av"
-    }, 
+    },
     {
-        "poi_type": "rest stop", 
-        "name": "The Clement Hotel", 
+        "poi_type": "rest stop",
+        "name": "The Clement Hotel",
         "address": "657 Ames Ave"
-    }, 
+    },
     {
-        "poi_type": "coffee", 
-        "name": "Starbucks", 
+        "poi_type": "coffee",
+        "name": "Starbucks",
         "address": "792 Bedoin Street"
-    }, 
+    },
     {
-        "poi_type": "rest stop", 
-        "name": "The Westin", 
+        "poi_type": "rest stop",
+        "name": "The Westin",
         "address": "329 El Camino Real"
-    }, 
+    },
     {
-        "poi_type": "shopping center", 
-        "name": "Town and Country", 
+        "poi_type": "shopping center",
+        "name": "Town and Country",
         "address": "383 University Ave"
-    }, 
+    },
     {
-        "poi_type": "grocery store", 
-        "name": "Safeway", 
+        "poi_type": "grocery store",
+        "name": "Safeway",
         "address": "452 Arcadia Pl"
-    }, 
+    },
     {
-        "poi_type": "shopping center", 
-        "name": "Topanga Mall", 
+        "poi_type": "shopping center",
+        "name": "Topanga Mall",
         "address": "171 Oak Rd"
-    }, 
+    },
     {
-        "poi_type": "chinese restaurant", 
-        "name": "Panda Express", 
+        "poi_type": "chinese restaurant",
+        "name": "Panda Express",
         "address": "842 Arrowhead Way"
-    }, 
+    },
     {
-        "poi_type": "pizza restaurant", 
-        "name": "Pizza Hut", 
+        "poi_type": "pizza restaurant",
+        "name": "Pizza Hut",
         "address": "704 El Camino Real"
-    }, 
+    },
     {
-        "poi_type": "hospital", 
-        "name": "Stanford Childrens Health", 
+        "poi_type": "hospital",
+        "name": "Stanford Childrens Health",
         "address": "899 Ames Ct"
-    }, 
+    },
     {
-        "poi_type": "certain address", 
-        "name": "5677 southwest 4th street", 
+        "poi_type": "certain address",
+        "name": "5677 southwest 4th street",
         "address": "5677 southwest 4th street"
-    }, 
+    },
     {
-        "poi_type": "certain address", 
-        "name": "5672 barringer street", 
+        "poi_type": "certain address",
+        "name": "5672 barringer street",
         "address": "5672 barringer street"
-    }, 
+    },
     {
-        "poi_type": "hospital", 
-        "name": "Stanford Express Care", 
+        "poi_type": "hospital",
+        "name": "Stanford Express Care",
         "address": "214 El Camino Real"
-    }, 
+    },
     {
-        "poi_type": "grocery store", 
-        "name": "Sigona Farmers Market", 
+        "poi_type": "grocery store",
+        "name": "Sigona Farmers Market",
         "address": "638 Amherst St"
-    }, 
+    },
     {
-        "poi_type": "hospital", 
-        "name": "Palo Alto Medical Foundation", 
+        "poi_type": "hospital",
+        "name": "Palo Alto Medical Foundation",
         "address": "611 Ames Ave"
-    }, 
+    },
     {
-        "poi_type": "shopping center", 
-        "name": "Ravenswood Shopping Center", 
+        "poi_type": "shopping center",
+        "name": "Ravenswood Shopping Center",
         "address": "434 Arastradero Rd"
-    }, 
+    },
     {
-        "poi_type": "shopping center", 
-        "name": "Midtown Shopping Center", 
+        "poi_type": "shopping center",
+        "name": "Midtown Shopping Center",
         "address": "338 Alester Ave"
-    }, 
+    },
     {
-        "poi_type": "chinese restaurant", 
-        "name": "Mandarin Roots", 
+        "poi_type": "chinese restaurant",
+        "name": "Mandarin Roots",
         "address": "271 Springer Street"
-    }, 
+    },
     {
-        "poi_type": "rest stop", 
-        "name": "Comfort Inn", 
+        "poi_type": "rest stop",
+        "name": "Comfort Inn",
         "address": "753 University Ave"
-    }, 
+    },
     {
-        "poi_type": "chinese restaurant", 
-        "name": "P.F. Changs", 
+        "poi_type": "chinese restaurant",
+        "name": "P.F. Changs",
         "address": "669 El Camino Real"
-    }, 
+    },
     {
-        "poi_type": "pizza restaurant", 
-        "name": "Pizza Chicago", 
+        "poi_type": "pizza restaurant",
+        "name": "Pizza Chicago",
         "address": "915 Arbol Dr"
-    }, 
+    },
     {
-        "poi_type": "rest stop", 
-        "name": "Travelers Lodge", 
+        "poi_type": "rest stop",
+        "name": "Travelers Lodge",
         "address": "333 Arbol Dr"
-    }, 
+    },
     {
-        "poi_type": "coffee", 
-        "name": "Palo Alto Cafe", 
+        "poi_type": "coffee",
+        "name": "Palo Alto Cafe",
         "address": "436 Alger Dr"
-    }, 
+    },
     {
-        "poi_type": "certain address", 
-        "name": "5677 springer street", 
+        "poi_type": "certain address",
+        "name": "5677 springer street",
         "address": "5677 springer street"
-    }, 
+    },
     {
-        "poi_type": "chinese restaurant", 
-        "name": "Jing Jing", 
+        "poi_type": "chinese restaurant",
+        "name": "Jing Jing",
         "address": "113 Arbol Dr"
-    }, 
+    },
     {
-        "poi_type": "grocery store", 
-        "name": "Willows Market", 
+        "poi_type": "grocery store",
+        "name": "Willows Market",
         "address": "409 Bollard St"
-    }, 
+    },
     {
-        "poi_type": "pizza restaurant", 
-        "name": "Dominos", 
+        "poi_type": "pizza restaurant",
+        "name": "Dominos",
         "address": "776 Arastradero Rd"
-    }, 
+    },
     {
-        "poi_type": "coffee", 
-        "name": "Cafe Venetia", 
+        "poi_type": "coffee",
+        "name": "Cafe Venetia",
         "address": "269 Alger Dr"
-    }, 
+    },
     {
-        "poi_type": "pizza restaurant", 
-        "name": "Papa Johns", 
+        "poi_type": "pizza restaurant",
+        "name": "Papa Johns",
         "address": "110 Arastradero Rd"
-    }, 
+    },
     {
-        "poi_type": "parking garage", 
-        "name": "Dish Parking", 
+        "poi_type": "parking garage",
+        "name": "Dish Parking",
         "address": "550 Alester Ave"
-    }, 
+    },
     {
-        "poi_type": "rest stop", 
-        "name": "Hotel Keen", 
+        "poi_type": "rest stop",
+        "name": "Hotel Keen",
         "address": "578 Arbol Dr"
-    }, 
+    },
     {
-        "poi_type": "coffee", 
-        "name": "Peets Coffee", 
+        "poi_type": "coffee",
+        "name": "Peets Coffee",
         "address": "9981 Archuleta Ave"
-    }, 
+    },
     {
-        "poi_type": "gas station", 
-        "name": "Valero", 
+        "poi_type": "gas station",
+        "name": "Valero",
         "address": "200 Alester Ave"
-    }, 
+    },
     {
-        "poi_type": "grocery store", 
-        "name": "Whole Foods", 
+        "poi_type": "grocery store",
+        "name": "Whole Foods",
         "address": "819 Alma St"
-    }, 
+    },
     {
-        "poi_type": "gas station", 
-        "name": "76", 
+        "poi_type": "gas station",
+        "name": "76",
         "address": "91 El Camino Real"
-    }, 
+    },
     {
-        "poi_type": "coffee", 
-        "name": "Philz", 
+        "poi_type": "coffee",
+        "name": "Philz",
         "address": "583 Alester Ave"
-    }, 
+    },
     {
-        "poi_type": "parking garage", 
-        "name": "Civic Center Garage", 
+        "poi_type": "parking garage",
+        "name": "Civic Center Garage",
         "address": "270 Altaire Walk"
-    }, 
+    },
     {
-        "poi_type": "parking garage", 
-        "name": "Stanford Oval Parking", 
+        "poi_type": "parking garage",
+        "name": "Stanford Oval Parking",
         "address": "610 Amarillo Ave"
-    }, 
+    },
     {
-        "poi_type": "friends house", 
-        "name": "jills house", 
+        "poi_type": "friends house",
+        "name": "jills house",
         "address": "347 Alta Mesa Ave"
-    }, 
+    },
     {
-        "poi_type": "parking garage", 
-        "name": "Webster Garage", 
+        "poi_type": "parking garage",
+        "name": "Webster Garage",
         "address": "880 Ames Ct"
-    }, 
+    },
     {
-        "poi_type": "friends house", 
-        "name": "jacks house", 
+        "poi_type": "friends house",
+        "name": "jacks house",
         "address": "864 Almanor Ln"
-    }, 
+    },
     {
-        "poi_type": "home", 
-        "name": "home_2", 
+        "poi_type": "home",
+        "name": "home_2",
         "address": "56 cadwell street"
-    }, 
+    },
     {
-        "poi_type": "home", 
-        "name": "home_3", 
+        "poi_type": "home",
+        "name": "home_3",
         "address": "5671 barringer street"
-    }, 
+    },
     {
-        "poi_type": "pizza restaurant", 
-        "name": "Pizza My Heart", 
+        "poi_type": "pizza restaurant",
+        "name": "Pizza My Heart",
         "address": "528 Anton Ct"
-    }, 
+    },
     {
-        "poi_type": "home", 
-        "name": "home_1", 
+        "poi_type": "home",
+        "name": "home_1",
         "address": "10 ames street"
-    }, 
+    },
     {
-        "poi_type": "friends house", 
-        "name": "toms house", 
+        "poi_type": "friends house",
+        "name": "toms house",
         "address": "580 Van Ness Ave"
-    }, 
+    },
     {
-        "poi_type": "parking garage", 
-        "name": "Palo Alto Garage R", 
+        "poi_type": "parking garage",
+        "name": "Palo Alto Garage R",
         "address": "481 Amaranta Ave"
-    }, 
+    },
     {
-        "poi_type": "gas station", 
-        "name": "Chevron", 
+        "poi_type": "gas station",
+        "name": "Chevron",
         "address": "783 Arcadia Pl"
-    }, 
+    },
     {
-        "poi_type": "tea", 
-        "name": "Teavana", 
+        "poi_type": "tea",
+        "name": "Teavana",
         "address": "145 Amherst St"
     }
 ]
