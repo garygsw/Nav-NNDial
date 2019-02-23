@@ -350,6 +350,11 @@ class NNDial(object):
                         if self.verbose>1:
                             print '  | %16s\t%.3f\t%20s |' % (psem,prob,ysem)
 
+                        # weird sometime the same ysem is printed twice
+                        # index = np.array(inf_trk_label[t][bn:self.inf_dimensions[i+1]+bn]))+bn
+                        # index supposed to be 0, 3, 73
+                        # but it becomes: 0, 73, 73
+
                         # counting stats
                         slt,val = ysem.split('=')
                         if 'none' not in ysem:

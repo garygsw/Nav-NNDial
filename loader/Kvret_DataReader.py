@@ -193,7 +193,7 @@ class DataReader(object):
                 # extract system side sentence feature
                 sent = turn['sys']['sent']
                 mtar, tar, spos, vpos, venues \
-                    = self.extractSeq(sent,type='target')
+                    = self.extractSeq(sent,type='target',assist=True)
 
                 # store sentence group
                 utt_group.append(self.sentGroup[groupidx])
@@ -481,7 +481,7 @@ class DataReader(object):
             self.db_logics.append(db_logic)
         print
 
-    def extractSeq(self,sent,slu=None,type='source',normalise=False,index=True):
+    def extractSeq(self,sent,slu=None,type='source',normalise=False,index=True,assist=False):
 
         # setup vocab
         if type=='source':  vocab = self.vocab
@@ -505,7 +505,7 @@ class DataReader(object):
             idx = words
 
         # delexicalise all
-        sent = self.delexicalise(' '.join(words),mode='all',slu=slu)
+        sent = self.delexicalise(' '.join(words),mode='all',slu=slu,assist=assist)
         #sent = re.sub(digitpat,'[VALUE_COUNT]',sent)
         words= sent.split()
         #print words
@@ -548,7 +548,7 @@ class DataReader(object):
 
         return midx, idx, sltpos, valpos, names
 
-    def delexicalise(self,utt,slu=None,mode='all'):
+    def delexicalise(self,utt,slu=None,mode='all',assist=False):
         if slu is not None:
             for slot, value in slu:
                 del_value = '[VALUE_' + slot.upper() + ']'
@@ -557,10 +557,12 @@ class DataReader(object):
 
         inftoks =   ['[VALUE_'+s.upper()+']' for s in self.s2v['informable'].keys()] + \
                     ['[SLOT_' +s.upper()+']' for s in self.s2v['informable'].keys()] + \
-                    ['[VALUE_DONTCARE]','[VALUE_NAME]'] +\
+                    ['[VALUE_ANY]','[VALUE_NAME]'] +\
                     ['[SLOT_' +s.upper()+']' for s in self.s2v['requestable'].keys()]
         reqtoks =   ['[VALUE_'+s.upper()+']' for s in self.s2v['requestable'].keys()]
         for i in range(len(self.values)):
+            if assist and self.slots[i] == 'VALUE_POI':
+                continue
             # informable mode, preserving location information
             if mode=='informable'and self.slots[i] in inftoks:
                 tok = self.slots[i]+'::'+(self.supervalues[i]).replace(' ','-')
@@ -651,7 +653,7 @@ class DataReader(object):
                 self.supervalues.extend([v for x in self.semidict[v]])
                 self.values.extend([normalize(x) for x in self.semidict[v]])
                 self.slots.extend(['[VALUE_'+s.upper()+']' for x in self.semidict[v]])
-        for s,vs in self.s2v['requestable'].items()+self.s2v['other'].items():
+        for s,vs in self.s2v['requestable'].items(): # +self.s2v['other'].items():
             # adding value delexicalisation
             self.values.extend([normalize(v) for v in vs])
             self.supervalues.extend([v for v in vs])
@@ -964,7 +966,7 @@ class DataReader(object):
 
                 # system side
                 words,_,_,_,_ = self.extractSeq(turn['sys']['sent'],\
-                    type='target',index=False)
+                    type='target',index=False,assist=True)
 
                 ovocab.extend(words)
 
