@@ -981,7 +981,7 @@ class NNDial(object):
                 idx = np.argmax(np.array(b_i)) + self.inf_dimensions[i]
                 # ignore dont care case
                 s2v = self.reader.infovs[idx]
-                if '=dontcare' not in s2v and '=none' not in s2v:
+                if '=any' not in s2v and '=none' not in s2v:
                     query.append(idx)
                 q.append(idx)
             # search through db by query
@@ -1193,7 +1193,7 @@ class NNDial(object):
         # requestable tracker scoreTable
         #print len(sem_j)
         if self.trk=='rnn' and self.trkreq==True:
-            infbn = 1 if self.trkinf else 0
+            infbn = 3 if self.trkinf else 0  # 3 because, =value, =any, =none
             for i in range(len(self.req_dimensions)-1):
                 bn = self.req_dimensions[i]
                 # prediction for this req tracker
