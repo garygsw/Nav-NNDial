@@ -20,8 +20,6 @@ from utils.nlp import normalize
 from utils.tools import findSubList
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
-from nltk.tokenize import PunktWordTokenizer
-
 
 digitpat = re.compile('\d+')
 
@@ -118,11 +116,6 @@ class DataReader(object):
             self._setupData(percent)
 
         if verbose : self._printStats()
-
-    def tokenize(self, text):
-        text = re.sub('\s*\.(?!\w)', ' .', text)  # seperate the '.'
-        text = re.sub("'", '', text)  # removes all astrophies
-        return TOKENIZER.tokenize(text)
 
     def loadDialog(self):
 
@@ -420,13 +413,13 @@ class DataReader(object):
                             if toreplace:
                                 semi.remove(toreplace)
 
-                            if v.lower().sub("'", '') not in self.values:
-                                print v.lower().sub("'", '')
-                            value_idx = self.values.index(v.lower().sub("'", ''))
+                            if v.lower() not in self.values:
+                                print v.lower()
+                            value_idx = self.values.index(v.lower())
                             if value_idx != -1:
                                 v = self.supervalues[value_idx]
                             else:
-                                v = v.lower().sub("'", '')
+                                v = v.lower()
 
                             combi = s+'='+v
                             if combi not in self.infovs:
@@ -510,7 +503,7 @@ class DataReader(object):
 
         # preporcessing
         sent = sent.lower()
-        words = self.tokenize(sent)
+        words = sent.split()
         if type=='source':
             if len(words)==0: words = ['<unk>']
         elif type=='target':
