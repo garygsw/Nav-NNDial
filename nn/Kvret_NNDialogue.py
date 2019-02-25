@@ -288,7 +288,15 @@ class NNDial(object):
                         masked_source_t, masked_target_t, scoreTable)
 
                 # choose venue
-                venues = [i for i, e in enumerate(db_degree_t[:-6]) if e != 0 ]
+                # venues = [i for i, e in enumerate(db_degree_t[:-6]) if e != 0 ]
+                # # keep the current venue
+                # if selected_venue in venues: pass
+                # else: # choose the first match as default index
+                #     if len(venues)!=0:  selected_venue = random.choice(venues)
+                #     # no matched venues
+                #     else:
+                #         selected_venue = None
+                venues = ['test']
                 # keep the current venue
                 if selected_venue in venues: pass
                 else: # choose the first match as default index
@@ -326,8 +334,9 @@ class NNDial(object):
                     if '[VALUE_'+requestable.upper()+']' in gennerated_utt:
                         reqs.append(self.reader.reqs.index(requestable+'=exist'))
                 # check offered venue
-                if '[VALUE_NAME]' in generated_utt and selected_venue!=None:
-                    venue_offered = self.reader.db2inf[selected_venue]
+                if '[VALUE_NAME]' in generated_utt: # and selected_venue!=None:
+                    venue_offered = 'test'
+                    #venue_offered = self.reader.db2inf[selected_venue]
 
                 ############################### debugging ############################
                 if self.verbose>0:
@@ -439,8 +448,9 @@ class NNDial(object):
                 best_corpus.append([[generated_utt],[masked_target_utt]])
 
             # at the end of the dialog, calculate goal completion rate
-            if venue_offered!=None and finished:
-                if set(venue_offered).issuperset(set(goal[0].nonzero()[0].tolist())):
+            if venue_offered!=None:
+                if venue_offered:
+                #if set(venue_offered).issuperset(set(goal[0].nonzero()[0].tolist())):
                     stats['vmc'] += 1.0
 
                     truth_req = goal[1].nonzero()[0].tolist()
