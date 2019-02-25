@@ -73,8 +73,6 @@ class DataReader(object):
             split, lengthen, percent, shuffle,
             trkenc, verbose, mode, att=False, latent_size=1):
 
-        TOKENIZER = PunktWordTokenizer()
-
         self.att = True if att=='attention' else False
         self.dl  = latent_size
         self.data  = {'train':[],'valid':[],'test':[]} # container for data
