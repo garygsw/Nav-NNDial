@@ -515,7 +515,7 @@ class DataReader(object):
 
         # delexicalise all
         sent = self.delexicalise(' '.join(words),mode='all',slu=slu,assist=assist)
-        sent = re.sub(digitpat,'[VALUE_COUNT]',sent)
+        #sent = re.sub(digitpat,'[VALUE_COUNT]',sent)
         words= sent.split()
         #print words
 
