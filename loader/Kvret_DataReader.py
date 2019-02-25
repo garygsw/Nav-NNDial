@@ -500,6 +500,7 @@ class DataReader(object):
         #    sent = normalize(sent)
 
         # preporcessing
+        sent = sent.lower()
         words = sent.split()
         if type=='source':
             if len(words)==0: words = ['<unk>']
@@ -514,7 +515,7 @@ class DataReader(object):
 
         # delexicalise all
         sent = self.delexicalise(' '.join(words),mode='all',slu=slu,assist=assist)
-        #sent = re.sub(digitpat,'[VALUE_COUNT]',sent)
+        sent = re.sub(digitpat,'[VALUE_COUNT]',sent)
         words= sent.split()
         #print words
 
@@ -928,8 +929,8 @@ class DataReader(object):
     def loadVocab(self):
 
         # iterate through dialog and make vocab
-        self.inputvocab = ['[VALUE_DONTCARE]','[VALUE_COUNT]']
-        self.outputvocab= ['[VALUE_DONTCARE]','[VALUE_COUNT]']
+        self.inputvocab = ['[VALUE_ANY]','[VALUE_COUNT]']
+        self.outputvocab= ['[VALUE_ANY]','[VALUE_COUNT]']
         self.vocab = []
 
         # init inputvocab with informable values
