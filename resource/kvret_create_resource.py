@@ -43,8 +43,8 @@ semidict['poi'] += ['name']
 
 
 # add to requestable slot names [SLOT_REQ]
-semidict["address"] += ["position", "directions", "details of the location", "details", "located", "where is it", "where is", "where's"]
-semidict["traffic_info"] += ["route details", "the traffic", "any traffic", "how's the traffic", "is the traffic",
+semidict["address"] += ["position", "directions", "details of the location", "details", "located", "where is it", "where is", "wheres"]
+semidict["traffic_info"] += ["route details", "the traffic", "any traffic", "hows the traffic", "is the traffic",
                              "there traffic", "show me traffic", "traffic like", "how is the traffic", "contain traffic",
                              "any traffic", "details about the traffic", "details of the traffic", "is there traffic",
                              "how does the traffic", "traffic nearby"]
@@ -57,18 +57,18 @@ semidict["3 miles"] += ["three miles", "3 mile", "three mile"]
 semidict["4 miles"] += ["four miles", "4 mile", "four mile"]
 semidict["5 miles"] += ["five miles", "5 mile", "five mile"]
 semidict["6 miles"] += ["six miles", "6 mile", "six mile"]
-semidict["7 miles"] += ["seven miles", "7 mile", 'seven mile']
+semidict["7 miles"] += ["seven miles", "7 mile", "seven mile"]
 semidict["8 miles"] += ["eight miles", "8 mile", "eight mile"]
 semidict["9 miles"] += ["nine miles", "9 mile", "nine mile"]
-semidict["no traffic"] += ["isn't any traffic"]
-semidict["jills house"] += ["jill's house", "jill's", "jill", "jill house"]
-semidict["toms house"] += ["tom's house", "tom's", "tom", "tom house"]
-semidict["jacks house"] += ["jack", "jacks", "jack house", "jack's house", "jack's"]
-semidict["trader joes"] += ["trader joe's", "traders joes"]
+semidict["no traffic"] += ["isnt any traffic"]
+semidict["jills house"] += ["jills", "jill", "jill house"]
+semidict["toms house"] += ["toms", "tom", "tom house"]
+semidict["jacks house"] += ["jack", "jacks", "jack house", "jacks"]
+semidict["trader joes"] += ["traders joes"]
 semidict["hotel keen"] += ["keen"]
 semidict["stanford oval parking"] += ["stanford oval"]
 semidict["palo alto cafe"] += ["palo alto"]
-semidict["willows market"] += ["willows", "willow's", "willow's market", "willow"]
+semidict["willows market"] += ["willows", "willow"]
 semidict["the westin"] += ["westin", "westin hotel"]
 semidict["stanford express care"] += ["stanford express"]
 semidict["hacienda market"] += ["hacienda"]
@@ -100,7 +100,7 @@ semidict["least traffic"] += ["best route", "best possible route", "best availab
                               "avoid heavy traffic", "avoids heavy traffic", "without any heavy traffic",
                               "least amount of traffic", "around the traffic", "least heavy traffic",
                               "little traffic", "few traffic", "lighter traffic",
-                              "doesn't have any traffic"]
+                              "doesnt have any traffic"]
 
 semidict["pizza restaurant"] += ["pizza", "fast food", "place to get to eat", "pizza place", "pizza places", "pizza shop", "pizza spot",
                                  "fast food restaurant", "fast food place", "fast food restaurants", "something to eat", "pizzeria", "pizza joint"]
@@ -113,7 +113,7 @@ semidict["home"] += ["my house", "my address", "i live", "the house"]
 semidict["parking garage"] += ["parking spot", "parking", "parking lot", "parking lots", "garage", "place to park", "parking area",
                                "somewhere to park", "parking garages", "where i can park", "parking areas", "park"]
 semidict["grocery store"] += ["groceries", "grocery stores", "grocery market", "produce stand", "grocery shop", "grocery shops"]
-semidict["friend house"] += ["friend", "friends", "friend's", "friendss'", "friends' house", "friend's house", "friend's home", "friends house", "friend's home"]
+semidict["friend house"] += ["friend", "friends", "friendss", "friends house", "friends home"]
 semidict["rest stop"] += ["rest stops", "motel", "motels", "hotel", "hotels", "place to sleep"]
 semidict["gas station"] += ["fill up", "gas", "gas stations"]
 semidict["shopping center"] += ["shopping centers", "shopping mall", "mall", "malls", "place to shop", "shopping"]
