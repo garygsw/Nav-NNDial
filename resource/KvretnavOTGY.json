@@ -7,7 +7,7 @@
         "distance_pref" : ["nearest"]
     },
     "requestable" : {
-        "distance": ["1 mile", "2 miles", "3 miles", "4 miles", "5 miles", "6 miles", "7 miles", "8 miles", "9 miles"],
+        "distance": ["1 miles", "2 miles", "3 miles", "4 miles", "5 miles", "6 miles", "7 miles", "8 miles", "9 miles"],
         "traffic_info": ["no traffic", "moderate traffic", "heavy traffic", "road block nearby", "car collision nearby"],
         "address": []
     },

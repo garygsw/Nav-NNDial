@@ -20,6 +20,8 @@ from utils.nlp import normalize
 from utils.tools import findSubList
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
+import unicodedata
+
 
 digitpat = re.compile('\d+')
 
@@ -31,7 +33,6 @@ def is_number(s):
         pass
 
     try:
-        import unicodedata
         unicodedata.numeric(s)
         return True
     except (TypeError, ValueError):

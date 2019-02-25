@@ -205,11 +205,6 @@
     "830 almanor ln": [
         "830 almanor ln"
     ],
-    "1 mile": [
-        "1 mile",
-        "one mile",
-        "1 miles"
-    ],
     "9981 archuleta ave": [
         "9981 archuleta ave"
     ],
@@ -348,6 +343,12 @@
     "palo alto garage r": [
         "palo alto garage r",
         "palo alto garage"
+    ],
+    "1 miles": [
+        "1 miles",
+        "one mile",
+        "1 mile",
+        "one miles"
     ],
     "704 el camino real": [
         "704 el camino real"
