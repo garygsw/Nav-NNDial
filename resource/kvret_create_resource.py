@@ -48,7 +48,7 @@ semidict["traffic_info"] += ["route details", "the traffic", "any traffic", "how
                              "there traffic", "show me traffic", "traffic like", "how is the traffic", "contain traffic",
                              "any traffic", "details about the traffic", "details of the traffic", "is there traffic",
                              "how does the traffic", "traffic nearby"]
-semidict["distance"] += ["how far", "how far away", "how close", "how long"]
+semidict["distance"] += ["how far", "how far away", "how close", "how long", "distance from here"]
 
 # add to requestable value names [VALUE_REQ]
 semidict["1 miles"] += ["one mile", "1 mile", "one miles"]
