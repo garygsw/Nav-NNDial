@@ -561,7 +561,8 @@ class DataReader(object):
                     ['[SLOT_' +s.upper()+']' for s in self.s2v['requestable'].keys()]
         reqtoks =   ['[VALUE_'+s.upper()+']' for s in self.s2v['requestable'].keys()]
         for i in range(len(self.values)):
-            if assist and self.slots[i] == 'VALUE_POI':
+            if assist and self.slots[i] == '[VALUE_POI]':
+                # for sys turns, ignore value poi
                 continue
             # informable mode, preserving location information
             if mode=='informable'and self.slots[i] in inftoks:
@@ -653,7 +654,7 @@ class DataReader(object):
                 self.supervalues.extend([v for x in self.semidict[v]])
                 self.values.extend([normalize(x) for x in self.semidict[v]])
                 self.slots.extend(['[VALUE_'+s.upper()+']' for x in self.semidict[v]])
-        for s,vs in self.s2v['requestable'].items(): # +self.s2v['other'].items():
+        for s,vs in self.s2v['requestable'].items() + self.s2v['other'].items():
             # adding value delexicalisation
             self.values.extend([normalize(v) for v in vs])
             self.supervalues.extend([v for v in vs])
