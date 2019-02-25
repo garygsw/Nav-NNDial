@@ -966,10 +966,10 @@ class DataReader(object):
             # parsing dialog
             for j in range(len(self.dialog[i]['dial'])):
                 # text normalisation
-                self.dialog[i]['dial'][j]['sys']['sent'] = normalize(
-                        self.dialog[i]['dial'][j]['sys']['sent'])
-                self.dialog[i]['dial'][j]['usr']['transcript'] = normalize(
-                        self.dialog[i]['dial'][j]['usr']['transcript'])
+                # self.dialog[i]['dial'][j]['sys']['sent'] = normalize(
+                #         self.dialog[i]['dial'][j]['sys']['sent'])
+                # self.dialog[i]['dial'][j]['usr']['transcript'] = normalize(
+                #         self.dialog[i]['dial'][j]['usr']['transcript'])
                 # this turn
                 turn = self.dialog[i]['dial'][j]
 
