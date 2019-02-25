@@ -394,7 +394,7 @@ class DataReader(object):
                             continue
                         s,v = s2v
                         # need to replace the slot with system request
-                        if v=='dontcare' and s=='this':
+                        if v=='any' and s=='this':
                             sdas = d['dial'][t-1]['sys']['DA']
                             for sda in sdas:
                                 if sda['act']=='request':
@@ -410,10 +410,17 @@ class DataReader(object):
                         else:
                             if toreplace:
                                 semi.remove(toreplace)
+
+
+                            value_idx = self.values.index(v.lower())
+                            if value_idx != -1:
+                                v = self.supervalues(value_idx)
+                            else:
+                                v = v.lower()
+
                             combi = s+'='+v
                             if combi not in self.infovs:
-                                pass
-                                #print combi
+                                print combi
                             else:
                                 semi.append(combi)
 

@@ -344,7 +344,7 @@ class NNDial(object):
                         bn = self.inf_dimensions[i]
                         psem = self.reader.infovs[np.argmax(np.array(full_belief_t[i]))+bn]
                         ysem = self.reader.infovs[np.argmax(np.array(\
-                                inf_trk_label[t][bn:self.inf_dimensions[i+1]+bn]))+bn]
+                                inf_trk_label[t][bn:self.inf_dimensions[i+1]]))+bn]
                         prob = full_belief_t[i][np.argmax(np.array(full_belief_t[i]))]
                         #print '%20s\t%.3f\t%20s' % (psem,prob,ysem)
                         if self.verbose>1:
@@ -352,6 +352,7 @@ class NNDial(object):
 
                         # weird sometime the same ysem is printed twice
                         # index = np.array(inf_trk_label[t][bn:self.inf_dimensions[i+1]+bn]))+bn
+                        # infoseg: [0, 3, 71, 74]
                         # index supposed to be 0, 3, 73
                         # but it becomes: 0, 73, 73
 
