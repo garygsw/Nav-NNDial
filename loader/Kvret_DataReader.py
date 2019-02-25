@@ -411,10 +411,11 @@ class DataReader(object):
                             if toreplace:
                                 semi.remove(toreplace)
 
-
+                            if v.lower() not in self.values:
+                                print v.lower()
                             value_idx = self.values.index(v.lower())
                             if value_idx != -1:
-                                v = self.supervalues(value_idx)
+                                v = self.supervalues[value_idx]
                             else:
                                 v = v.lower()
 
@@ -654,21 +655,21 @@ class DataReader(object):
         for s,vs in self.s2v['informable'].iteritems():
              # adding slot delexicalisation
             self.supervalues.extend([s for x in self.semidict[s]])
-            self.values.extend([normalize(x) for x in self.semidict[s]])
+            self.values.extend([x for x in self.semidict[s]])
             self.slots.extend(['[SLOT_'+s.upper()+']' for x in self.semidict[s]])
             # adding value delexicalisation
             for v in vs:
                 self.supervalues.extend([v for x in self.semidict[v]])
-                self.values.extend([normalize(x) for x in self.semidict[v]])
+                self.values.extend([x for x in self.semidict[v]])
                 self.slots.extend(['[VALUE_'+s.upper()+']' for x in self.semidict[v]])
         for s,vs in self.s2v['requestable'].items() + self.s2v['other'].items():
             # adding value delexicalisation
-            self.values.extend([normalize(v) for v in vs])
+            self.values.extend([v for v in vs])
             self.supervalues.extend([v for v in vs])
             self.slots.extend(['[VALUE_'+s.upper()+']' for v in vs])
             # adding slot delexicalisation
             self.supervalues.extend([s for x in self.semidict[s]])
-            self.values.extend([normalize(x) for x in self.semidict[s]])
+            self.values.extend([x for x in self.semidict[s]])
             self.slots.extend(['[SLOT_'+s.upper()+']' for x in self.semidict[s]])
         # incorporate dontcare values
         #self.values.extend([normalize(v) for v in self.semidict['any']])
