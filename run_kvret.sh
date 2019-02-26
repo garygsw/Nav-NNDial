@@ -33,7 +33,7 @@ sleep 5
 echo $(date) "kvret LIDM end"  >> kvret.log
 
 echo $(date) "kvret LIDM-RL start"  >> kvret.log
-cp model/KvretNav.tracker.model model/KvretNav.LIDM-RL.model
+cp model/KvretNav.LIDM.model model/KvretNav.LIDM-RL.model
 nohup python kvret_nndial.py -config config/Kvret-LIDM-RL.cfg -mode rl
 sleep 5
 python kvret_nndial.py -config config/Kvret-LIDM-RL.cfg -mode test >> kvret-LIDM-RL.log
