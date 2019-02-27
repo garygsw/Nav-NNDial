@@ -240,6 +240,8 @@ class NNDial(object):
             # initial selection
             selected_venue  = -1
             venue_offered   = None
+            prev_correct = False
+
 
             # initial belief
             flatten_belief_tm1 = np.zeros((self.inf_dimensions[-1]))
@@ -344,6 +346,7 @@ class NNDial(object):
                     print '           :\t%s'% masked_source_utt
                     print
                 if self.trk=='rnn' and self.trkinf==True:
+                    all_correct = True
                     if self.verbose>1:
                         print 'Belief Tracker :'
                         print '  | %16s%13s%20s|' % ('','Informable','')
@@ -372,11 +375,15 @@ class NNDial(object):
                                 stats['informable'][slt][0] += 1.0
                             else: # false negative
                                 stats['informable'][slt][1] += 1.0
+                                if ysem != 'any':
+                                    all_correct = False
                         else:
                             if psem==ysem: # true negative
                                 stats['informable'][slt][2] += 1.0
                             else: # false positive
                                 stats['informable'][slt][3] += 1.0
+                                if ysem != 'any':
+                                    all_correct = False
 
                 if self.trk=='rnn' and self.trkreq==True:
                     if self.verbose>1:
@@ -450,8 +457,9 @@ class NNDial(object):
             # at the end of the dialog, calculate goal completion rate
             if venue_offered!=None:
                 if venue_offered:
-                #if set(venue_offered).issuperset(set(goal[0].nonzero()[0].tolist())):
-                    stats['vmc'] += 1.0
+                    if prev_correct:
+                        #if set(venue_offered).issuperset(set(goal[0].nonzero()[0].tolist())):
+                        stats['vmc'] += 1.0
 
                     truth_req = goal[1].nonzero()[0].tolist()
 
@@ -466,6 +474,8 @@ class NNDial(object):
 
                     if set(reqs).issuperset(set(goal[1].nonzero()[0].tolist())):
                         stats['success'] += 1.0
+
+            prev_correct = all_correct
 
 
         precision = stats['success_tp'] / (stats['success_tp'] + stats['success_fp'])
