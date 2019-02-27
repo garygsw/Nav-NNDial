@@ -375,14 +375,14 @@ class NNDial(object):
                                 stats['informable'][slt][0] += 1.0
                             else: # false negative
                                 stats['informable'][slt][1] += 1.0
-                                if ysem != 'any':
+                                if '=any' not in ysem:
                                     all_correct = False
                         else:
                             if psem==ysem: # true negative
                                 stats['informable'][slt][2] += 1.0
                             else: # false positive
                                 stats['informable'][slt][3] += 1.0
-                                if ysem != 'any':
+                                if '=any' not in ysem:
                                     all_correct = False
 
                 if self.trk=='rnn' and self.trkreq==True:
@@ -455,25 +455,24 @@ class NNDial(object):
                 best_corpus.append([[generated_utt],[masked_target_utt]])
 
             # at the end of the dialog, calculate goal completion rate
-            if venue_offered!=None:
-                if venue_offered:
-                    if prev_correct:
-                        #if set(venue_offered).issuperset(set(goal[0].nonzero()[0].tolist())):
-                        stats['vmc'] += 1.0
+            if venue_offered != None:
+                if prev_correct:
+                    #if set(venue_offered).issuperset(set(goal[0].nonzero()[0].tolist())):
+                    stats['vmc'] += 1.0
 
-                    truth_req = goal[1].nonzero()[0].tolist()
+                truth_req = goal[1].nonzero()[0].tolist()
 
-                    for req in reqs:
-                        if req in truth_req:
-                            stats['success_tp'] += 1.0
-                        else:
-                            stats['success_fp'] += 1.0
-                    for req in truth_req:
-                        if req not in reqs:
-                            stats['success_fn'] += 1.0
+                for req in reqs:
+                    if req in truth_req:
+                        stats['success_tp'] += 1.0
+                    else:
+                        stats['success_fp'] += 1.0
+                for req in truth_req:
+                    if req not in reqs:
+                        stats['success_fn'] += 1.0
 
-                    if set(reqs).issuperset(set(goal[1].nonzero()[0].tolist())):
-                        stats['success'] += 1.0
+                if set(reqs).issuperset(set(goal[1].nonzero()[0].tolist())):
+                    stats['success'] += 1.0
 
             prev_correct = all_correct
 
