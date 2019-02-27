@@ -240,7 +240,7 @@ class NNDial(object):
             # initial selection
             selected_venue  = -1
             venue_offered   = None
-            prev_correct = False
+            all_correct = True
 
 
             # initial belief
@@ -346,7 +346,6 @@ class NNDial(object):
                     print '           :\t%s'% masked_source_utt
                     print
                 if self.trk=='rnn' and self.trkinf==True:
-                    all_correct = True
                     if self.verbose>1:
                         print 'Belief Tracker :'
                         print '  | %16s%13s%20s|' % ('','Informable','')
@@ -456,7 +455,7 @@ class NNDial(object):
 
             # at the end of the dialog, calculate goal completion rate
             if venue_offered != None:
-                if prev_correct:
+                if all_correct:
                     #if set(venue_offered).issuperset(set(goal[0].nonzero()[0].tolist())):
                     stats['vmc'] += 1.0
 
@@ -473,8 +472,6 @@ class NNDial(object):
 
                 if set(reqs).issuperset(set(goal[1].nonzero()[0].tolist())):
                     stats['success'] += 1.0
-
-            prev_correct = all_correct
 
 
         precision = stats['success_tp'] / (stats['success_tp'] + stats['success_fp'])
