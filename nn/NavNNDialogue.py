@@ -57,7 +57,8 @@ class NNDial(object):
     enc_vars    = ['self.vocab_size','self.input_hidden']
     dec_vars    = ['self.output_hidden','self.seq_wvec_file','self.dec_struct']
     trk_vars    = ['self.trkinf','self.trkreq','self.belief','self.inf_dimensions',
-                   'self.req_dimensions','self.trk_enc','self.trk_wvec_file']
+                   'self.req_dimensions','self.trk_enc','self.trk_wvec_file',
+                   'self.task_size']
     ply_vars    = ['self.policy','self.latent']
 
     def __init__(self,config=None,opts=None):
@@ -180,6 +181,7 @@ class NNDial(object):
         self.vocab_size     = len(self.reader.vocab)
         self.inf_dimensions = self.reader.infoseg
         self.req_dimensions = self.reader.reqseg
+        self.task_size = len(self.reader.refvs) - 1
 
         # logp for validation set
         self.valid_logp = 0.0
@@ -200,7 +202,8 @@ class NNDial(object):
             self.trk, self.trkinf, self.trkreq, self.belief, self.trk_enc,
             self.use_snapshot, self.dec_struct, self.vocab_size,
             self.input_hidden, self.output_hidden,
-            self.inf_dimensions, self.req_dimensions, self.grad_clip,
+            self.inf_dimensions, self.req_dimensions,
+            self.task_size, self.grad_clip,
             self.learn_mode, len(self.reader.snapshots), self.latent)
 
         # setput theano variables
@@ -246,7 +249,9 @@ class NNDial(object):
             source, source_len, masked_source, masked_source_len,\
             target, target_len, masked_target, masked_target_len,\
             snapshot, new_label, goal, inf_trk_label, req_trk_label,\
-            db_degree, srcfeat, tarfeat, finished, utt_group = testset[cnt]
+            db_degree, srcfeat, tarfeat,
+            ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,
+            finished, utt_group = testset[cnt]
 
             # initial selection
             selected_venue  = -1
@@ -262,9 +267,14 @@ class NNDial(object):
                 # print 'setting belief of', self.reader.infovs[self.inf_dimensions[i+1]-1], ' to 1'
                 # for every if s = none, set to 1 initially, for all informable
 
+            # initial ref target feat
+            #refmentions_t = np.zeroes((self.task_size))
+            #refmentions_t[-1] = 1.0
+            #reftarfeat_tm1 = np.zeroes((self.task_size))
+
             # for each turn
             reqs = []
-            generated_utt_tm1 = ''  # previous maksed generated utterance
+            generated_utt_tm1 = ''  # previous masked generated utterance
             for t in range(len(source)):
                 if self.verbose>0:
                     print '-'*28 + ' Turn '+ str(t) +' '+ '-'*28
@@ -274,12 +284,15 @@ class NNDial(object):
                 masked_target_t = masked_target[t][:masked_target_len[t]]
                 # this turn features
                 srcfeat_t   = srcfeat[t]
+                refsrcfeat_t = refsrcfeat[t]
+                ref_mentions_t = ref_mentions[t]
 
                 # previous target
                 masked_target_tm1, target_tm1, starpos_tm1, vtarpos_tm1, offer = \
                     self.reader.extractSeq(generated_utt_tm1,type='target')
-
                 tarfeat_tm1 = [starpos_tm1,vtarpos_tm1]
+                reftarfeat_tm1 = self.reader.extractRef(generated_utt_tm1)
+                #ref_mentions_t = self.reader.updateRef(generated_utt_tm1)
 
                 # utterance preparation
                 source_utt = ' '.join([self.reader.vocab[w] for w in source_t])
@@ -290,6 +303,12 @@ class NNDial(object):
 
                 # read and understand user sentence
                 masked_intent_t = self.model.read(masked_source_t) # bidirectional encode context
+
+                # task reference tracking
+                ref_t = self.model.track_ref(ref_mentions_t, masked_source_t, masked_target_tm1,
+                                             refsrcfeat_t, reftarfeat_tm1)
+
+                # belief tracking
                 full_belief_t, belief_t = self.model.track(
                         flatten_belief_tm1, masked_source_t, masked_target_tm1,
                         srcfeat_t, tarfeat_tm1)
@@ -380,7 +399,7 @@ class NNDial(object):
                     for i in range(len(self.inf_dimensions)-1):
                         bn = self.inf_dimensions[i]
                         bidx = np.argmax(np.array(full_belief_t[i]))+bn
-                        yidx = np.argmax(np.array(inf_trk_label[t][bn:self.inf_dimensions[i+1]+bn]))+bn
+                        yidx = np.argmax(np.array(inf_trk_label[t][bn:self.inf_dimensions[i+1]]))+bn
                         psem = self.reader.infovs[bidx]
                         ysem = self.reader.infovs[yidx]
                         prob = full_belief_t[i][np.argmax(np.array(full_belief_t[i]))]
@@ -404,6 +423,16 @@ class NNDial(object):
                                 stats['informable'][slt][3] += 1.0
                                 if ysem != 'any':
                                     all_correct = False
+
+                print '  | %25s%13s%35s|' % ('','Task Reference','')
+                print '  | %25s\t%5s\t%35s |' % ('Prediction','Prob.','Ground Truth')
+                print '  | %25s\t%5s\t%35s |' % ('------------','-----','------------')
+                bidx = np.argmax(np.array(task_ref_t))
+                yidx = np.argmax(ref_trk_label[t])
+                psem = self.reader.refvs[bidx]
+                ysem = self.reader.refvs[yidx]
+                prob = task_ref_t[bidx]
+                print '  | %25s\t%.3f\t%35s |' % (psem,prob,ysem)
 
                 if self.trk=='rnn' and self.trkreq==True:
                     if self.verbose>1:
@@ -484,8 +513,8 @@ class NNDial(object):
                             stats['vmc'] += 1.0
 
                         truth_req = goal[task_i][1].nonzero()[0].tolist()
-                        # truth_req is a list of all req: 0 if exist, 1 if not exist
-                        # reqs is a list of indexes that exist in the dialogue
+                        # truth_req is a list of all req types: 0 if exist, 1 if not exist
+                        # reqs is a list of indexes of requests that values exist in the system turn
                         for req in reqs:
                             if req in truth_req:
                                 stats['success_tp'] += 1.0
@@ -495,7 +524,8 @@ class NNDial(object):
                             if req not in reqs:
                                 stats['success_fn'] += 1.0
 
-                        if set(reqs).issuperset(set(goal[task_i][1].nonzero()[0].tolist())):
+                        #if set(reqs).issuperset(set(goal[task_i][1].nonzero()[0].tolist())):
+                        if set(reqs).issuperset(set(truth_req)):
                             stats['success'] += 1.0
 
                     task_i += 1
@@ -611,7 +641,9 @@ class NNDial(object):
                 source, source_len, masked_source, masked_source_len,\
                 target, target_len, masked_target, masked_target_len,\
                 snapshot, change, goal, inf_trk_label, req_trk_label,\
-                db_degree, srcfeat, tarfeat, finished, utt_group = data
+                db_degree, srcfeat, tarfeat,\
+                ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,
+                finished, utt_group = data
 
                 # TODO: improve, default parameters for success
                 success_rewards = [0. for i in range(len(source))]
@@ -626,7 +658,9 @@ class NNDial(object):
                             masked_source_len, masked_target_len,
                             utt_group, snapshot, success_rewards, sample,
                             change, inf_trk_label, req_trk_label, db_degree,
-                            srcfeat, tarfeat, self.lr, self.l2)
+                            srcfeat, tarfeat,
+                            ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,
+                            self.lr, self.l2)
                 if self.policy=='latent':
                     train_logp+=-np.sum(loss)-0.1*np.sum(prior_loss)
                 else:
@@ -657,7 +691,9 @@ class NNDial(object):
                 source, source_len, masked_source, masked_source_len,\
                 target, target_len, masked_target, masked_target_len,\
                 snapshot, change, goal, inf_trk_label, req_trk_label,\
-                db_degree, srcfeat, tarfeat, finished, utt_group = data
+                db_degree, srcfeat, tarfeat,
+                ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,
+                finished, utt_group = data
 
                 # TODO: improve, default parameters for success
                 success_rewards = [0. for i in range(len(source))]
@@ -670,7 +706,8 @@ class NNDial(object):
                         masked_source_len, masked_target_len,
                         utt_group, snapshot, success_rewards, sample,
                         change, inf_trk_label, req_trk_label, db_degree,
-                        srcfeat, tarfeat )
+                        srcfeat, tarfeat,
+                        ref_trk_label, ref_mentions, refsrcfeat, reftarfeat)
                 if self.policy=='latent':
                     self.valid_logp += -np.sum(loss)-0.1*np.sum(prior_loss)
                 else:
@@ -716,7 +753,9 @@ class NNDial(object):
         source, source_len, masked_source, masked_source_len,\
         target, target_len, masked_target, masked_target_len,\
         snapshot, change, goal, inf_trk_label, req_trk_label,\
-        db_degree, srcfeat, tarfeat, finished, utt_group = data
+        db_degree, srcfeat, tarfeat,
+        ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,\
+        finished, utt_group = data
 
         # for calculating success: check requestable slots match
         #requestables = ['phone','address','postcode']
@@ -812,7 +851,9 @@ class NNDial(object):
                 source, source_len, masked_source, masked_source_len,\
                 target, target_len, masked_target, masked_target_len,\
                 snapshot, change, goal, inf_trk_label, req_trk_label,\
-                db_degree, srcfeat, tarfeat, finished, utt_group = data
+                db_degree, srcfeat, tarfeat,
+                ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,\
+                finished, utt_group = data
 
                 # sampling and compute success rate
                 success_rewards, sample, gens =self.sampleDialog(data)
@@ -824,7 +865,9 @@ class NNDial(object):
                             masked_source_len, masked_target_len,
                             utt_group, snapshot, success_rewards, sample,
                             change, inf_trk_label, req_trk_label, db_degree,
-                            srcfeat, tarfeat, self.lr, self.l2)
+                            srcfeat, tarfeat,
+                            ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,
+                            self.lr, self.l2)
                 train_logp+=-np.sum(prior_loss)
 
                 num_dialog+=1
@@ -1199,6 +1242,7 @@ class NNDial(object):
         self.req_dimensions = bundle['trk']['self.req_dimensions']
         self.belief         = parser.get('trk','belief')
         self.trk_wvec_file  = parser.get('trk','wvec')
+        self.task_size      = bundle['trk']['self.task_size']
 
         # always load learning mode from config
         self.learn_mode = parser.get('mode','learn_mode')
@@ -1220,7 +1264,7 @@ class NNDial(object):
             self.trk, self.trkinf, self.trkreq, self.belief, self.trk_enc,
             self.use_snapshot, self.dec_struct, self.vocab_size,
             self.input_hidden, self.output_hidden,
-            self.inf_dimensions, self.req_dimensions, self.grad_clip,
+            self.inf_dimensions, self.req_dimensions, self.task_size, self.grad_clip,
             self.learn_mode, len(self.reader.snapshots), self.latent)
 
         # load weights

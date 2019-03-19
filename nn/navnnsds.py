@@ -24,7 +24,7 @@ class NNSDS(BaseNNModule):
 
     def __init__(self, enc, dec, ply, trk, inf, req, bef,
             trkenc, use_snap , decstruct, voc_size,
-            ih_size, oh_size, inf_size, req_size, gradcut='1',
+            ih_size, oh_size, inf_size, req_size, task_size, gradcut='1',
             learn_mode='all', snap_size=0, latent_size=1):
 
         print 'init n2n SDS ...'
@@ -34,6 +34,7 @@ class NNSDS(BaseNNModule):
         self.dsp    = snap_size
         self.iseg   = inf_size
         self.rseg   = req_size
+        self.refs   = task_size
         self.enc    = enc
         self.dec    = dec
         self.trk    = trk
@@ -50,6 +51,7 @@ class NNSDS(BaseNNModule):
         # trainable parameters
         self.params = {
             'enc':      [],
+            'reftrk':   [],
             'inftrk':   [],
             'reqtrk':   [],
             'dec':      [],
@@ -65,6 +67,12 @@ class NNSDS(BaseNNModule):
             self.params['enc'].extend(self.fEncoder.params+self.bEncoder.params)
 
         ##############################################################
+        # init reference tracker
+        print '\tinit task reference tracker ...'
+        self.reftracker = CNNReferenceTracker(task_size, voc_size,
+                                              ih_size, oh_size)
+        self.params['reftrk'].extend(self.reftracker.params)
+
         # init requestable tracker
         if trk=='rnn' and req==True: # track requestable slots
             print '\tinit rnn requestable trackers ...'
@@ -148,6 +156,7 @@ class NNSDS(BaseNNModule):
         # semantics
         inf_trk_labels = T.fmatrix('inf_trk_labels')
         req_trk_labels = T.fmatrix('req_trk_labels')
+        ref_trk_labels = T.fmatrix('ref_trk_labels')
 
         # DB matching degree
         db_degrees  = T.fmatrix('db_degrees')
@@ -167,7 +176,10 @@ class NNSDS(BaseNNModule):
 
         # tracker features, either n-grams or delexicalised position
         srcfeat = T.itensor4('srcfeat')
-        tarfeat = T.itensor4('tarfeat')
+        tarfeat = T.itensor4('tarfeat') # 1: every turn, 2: slot/value, 3: every value, 4: all indexes
+        refsrcfeat = T.itensor3('refsrcfeat')  # 1: every turn, 2: every value, 3: all indexes
+        reftarfeat = T.itensor3('tarsrcfeat')
+        ref_mentions = T.fmatrix('refmentions')  # 1: every turn, 2: every value
 
         # external samples
         success_rewards = T.fvector('success_reward')
@@ -182,9 +194,11 @@ class NNSDS(BaseNNModule):
                     masked_source_len_t, masked_target_len_t,
                     utt_group_t, snapshot_t, success_reward_t, sample_t,
                     change_label_t, db_degree_t,
-                    inf_label_t, req_label_t, source_feat_t, target_feat_t,
-                    belief_tm1, masked_target_tm1, masked_target_len_tm1,  # not in use
-                    target_feat_tm1, posterior_tm1):                       # dummy inputs
+                    inf_label_t, req_label_t, ref_mentions_t, source_feat_t, target_feat_t,
+                    ref_label_t, refsrcfeat_t, reftarfeat_t,
+                    belief_tm1, masked_target_tm1, masked_target_len_tm1,  # outputs info
+                    target_feat_tm1, reftarfeat_tm1,
+                    posterior_tm1):
 
             ##############################################################
             ##################### Intent encoder #########################
@@ -210,6 +224,12 @@ class NNSDS(BaseNNModule):
             reward_t        = theano.shared(np.zeros((dtmp),dtype=theano.config.floatX))
             baseline_t      = theano.shared(np.zeros((1),dtype=theano.config.floatX))[0]
             posterior_t     = theano.shared(np.zeros((self.dl),dtype=theano.config.floatX))[0]
+
+            # Task reference tracker
+            task_ref_t = self.reftracker.recur(ref_mentions_t, masked_source_t, masked_target_tm1,
+                                               masked_source_len_t, masked_target_len_tm1,
+                                               refsrcfeat_t, reftarfeat_t)
+            loss_t += -T.sum(ref_label_t*T.log10(task_ref_t+epsln))
 
             # Informable slot belief tracker
             # belief vector
@@ -383,13 +403,13 @@ class NNSDS(BaseNNModule):
 
             # take the semi label for next input - like LM
             return inf_belief_t, masked_target_t, masked_target_len_t, \
-                    target_feat_t, posterior_t, z_t,\
+                    target_feat_t, reftarfeat_t, posterior_t, z_t,\
                     loss_t, companion_loss_t, prior_loss_t, posterior_loss_t, base_loss_t,\
                     reward_t, baseline_t, debug_t
 
         # initial belief state
         belief_0 = T.zeros((self.iseg[-1]),dtype=theano.config.floatX)
-        belief_0 = T.set_subtensor(belief_0[[x-1 for x in self.iseg[1:]]],1.0)
+        belief_0 = T.set_subtensor(belief_0[[x-1 for x in self.iseg[1:]]],1.0)  # set all the none to be 1
         # initial target jm1
         masked_target_tm1    = T.ones_like(masked_target[0])
         masked_target_len_tm1= T.ones_like(masked_target_len[0])
@@ -398,6 +418,12 @@ class NNSDS(BaseNNModule):
         # initial posterior
         p0 = np.ones((self.dl))/float(self.dl)
         posterior_0 = theano.shared(p0.astype(theano.config.floatX))
+
+        # initial task ref state
+        #ref_mentions0 = T.zeroes(self.refs, dtype=theano.config.floatX)
+        #ref_mentions0 = T.set_subtensor(ref_mentions0[-1], 1.0)  # set the last none to 1
+        # initial target ref feat
+        reftar_feat_tm1 = -T.ones_like(reftarfeat[0])
 
         # Dialogue level forward propagation
         [_,_,_,_,posterior,sample,loss,companion_loss,prior_loss,posterior_loss,base_loss,
@@ -408,10 +434,10 @@ class NNSDS(BaseNNModule):
                            masked_source_len,masked_target_len,
                            utt_group, snapshot, success_rewards, samples,
                            change_label, db_degrees,
-                           inf_trk_labels, req_trk_labels,
-                           srcfeat, tarfeat],  # srcfeat, tarfeat:
+                           inf_trk_labels, req_trk_labels, ref_mentions,
+                           srcfeat, tarfeat, ref_trk_labels, refsrcfeat, reftarfeat],  # srcfeat, tarfeat:
                 outputs_info=[belief_0,masked_target_tm1,masked_target_len_tm1,tarfeat_tm1,
-                        posterior_0,None,None,None,None,None,None,None,None,None])
+                              reftar_feat_tm1, posterior_0,None,None,None,None,None,None,None,None,None])
 
         # Theano validation function
         self.valid = theano.function(
@@ -420,7 +446,8 @@ class NNSDS(BaseNNModule):
                         masked_source_len, masked_target_len,
                         utt_group, snapshot, success_rewards, samples,
                         change_label, inf_trk_labels, req_trk_labels,
-                        db_degrees, srcfeat, tarfeat],\
+                        db_degrees, srcfeat, tarfeat,
+                        ref_trk_labels, ref_mentions, refsrcfeat, reftarfeat],\
                 outputs=[loss,prior_loss,posterior],\
                 updates=updates,\
                 on_unused_input='warn')
@@ -432,7 +459,8 @@ class NNSDS(BaseNNModule):
                         masked_source_len, masked_target_len,
                         utt_group, snapshot, success_rewards, samples,
                         change_label, inf_trk_labels, req_trk_labels,
-                        db_degrees, srcfeat, tarfeat],\
+                        db_degrees, srcfeat, tarfeat,
+                        ref_trk_labels, ref_mentions, refsrcfeat, reftarfeat],\
                 outputs=[prior_loss, debug],\
                 updates=updates,\
                 on_unused_input='warn')
@@ -442,7 +470,7 @@ class NNSDS(BaseNNModule):
 
             # flatten parameters
             self.flatten_params = []
-            for k in ['inftrk','reqtrk','dec','ply','enc']:
+            for k in ['reftrk', 'inftrk','reqtrk','dec','ply','enc']:
                 ws = self.params[k]
                 if self.learn_mode=='all':
                     # train whole model
@@ -507,7 +535,8 @@ class NNSDS(BaseNNModule):
                         masked_source_len, masked_target_len,
                         utt_group, snapshot, success_rewards, samples,
                         change_label, inf_trk_labels, req_trk_labels,
-                        db_degrees, srcfeat, tarfeat, lr, reg],\
+                        db_degrees, srcfeat, tarfeat,
+                        ref_trk_labels, ref_mentions, refsrcfeat, reftarfeat, lr, reg],\
                 outputs=[loss,prior_loss,posterior_loss,base_loss,
                         posterior,sample,reward,baseline,debug],\
                 updates=updates,\
@@ -522,7 +551,8 @@ class NNSDS(BaseNNModule):
                         masked_source_len, masked_target_len,
                         utt_group, snapshot, success_rewards, samples,
                         change_label, inf_trk_labels, req_trk_labels,
-                        db_degrees, srcfeat, tarfeat, lr, reg],\
+                        db_degrees, srcfeat, tarfeat,
+                        ref_trk_labels, ref_mentions, refsrcfeat, reftarfeat, lr, reg],\
                 outputs=[prior_loss,sample, debug],\
                 updates=updates,\
                 on_unused_input='warn')
@@ -537,6 +567,13 @@ class NNSDS(BaseNNModule):
         else:
             masked_intent_t = []
         return masked_intent_t
+
+    def track_ref(self, ref_tm1, masked_source_t, masked_target_tm1,
+                  vsrcpos_t, vtarpos_tm1):
+
+        ref_t = self.reftracker.track(ref_tm1, masked_source_t, masked_target_tm1,
+                                      vsrcpos_t, vtarpos_tm1)
+        return ref_t
 
     def track(self, belief_tm1, masked_source_t, masked_target_tm1,
             srcfeat_t, tarfeat_tm1):
@@ -667,6 +704,9 @@ class NNSDS(BaseNNModule):
             self.bEncoder.loadConverseParams()
 
         ##############################################################
+        # ref tracker
+        self.reftracker.loadConverseParams()
+
         # beleif tracker
         if self.trk=='rnn' and self.req==True:
             for t in self.reqtrackers:  t.loadConverseParams()

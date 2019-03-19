@@ -115,6 +115,11 @@ class DataReader(object):
         self.delsrcpos = []
         self.deltarpos = []
 
+        # task reference
+        self.refsrcfeat = []
+        self.reftarfeat = []
+        self.refmentions = []
+
         # finished dialogs
         self.finished = []
 
@@ -164,6 +169,12 @@ class DataReader(object):
             maxmsrc= -1     # maximum length of masked source
             maxfeat= -1     # maximum length of slot or value mentions in a response
 
+            # task reference
+            refsrcpos = []
+            reftarpos = []
+            refmaxfeat = -1
+            refmention = [0] * (len(self.refvs) - 1)
+
             offers  = []      # list of tuple (1,0) - offer or (0,1)- no offer
             changes = []      # list of tuple (1,0) - change or (0,1)- no change
             prevoffer = []    # list of previous offers
@@ -192,6 +203,24 @@ class DataReader(object):
                 # spos: [list of slot positions according to [self.infovs + self.regs]]
                 # vpos: [list of value positions, ""]
                 # names: list of names mentioned
+
+                # update ref mention
+                names, refpos = self.extractRef(turn['sys']['tokens'], slotpos=turn['sys']['slotpos'],\
+                    index=True, split=True)
+                cur_ref_mention = [x for x in refmention] # copy the last one
+                for name in names:
+                    if 'ref=%s' % name not in self.refvs:
+                        print name, 'not in self.refvs'
+                        print ' '.join(turn['sys']['tokens'])
+                        print d['dialogue_id']
+                    cur_ref_mention[self.refvs.index('ref=%s' % name)] = 1
+                refmention.append(cur_ref_mention)
+
+                # handling positional features
+                for f in refpos:            # list of list of index of slot positions
+                    if len(f)>refmaxfeat:    # updates the maximum number of slot mentions
+                        refmaxfeat = len(f)
+                reftarpos.append(refpos)
 
                 # store sentence group
                 utt_group.append(self.sentGroup[groupidx])
@@ -303,6 +332,16 @@ class DataReader(object):
                 # repeats the same as sys
                 # except that now, no need for changes, offers, snapshot vector,
 
+                # update refsrcpos
+                names, refpos = self.extractRef(turn['usr']['tokens'], slotpos=turn['usr']['slotpos'],\
+                    index=True, split=True)
+                # handling positional features
+                for f in refpos:            # list of list of index of slot positions
+                    if len(f)>refmaxfeat:    # updates the maximum number of slot mentions
+                        refmaxfeat = len(f)
+                refsrcpos.append(refpos)
+
+                # update task reference - semantics?
                 # delexicalised
                 if len(msrc)>maxsrc:
                     maxsrc = len(msrc)
@@ -395,6 +434,19 @@ class DataReader(object):
                     for k in range(len(srcpos[i][j])):
                         srcpos[i][j][k].extend([-1]*(maxfeat-len(srcpos[i][j][k])))
 
+            # Padding task reference feat
+            for i in range(len(reftarpos)):
+                for j in range(len(reftarpos[i])):
+                    reftarpos[i][j].extend([-1]*(refmaxfeat-len(reftarpos[i][j])))
+            for i in range(len(refsrcpos)):
+                for j in range(len(refsrcpos[i])):
+                    refsrcpos[i][j].extend([-1]*(refmaxfeat-len(refsrcpos[i][j])))
+
+            # task reference matrix
+            self.refsrcfeat.append(refsrcpos)
+            self.reftarfeat.append(reftarpos)
+            self.refmentions.append(refmention)
+
             # entire dialogue matrix
             self.sourceutts.append(sourceutt)
             self.targetutts.append(targetutt)
@@ -418,6 +470,7 @@ class DataReader(object):
         self.info_semis = []
         self.req_semis  = []
         self.db_logics = []
+        self.ref_semis = []
 
         sumvec      = np.array([0 for x in range(self.infoseg[-1])])
         # for each dialogue
@@ -435,6 +488,7 @@ class DataReader(object):
             req_semi    = []
             semi_idxs   = []
             db_logic    = []
+            ref_semi    = []
 
             # for each turn in a dialogue
             for t in range(len(d['dial'])):
@@ -455,7 +509,8 @@ class DataReader(object):
                 for da in turn['usr']['slu']:  # updates semi based on usr slu
                     for s2v in da['slots']:
                         # skip invalid slots
-                        if len(s2v)!=2 or s2v[0]=='slot':   # means it's a request
+                        if len(s2v)!=2 or s2v[0]=='slot' or s2v[0]=='place':   # means it's a request
+
                             continue                        # ignore
                         s,v = s2v
                         v = str(v).lower()  # added this
@@ -541,6 +596,8 @@ class DataReader(object):
 
                 # read requestable semi
                 semi = sorted(self.s2v['requestable'].keys())
+                ref_vec = [0] * len(self.refvs)
+                ref_vec[-1] = 1
                 #semi =  sorted(['food','pricerange','area'])+\
                 #        sorted(['phone','address','postcode'])  # TODO: remove informables as requestables
                 for da in turn['usr']['slu']:
@@ -549,6 +606,14 @@ class DataReader(object):
                             for i in range(len(semi)):
                                 if s2v[1]==semi[i]:
                                     semi[i] += '=exist'
+                        if s2v[0]=='place':  # it is a request action with place
+                            for i in range(len(self.refvs)-1):
+                                if s2v[1]==self.refvs[i].split('=')[1]:
+                                    ref_vec[i] = 1
+                                    ref_vec[-1] = 0
+                                    break
+                ref_semi.append(ref_vec)
+
                 for i in range(len(semi)):
                     if '=exist' not in semi[i]:
                         semi[i] += '=none'
@@ -559,9 +624,51 @@ class DataReader(object):
                 req_semi.append(vec)
 
             self.info_semis.append(semi_idxs)
-            self.req_semis.append( req_semi )
+            self.req_semis.append(req_semi)
             self.db_logics.append(db_logic)
+            self.ref_semis.append(ref_semi)
         print
+
+    def extractRef(self, sent, split=False, index=True, slotpos=None, debug=False):
+        vocab = self.vocab
+        if not split:
+            words = [x.lower() for x in sent.split()]
+        else:
+            words = [x.lower() for x in sent]
+
+        # indexing, non-delexicalised
+        if index:
+            idx  = map(lambda w: vocab.index(w) if w in vocab else 0, words)
+        else:
+            idx = words
+
+        # delexicalise all
+        sent = self.delexicalise(' '.join(words),slotpos,type,mode='all',sep='$',debug=debug)
+        words= sent.split()
+
+        refsltpos = [[] for x in self.refvs]
+        names = []
+        for i in range(len(words)):
+            if '::' not in words[i]:
+                continue
+            # handling offer changing
+            if words[i].startswith('[VALUE_PLACE]'):  # change name to place
+                name = words[i].replace('[VALUE_PLACE]::','')
+
+                # remove pos identifier
+                tok, ID = words[i].split("::")
+                ID = ID.replace('$',' ')  # revert back the spaces of the actual value
+                # record position
+                names.append(ID)
+                #print tok, ID  # remove outer brackets
+
+                for j in range(len(self.refvs)):
+                    s,v = self.refvs[j].split('=')
+                    if v == ID:
+                        refsltpos[j].append(i)
+
+        return names, refsltpos
+
 
     def extractSeq(self,sent,type='source',normalise=False,index=True, split=False, slotpos=None, debug=False):
 
@@ -663,7 +770,7 @@ class DataReader(object):
         #     list of names
         return midx, idx, sltpos, valpos, names
 
-    def delexicalise(self,utt,slotpos=None,type=None,mode='all',debug=False):
+    def delexicalise(self,utt,slotpos=None,type=None,mode='all',sep='-',debug=False):
         inftoks =   ['[VALUE_'+s.upper()+']' for s in self.s2v['informable'].keys()] + \
                     ['[SLOT_' +s.upper()+']' for s in self.s2v['informable'].keys()] + \
                     ['VALUE_ANY]','[VALUE_PLACE]'] + \
@@ -698,7 +805,10 @@ class DataReader(object):
                     start += 1
                     end += 1
                 if start < len(utt):
-                    originals.append(' '.join(utt[start:end]))
+                    if slot['slot'] == 'place':
+                        originals.append(slot['value'].replace(' ', sep))
+                    else:
+                        originals.append(' '.join(utt[start:end]).replace(' ', sep))
                     replacements.append(value + '::')
                 else:
                     print '%s start index %s is out of range' % (value, start)
@@ -727,7 +837,7 @@ class DataReader(object):
 
             utt = ' '.join(utt)
             for i in range(len(originals)):
-                utt = (' '+utt+' ').replace(' '+originals[i]+' ', ' '+replacements[i]+originals[i].replace(' ', '-')+' ')
+                utt = (' '+utt+' ').replace(' '+originals[i]+' ', ' '+replacements[i]+originals[i]+' ')
                 utt = utt[1:-1]
 
         # Problem with
@@ -742,7 +852,7 @@ class DataReader(object):
         for i in range(len(self.values)):
             # informable mode, preserving location information
             if mode=='informable'and self.slots[i] in inftoks:
-                tok = self.slots[i]+'::'+(self.supervalues[i]).replace(' ','-')
+                tok = self.slots[i]+'::'+(self.supervalues[i]).replace(' ',sep)
                 utt = (' '+utt+' ').replace(' '+self.values[i]+' ',' '+tok+' ')
                 utt = utt[1:-1]
             # requestable mode
@@ -750,7 +860,7 @@ class DataReader(object):
                 utt = (' '+utt+' ').replace(' '+self.values[i]+' ',' '+self.slots[i]+' ')
                 utt = utt[1:-1]
             elif mode=='all':
-                tok = self.slots[i]+'::'+(self.supervalues[i]).replace(' ','-') \
+                tok = self.slots[i]+'::'+(self.supervalues[i]).replace(' ',sep) \
                         if self.slots[i] in inftoks else self.slots[i]
                 utt = (' '+utt+' ').replace(' '+self.values[i]+' ',' '+tok+' ')
                 utt = utt[1:-1]
@@ -793,7 +903,7 @@ class DataReader(object):
                 if 'places' in turn['state']:
                     place_states = turn['state']['places']
                     for place in place_states:
-                        self.s2v['other']['place'].append(place['place'].lower())
+                        #self.s2v['other']['place'].append(place['place'].lower())
                         for state in place['state']:
                             slot, value = state['slot'], state['value']
                             value = str(value)
@@ -881,6 +991,11 @@ class DataReader(object):
         self.reqs = []
         self.reqseg = [0]
         self.dontcare = []
+        self.refvs = []
+
+        for place in sorted(self.s2v['other']['place']):
+            self.refvs.append('ref=%s' % place)
+        self.refvs.append('ref=none')
 
         print '\t\t\tgenerating informables semantic labels ...'
         for s in sorted(self.s2v['informable'].keys()):
@@ -903,6 +1018,7 @@ class DataReader(object):
         # Debug
         print
         print '\t\t\tDebugging semantic labels'
+        print '\t\t\tself.refvs:', self.refvs
         print '\t\t\tself.infovs:', self.infovs  #', '.join(self.infovs[:3]), '...', ', '.join(self.infovs[-3:]), 'len:', len(self.infovs)
         print '\t\t\tself.infoseg:', self.infoseg
         print '\t\t\tself.dontcare:', self.dontcare
@@ -964,6 +1080,8 @@ class DataReader(object):
                     self.info_semis,        self.req_semis,
                     np.array(self.db_logics),
                     trksrc,                 trktar,
+                    self.ref_semis,         self.refmentions,
+                    self.refsrcfeat,        self.reftarfeat,
                     self.finished,          self.sentGroupIndex]
         corpus = zip(*corpus)
 
