@@ -173,7 +173,10 @@ class DataReader(object):
             refsrcpos = []
             reftarpos = []
             refmaxfeat = -1
-            refmention = [0] * (len(self.refvs) - 1)
+            refmention = []
+
+
+            cur_ref_mention = [0] * (len(self.refvs) - 1)
 
             offers  = []      # list of tuple (1,0) - offer or (0,1)- no offer
             changes = []      # list of tuple (1,0) - change or (0,1)- no change
@@ -207,7 +210,7 @@ class DataReader(object):
                 # update ref mention
                 names, refpos = self.extractRef(turn['sys']['tokens'], slotpos=turn['sys']['slotpos'],\
                     index=True, split=True)
-                cur_ref_mention = [x for x in refmention] # copy the last one
+                cur_ref_mention = [x for x in cur_ref_mention] # copy the last one
                 for name in names:
                     if 'ref=%s' % name not in self.refvs:
                         print name, 'not in self.refvs'
@@ -1096,6 +1099,18 @@ class DataReader(object):
         self.data['train'] = self.split.train(train_valid)
         self.data['valid'] = self.split.valid(train_valid)
         self.data['test']  = self.split.test(corpus)
+
+
+        # Print the shapes of every data piece
+        sample_data = corpus[0]
+        labels = ['source', 'source_len', 'masked_source', 'masked_source_len',
+                  'target', 'target_len', 'masked_target', 'masked_target_len',
+                  'snapshot', 'changes', 'goals', 'inf_labels', 'req_labels', 'db_logics',
+                  'srcfeat', 'tarfeat', 'ref_labels', 'ref_mentions', 'refsrcfeat', 'reftarfeat',
+                  'finished', 'sent_group']
+        assert(len(labels) == len(sample_data))
+        for i in range(len(sample_data)):
+            print labels[i] + ':', np.array(sample_data[i]).shape
 
     def read(self,mode='train'):
         ## default implementation for read() function
