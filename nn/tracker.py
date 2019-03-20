@@ -26,9 +26,9 @@ class CNNReferenceTracker(BaseNNModule):
         self.dbm1 = task_size
         self.dh = int((task_size + 1)/1.5)
         self.Wfbs = theano.shared(0.3 * np.random.uniform(-1.0,1.0,\
-                (ihidden_size*5,self.dh)).astype(theano.config.floatX))
+                (ihidden_size*3,self.dh)).astype(theano.config.floatX))
         self.Wfbt = theano.shared(0.3 * np.random.uniform(-1.0,1.0,\
-                (ihidden_size*5,self.dh)).astype(theano.config.floatX))
+                (ihidden_size*3,self.dh)).astype(theano.config.floatX))
         self.Whb  = theano.shared(0.3 * np.random.uniform(-1.0,1.0,\
                 (self.dh)).astype(theano.config.floatX))
 

@@ -655,7 +655,7 @@ class DataReader(object):
         sent = self.delexicalise(' '.join(words),slotpos,type,mode='all',sep='$',debug=debug)
         words= sent.split()
 
-        refsltpos = [[] for x in self.refvs]
+        refsltpos = [[] for x in self.refvs[:-1]]
         names = []
         for i in range(len(words)):
             if '::' not in words[i]:
