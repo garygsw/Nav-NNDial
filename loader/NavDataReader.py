@@ -249,7 +249,7 @@ class DataReader(object):
                 # but it's a new name mentioned , then change = [1,0]
                 # it's a one-hot encoding?
                 # x1 : change?, x2: no change?
-                #changes.append(change)
+                changes.append(change)
 
                 # offer label
                 if offered or len(venues)!=0: # offer has happened
