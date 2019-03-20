@@ -1109,7 +1109,7 @@ class DataReader(object):
         sample_data = corpus[0]
         labels = ['source', 'source_len', 'masked_source', 'masked_source_len',
                   'target', 'target_len', 'masked_target', 'masked_target_len',
-                  'snapshot', 'changes', 'goals', 'inf_labels', 'req_labels', 'db_logics',
+                  'snapshot', 'changes', 'goals', 'inf_labels', 'req_labels', 'db_logics', 'new_task',
                   'srcfeat', 'tarfeat', 'ref_labels', 'ref_mentions', 'refsrcfeat', 'reftarfeat',
                   'finished', 'sent_group']
         assert(len(labels) == len(sample_data))
