@@ -173,7 +173,7 @@ class DataReader(object):
             # task reference
             refsrcpos = []
             reftarpos = []
-            refmaxfeat = -1
+            refmaxfeat = 1
             refmention = []
 
 
@@ -443,7 +443,7 @@ class DataReader(object):
                         srcpos[i][j][k].extend([-1]*(maxfeat-len(srcpos[i][j][k])))
 
             # Padding task reference feat
-            assert(refmaxfeat > 0)
+            #assert(refmaxfeat > 0)
             for i in range(len(reftarpos)):  # for every turn
                 for j in range(len(reftarpos[i])):  # for every location
                     reftarpos[i][j].extend([-1]*(refmaxfeat-len(reftarpos[i][j])))
