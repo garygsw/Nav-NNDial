@@ -426,7 +426,7 @@ class NNSDS(BaseNNModule):
         reftar_feat_tm1 = -T.ones_like(reftarfeat[0])
 
         # Dialogue level forward propagation
-        [_,_,_,_,posterior,sample,loss,companion_loss,prior_loss,posterior_loss,base_loss,
+        [_,_,_,_,_,posterior,sample,loss,companion_loss,prior_loss,posterior_loss,base_loss,
                 reward,baseline,debug], updates= \
                 theano.scan( fn=dialog_recur,
                 sequences=[source,target,source_len,target_len,
