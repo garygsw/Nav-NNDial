@@ -1171,8 +1171,8 @@ class DataReader(object):
                     for t in range(len(addon[i])):# turn
                         addon[i][t].extend([[-1 for cnt in \
                             range(len(addon[i][t][0]))]]*(maxleng-len(addon[i][t])))
-                idx = [14,15]
-                if i in idx: # ngram/position features
+                idx = [15,16]
+                if i in idx: # srcfeat and tarfeat
                     maxleng = max(len(data[i][0][0][0]),len(addon[i][0][0][0]))
                     for t in range(len(data[i])): # turn
                         for x in range(len(data[i][t])): # slot or value
@@ -1185,6 +1185,19 @@ class DataReader(object):
                                 addon[i][t][x][sv].extend([-1]*\
                                     (maxleng-len(addon[i][t][x][sv])))
                 data[i] = addon[i] + data[i]
+                idx = [19, 20]
+                if i in idx: # refsrcfeat and reftarfeat
+                    maxleng = max(len(data[i][0][0]),len(addon[i][0][0]))
+                    for t in range(len(data[i])): # turn
+                        for sv in range(len(data[i][t])): # each value
+                            data[i][t][sv].extend([-1]*\
+                                (maxleng-len(data[i][t][sv])))
+                    for t in range(len(addon[i])):# turn
+                        for sv in range(len(addon[i][t])):# each value
+                            addon[i][t][sv].extend([-1]*\
+                                (maxleng-len(addon[i][t][sv])))
+                data[i] = addon[i] + data[i]
+
         # propagte tracker labels
         for t in range(len(data[11])):
             for s in range(len(self.infoseg[:-1])):
