@@ -122,6 +122,7 @@ class DataReader(object):
 
         # finished dialogs
         self.finished = []
+        self.newtask = []
 
         # venue specific - offered/changing
         self.offers = []
@@ -182,7 +183,7 @@ class DataReader(object):
             changes = []      # list of tuple (1,0) - change or (0,1)- no change
             prevoffer = []    # list of previous offers
             offered = False
-            new = []  # true or false
+            new = []  # true or false / 1 or 0
 
             snapshot_vecs = []   # list of snapshot vectors that contain snapshots
                                  # order by the last word in the masked target first
@@ -374,14 +375,17 @@ class DataReader(object):
                     maxmsrc = len(src)
                 sourceutt.append(src)
 
-                new.append(d['dial'][t]['new'])
+                if d['dial'][t]['new']:
+                    new.append(1)
+                else:
+                    new.append(0)
 
             # sentence group
             self.sentGroupIndex.append(utt_group)
 
             # offers
-            #self.changes.append(changes)
-            self.changes.append(new)
+            self.changes.append(changes)
+            self.newtask.append(new)
             self.offers.append(offers)
 
             # padding for snapshots
@@ -1081,7 +1085,7 @@ class DataReader(object):
                     self.snapshot_vecs,
                     self.changes,   self.goals,
                     self.info_semis,        self.req_semis,
-                    np.array(self.db_logics),
+                    np.array(self.db_logics), self.newtask,
                     trksrc,                 trktar,
                     self.ref_semis,         self.refmentions,
                     self.refsrcfeat,        self.reftarfeat,

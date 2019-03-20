@@ -248,8 +248,8 @@ class NNDial(object):
             # read one example
             source, source_len, masked_source, masked_source_len,\
             target, target_len, masked_target, masked_target_len,\
-            snapshot, new_label, goal, inf_trk_label, req_trk_label,\
-            db_degree, srcfeat, tarfeat,\
+            snapshot, change, goal, inf_trk_label, req_trk_label,\
+            db_degree, new_task, srcfeat, tarfeat,\
             ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,\
             finished, utt_group = testset[cnt]
 
@@ -505,8 +505,12 @@ class NNDial(object):
                 # not used at all
                 best_corpus.append([[generated_utt],[masked_target_utt]])
 
-                new = new_label[t]
-                print 'New Label : %s' % new_label[t]
+                new = new_task[t]
+                if new == 1:
+                    new = True
+                else:
+                    new = False
+                print 'New Label : %s' % new_task[t]
                 if new:
                     if venue_offered != None:
                         if prev_correct:
@@ -641,7 +645,7 @@ class NNDial(object):
                 source, source_len, masked_source, masked_source_len,\
                 target, target_len, masked_target, masked_target_len,\
                 snapshot, change, goal, inf_trk_label, req_trk_label,\
-                db_degree, srcfeat, tarfeat,\
+                db_degree, new_task, srcfeat, tarfeat,\
                 ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,\
                 finished, utt_group = data
 
@@ -691,7 +695,7 @@ class NNDial(object):
                 source, source_len, masked_source, masked_source_len,\
                 target, target_len, masked_target, masked_target_len,\
                 snapshot, change, goal, inf_trk_label, req_trk_label,\
-                db_degree, srcfeat, tarfeat,\
+                db_degree, new_task, srcfeat, tarfeat,\
                 ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,\
                 finished, utt_group = data
 
@@ -753,7 +757,7 @@ class NNDial(object):
         source, source_len, masked_source, masked_source_len,\
         target, target_len, masked_target, masked_target_len,\
         snapshot, change, goal, inf_trk_label, req_trk_label,\
-        db_degree, srcfeat, tarfeat,\
+        db_degree, new_task, srcfeat, tarfeat,\
         ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,\
         finished, utt_group = data
 
@@ -851,7 +855,7 @@ class NNDial(object):
                 source, source_len, masked_source, masked_source_len,\
                 target, target_len, masked_target, masked_target_len,\
                 snapshot, change, goal, inf_trk_label, req_trk_label,\
-                db_degree, srcfeat, tarfeat,\
+                db_degree, new_task, srcfeat, tarfeat,\
                 ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,\
                 finished, utt_group = data
 
