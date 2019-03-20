@@ -24,12 +24,15 @@ class CNNReferenceTracker(BaseNNModule):
 
         # handling tasks feature to  task reference mapping
         self.dbm1 = task_size
-        self.dh = int(task_size/1.5)
+        self.dh = int((task_size + 1)/1.5)
         self.Wfbs = theano.shared(0.3 * np.random.uniform(-1.0,1.0,\
                 (ihidden_size*5,self.dh)).astype(theano.config.floatX))
         self.Wfbt = theano.shared(0.3 * np.random.uniform(-1.0,1.0,\
                 (ihidden_size*5,self.dh)).astype(theano.config.floatX))
         self.Whb  = theano.shared(0.3 * np.random.uniform(-1.0,1.0,\
+                (self.dh)).astype(theano.config.floatX))
+
+        self.Wrec = theano.shared(0.3 * np.random.uniform(-1.0,1.0,\
                 (self.dh)).astype(theano.config.floatX))
         self.B    = theano.shared(0.3 * np.random.uniform(-1.0,1.0,\
                 (1)).astype(theano.config.floatX))
@@ -38,7 +41,7 @@ class CNNReferenceTracker(BaseNNModule):
         self.B0 = theano.shared(0.3 * np.random.uniform(-1.0,1.0,\
                 (self.dh)).astype(theano.config.floatX))
 
-        self.params = [self.Wfbs, self.Wfbt, self.Whb, self.B, self.B0 ] + self.sCNN.params
+        self.params = [self.Wfbs, self.Wfbt, self.Whb, self.Wrec, self.B, self.B0 ] + self.sCNN.params
 
         # initial state
         self.b0 = theano.shared(np.zeros((task_size + 1),\
@@ -118,15 +121,16 @@ class CNNReferenceTracker(BaseNNModule):
     def setParams(self,params):
         for i in range(len(self.params)):
             self.params[i].set_value(params[i])
-        self.sCNN.setParams(params[5:5+len(self.sCNN.params)])
+        self.sCNN.setParams(params[6:6+len(self.sCNN.params)])
 
     def loadConverseParams(self):
         self.Wfbs_backup  = self.params[0].get_value()
         self.Wfbt_backup  = self.params[1].get_value()
         self.Whb_backup   = self.params[2].get_value()
-        self.B_backup     = self.params[3].get_value()
+        self.Wrec_backup  = self.params[3].get_value()
+        self.B_backup     = self.params[4].get_value()
         #self.Wnone_backup = self.params[4].get_value()
-        self.B0_backup    = self.params[4].get_value()
+        self.B0_backup    = self.params[5].get_value()
         self.sCNN.loadConverseParams()
         self.tCNN.loadConverseParams()
 
