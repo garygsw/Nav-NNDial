@@ -432,6 +432,7 @@ class DataReader(object):
             # ]
 
             # Padding semantic info
+            #print 'maxfeat:', maxfeat
             for i in range(len(tarpos)): # for every dialog
                 for j in range(len(tarpos[i])): # for spos, and vpos
                     for k in range(len(tarpos[i][j])):  # for every index
@@ -442,8 +443,9 @@ class DataReader(object):
                         srcpos[i][j][k].extend([-1]*(maxfeat-len(srcpos[i][j][k])))
 
             # Padding task reference feat
-            for i in range(len(reftarpos)):
-                for j in range(len(reftarpos[i])):
+            assert(refmaxfeat > 0)
+            for i in range(len(reftarpos)):  # for every turn
+                for j in range(len(reftarpos[i])):  # for every location
                     reftarpos[i][j].extend([-1]*(refmaxfeat-len(reftarpos[i][j])))
             for i in range(len(refsrcpos)):
                 for j in range(len(refsrcpos[i])):
@@ -672,8 +674,10 @@ class DataReader(object):
                 for j in range(len(self.refvs)):
                     s,v = self.refvs[j].split('=')
                     if v == ID:
+                        #print 'matched!', v, '==', ID
                         refsltpos[j].append(i)
-
+                        #print 'updated index %s with value %s:' % (j, i), refsltpos
+                        break
         return names, refsltpos
 
 
