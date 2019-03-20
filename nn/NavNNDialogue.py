@@ -249,8 +249,8 @@ class NNDial(object):
             source, source_len, masked_source, masked_source_len,\
             target, target_len, masked_target, masked_target_len,\
             snapshot, new_label, goal, inf_trk_label, req_trk_label,\
-            db_degree, srcfeat, tarfeat,
-            ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,
+            db_degree, srcfeat, tarfeat,\
+            ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,\
             finished, utt_group = testset[cnt]
 
             # initial selection
@@ -642,7 +642,7 @@ class NNDial(object):
                 target, target_len, masked_target, masked_target_len,\
                 snapshot, change, goal, inf_trk_label, req_trk_label,\
                 db_degree, srcfeat, tarfeat,\
-                ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,
+                ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,\
                 finished, utt_group = data
 
                 # TODO: improve, default parameters for success
@@ -691,8 +691,8 @@ class NNDial(object):
                 source, source_len, masked_source, masked_source_len,\
                 target, target_len, masked_target, masked_target_len,\
                 snapshot, change, goal, inf_trk_label, req_trk_label,\
-                db_degree, srcfeat, tarfeat,
-                ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,
+                db_degree, srcfeat, tarfeat,\
+                ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,\
                 finished, utt_group = data
 
                 # TODO: improve, default parameters for success
@@ -753,7 +753,7 @@ class NNDial(object):
         source, source_len, masked_source, masked_source_len,\
         target, target_len, masked_target, masked_target_len,\
         snapshot, change, goal, inf_trk_label, req_trk_label,\
-        db_degree, srcfeat, tarfeat,
+        db_degree, srcfeat, tarfeat,\
         ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,\
         finished, utt_group = data
 
@@ -851,7 +851,7 @@ class NNDial(object):
                 source, source_len, masked_source, masked_source_len,\
                 target, target_len, masked_target, masked_target_len,\
                 snapshot, change, goal, inf_trk_label, req_trk_label,\
-                db_degree, srcfeat, tarfeat,
+                db_degree, srcfeat, tarfeat,\
                 ref_trk_label, ref_mentions, refsrcfeat, reftarfeat,\
                 finished, utt_group = data
 
