@@ -453,6 +453,7 @@ class DataReader(object):
 
             # task reference matrix
             self.refsrcfeat.append(refsrcpos)
+            print np.array(refsrcpos).shape
             self.reftarfeat.append(reftarpos)
             self.refmentions.append(refmention)
 
@@ -1188,7 +1189,6 @@ class DataReader(object):
                             for sv in range(len(addon[i][t][x])):# each value
                                 addon[i][t][x][sv].extend([-1]*\
                                     (maxleng-len(addon[i][t][x][sv])))
-                data[i] = addon[i] + data[i]
                 idx = [19, 20]
                 if i in idx: # refsrcfeat and reftarfeat
                     maxleng = max(len(data[i][0][0]),len(addon[i][0][0]))

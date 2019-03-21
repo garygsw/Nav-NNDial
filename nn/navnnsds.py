@@ -179,7 +179,7 @@ class NNSDS(BaseNNModule):
         tarfeat = T.itensor4('tarfeat') # 1: every turn, 2: slot/value, 3: every value, 4: all indexes
         refsrcfeat = T.itensor3('refsrcfeat')  # 1: every turn, 2: every value, 3: all indexes
         reftarfeat = T.itensor3('reftarfeat')
-        ref_mentions = T.fmatrix('refmentions')  # 1: every turn, 2: every value
+        refmentions = T.fmatrix('refmentions')  # 1: every turn, 2: every value
 
         # external samples
         success_rewards = T.fvector('success_reward')
@@ -434,7 +434,7 @@ class NNSDS(BaseNNModule):
                            masked_source_len,masked_target_len,
                            utt_group, snapshot, success_rewards, samples,
                            change_label, db_degrees,
-                           inf_trk_labels, req_trk_labels, ref_mentions,
+                           inf_trk_labels, req_trk_labels, refmentions,
                            srcfeat, tarfeat, ref_trk_labels, refsrcfeat, reftarfeat],  # srcfeat, tarfeat:
                 outputs_info=[belief_0,masked_target_tm1,masked_target_len_tm1,tarfeat_tm1,
                               reftar_feat_tm1, posterior_0,None,None,None,None,None,None,None,None,None])
@@ -447,7 +447,7 @@ class NNSDS(BaseNNModule):
                         utt_group, snapshot, success_rewards, samples,
                         change_label, inf_trk_labels, req_trk_labels,
                         db_degrees, srcfeat, tarfeat,
-                        ref_trk_labels, ref_mentions, refsrcfeat, reftarfeat],\
+                        ref_trk_labels, refmentions, refsrcfeat, reftarfeat],\
                 outputs=[loss,prior_loss,posterior],\
                 updates=updates,\
                 on_unused_input='warn')
@@ -460,7 +460,7 @@ class NNSDS(BaseNNModule):
                         utt_group, snapshot, success_rewards, samples,
                         change_label, inf_trk_labels, req_trk_labels,
                         db_degrees, srcfeat, tarfeat,
-                        ref_trk_labels, ref_mentions, refsrcfeat, reftarfeat],\
+                        ref_trk_labels, refmentions, refsrcfeat, reftarfeat],\
                 outputs=[prior_loss, debug],\
                 updates=updates,\
                 on_unused_input='warn')
@@ -536,7 +536,7 @@ class NNSDS(BaseNNModule):
                         utt_group, snapshot, success_rewards, samples,
                         change_label, inf_trk_labels, req_trk_labels,
                         db_degrees, srcfeat, tarfeat,
-                        ref_trk_labels, ref_mentions, refsrcfeat, reftarfeat, lr, reg],\
+                        ref_trk_labels, refmentions, refsrcfeat, reftarfeat, lr, reg],\
                 outputs=[loss,prior_loss,posterior_loss,base_loss,
                         posterior,sample,reward,baseline,debug],\
                 updates=updates,\
@@ -552,7 +552,7 @@ class NNSDS(BaseNNModule):
                         utt_group, snapshot, success_rewards, samples,
                         change_label, inf_trk_labels, req_trk_labels,
                         db_degrees, srcfeat, tarfeat,
-                        ref_trk_labels, ref_mentions, refsrcfeat, reftarfeat, lr, reg],\
+                        ref_trk_labels, refmentions, refsrcfeat, reftarfeat, lr, reg],\
                 outputs=[prior_loss,sample, debug],\
                 updates=updates,\
                 on_unused_input='warn')
