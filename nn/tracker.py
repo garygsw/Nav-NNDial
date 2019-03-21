@@ -59,7 +59,7 @@ class CNNReferenceTracker(BaseNNModule):
         # update g_jv
         g_jv =  T.dot( self.Whb, T.nnet.sigmoid(
                 T.dot(src_jsv,self.Wfbs) + T.dot(tar_jsv,self.Wfbt)+
-                G.disconnected_grad(ref_jm1v)*self.Wrec + self.B0 ))
+                G.disconnected_grad(ref_jm1v) * self.Wrec + self.B0 ))
         return g_jv
 
     def recur(self, ref_jm1, ms_j, mt_jm1, mscut_j, mtcut_jm1,
