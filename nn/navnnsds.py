@@ -178,7 +178,7 @@ class NNSDS(BaseNNModule):
         srcfeat = T.itensor4('srcfeat')
         tarfeat = T.itensor4('tarfeat') # 1: every turn, 2: slot/value, 3: every value, 4: all indexes
         refsrcfeat = T.itensor3('refsrcfeat')  # 1: every turn, 2: every value, 3: all indexes
-        reftarfeat = T.itensor3('tarsrcfeat')
+        reftarfeat = T.itensor3('reftarfeat')
         ref_mentions = T.fmatrix('refmentions')  # 1: every turn, 2: every value
 
         # external samples
