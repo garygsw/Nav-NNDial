@@ -228,7 +228,7 @@ class NNSDS(BaseNNModule):
             # Task reference tracker
             task_ref_t = self.reftracker.recur(ref_mentions_t, masked_source_t, masked_target_tm1,
                                                masked_source_len_t, masked_target_len_tm1,
-                                               refsrcfeat_t, reftarfeat_t)
+                                               refsrcfeat_t, reftarfeat_tm1)
             loss_t += -T.sum(ref_label_t*T.log10(task_ref_t+epsln))
 
             # Informable slot belief tracker
