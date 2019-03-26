@@ -453,7 +453,6 @@ class DataReader(object):
 
             # task reference matrix
             self.refsrcfeat.append(refsrcpos)
-            print np.array(refsrcpos).shape
             self.reftarfeat.append(reftarpos)
             self.refmentions.append(refmention)
 
