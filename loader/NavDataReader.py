@@ -617,7 +617,7 @@ class DataReader(object):
                                     semi[i] += '=exist'
                         if s2v[0]=='place':  # it is a request action with place
                             for i in range(len(self.refvs)-1):
-                                if s2v[1]==self.refvs[i].split('=')[1]:
+                                if s2v[1].lower()==self.refvs[i].split('=')[1]:
                                     ref_vec[i] = 1
                                     ref_vec[-1] = 0
                                     break
