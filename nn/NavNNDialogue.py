@@ -294,7 +294,7 @@ class NNDial(object):
                 if t == 0:
                     _, reftarfeat_tm1 = self.reader.extractRef(generated_utt_tm1)
                 else:
-                    reftarfeat_tm1 = refatrfeat[t-1]
+                    reftarfeat_tm1 = reftarfeat[t-1]
                 #_, reftarfeat_tm1 = self.reader.extractRef(generated_utt_tm1)
                 #ref_mentions_t = self.reader.updateRef(generated_utt_tm1)
 
