@@ -291,7 +291,11 @@ class NNDial(object):
                 masked_target_tm1, target_tm1, starpos_tm1, vtarpos_tm1, offer = \
                     self.reader.extractSeq(generated_utt_tm1,type='target')
                 tarfeat_tm1 = [starpos_tm1,vtarpos_tm1]
-                _, reftarfeat_tm1 = self.reader.extractRef(generated_utt_tm1)
+                if t == 0:
+                    _, reftarfeat_tm1 = self.reader.extractRef(generated_utt_tm1)
+                else:
+                    reftarfeat_tm1 = refatrfeat[t-1]
+                #_, reftarfeat_tm1 = self.reader.extractRef(generated_utt_tm1)
                 #ref_mentions_t = self.reader.updateRef(generated_utt_tm1)
 
                 # utterance preparation
