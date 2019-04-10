@@ -668,7 +668,7 @@ class DataReader(object):
 
                 # remove pos identifier
                 tok, ID = words[i].split("::")
-                ID = ID.replace(sep,' ')  # revert back the spaces of the actual value
+                ID = ID.replace('$',' ')  # revert back the spaces of the actual value
                 # record position
                 names.append(ID)
                 #print tok, ID  # remove outer brackets
