@@ -811,8 +811,9 @@ class DataReader(object):
         # reason: ?
         if slotpos is not None:
             utt = utt.split()
-            originals = []
-            replacements = []
+            originals = []     # searches
+            slot_replacements = []
+            value_replacements = []
             for slot in slotpos:  # slot is a dict{'slot', 'start', 'exclusive_end'}
                 # if it is a name of a place, it has 'value' key
                 if slot['slot'].startswith('order'):
@@ -828,17 +829,19 @@ class DataReader(object):
                     start += 1
                     end += 1
                 if start < len(utt):
+                    originals.append(' '.join(utt[start:end]).replace(' ', sep))
                     if slot['slot'] == 'place':
-                        utt = utt[:start+1] + utt[end:]
-                        utt[start:start+1] = value + '::' + slot['value'].replace(' ', sep)
-                        # originals.append(slot['value'].replace(' ', sep))
+                        #utt = utt[:start+1] + utt[end:]
+                        #utt[start] = value + '::' + slot['value'].replace(' ', sep)
+                        value_replacements.append(slot['value'].replace(' ', sep))
                     else:
-                        originals.append(' '.join(utt[start:end]).replace(' ', sep))
-                        replacements.append(value + '::')
+                        value_replacements.append(' '.join(utt[start:end]).replace(' ', sep))
+                        #originals.append(' '.join(utt[start:end]).replace(' ', sep))
+                    slot_replacements.append(value + '::')
                 else:
                     print '%s start index %s is out of range' % (value, start)
                     print ' '.join(utt)
-
+                        
                 # special case for [SLOT_SEARCH_PLACE_RATINGS]
                 if type == 'source' and name == 'search_place_ratings':
                     value = '[SLOT_' + 'search_place_ratings'.upper() + ']'
@@ -854,15 +857,15 @@ class DataReader(object):
                     #assert(end)
                     if start < len(utt):
                         originals.append(' '.join(utt[start:end]))
-                        replacements.append(value + '::')
+                        value_replacements.append(' '.join(utt[start:end]))
+                        slot_replacements.append(value + '::')
                     else:
                         print '%s start index %s is out of range' % (value, start)
                         print ' '.join(utt)
 
-
             utt = ' '.join(utt)
             for i in range(len(originals)):
-                utt = (' '+utt+' ').replace(' '+originals[i]+' ', ' '+replacements[i]+originals[i]+' ')
+                utt = (' '+utt+' ').replace(' '+originals[i]+' ', ' '+slot_replacements[i]+value_replacements[i]+' ')
                 utt = utt[1:-1]
 
         # Problem with
