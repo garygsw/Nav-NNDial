@@ -209,7 +209,7 @@ class DataReader(object):
                 # names: list of names mentioned
 
                 # update ref mention
-                cur_ref_mention, refpos = self.extractRef(turn['sys']['tokens'], slotpos=turn['sys']['slotpos'], index=True, split=True)
+                cur_ref_mention, refpos = self.extractRef(turn['sys']['tokens'], cur_ref_mention, slotpos=turn['sys']['slotpos'], index=True, split=True)
 
                 # cur_ref_mention = [x for x in cur_ref_mention] # copy the last one
                 # for name in names:
@@ -339,7 +339,7 @@ class DataReader(object):
                 # except that now, no need for changes, offers, snapshot vector,
 
                 # update refsrcpos
-                names, refpos = self.extractRef(turn['usr']['tokens'], slotpos=turn['usr']['slotpos'],\
+                cur_ref_mention, refpos = self.extractRef(turn['usr']['tokens'], cur_ref_mention, slotpos=turn['usr']['slotpos'],\
                     index=True, split=True)
                 # handling positional features
                 for f in refpos:            # list of list of index of slot positions
@@ -640,7 +640,7 @@ class DataReader(object):
             self.ref_semis.append(ref_semi)
         print
 
-    def extractRef(self, sent, split=False, index=True, slotpos=None, debug=False):
+    def extractRef(self, sent, cur_ref_mention, split=False, index=True, slotpos=None, debug=False):
         vocab = self.vocab
         if not split:
             words = [x.lower() for x in sent.split()]
