@@ -177,7 +177,7 @@ class DataReader(object):
             refmention = []
 
 
-            cur_ref_mention = [0] * len(self.refvs-1) + [1]
+            cur_ref_mention = [0] * len(self.refvs)+ [1]
 
             offers  = []      # list of tuple (1,0) - offer or (0,1)- no offer
             changes = []      # list of tuple (1,0) - change or (0,1)- no change
