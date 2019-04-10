@@ -668,7 +668,7 @@ class DataReader(object):
 
                 # remove pos identifier
                 tok, ID = words[i].split("::")
-                ID = ID.replace('$',' ')  # revert back the spaces of the actual value
+                ID = ID.replace(sep,' ')  # revert back the spaces of the actual value
                 # record position
                 names.append(ID)
                 #print tok, ID  # remove outer brackets
@@ -823,7 +823,7 @@ class DataReader(object):
                     name = slot['slot']
                 value = '[VALUE_' + name.upper() + ']'
                 start, end = slot['start'], slot['exclusive_end']
-                if start is None:
+                if start is None:  # ?
                     continue
                 if type == 'target':  # means it's a system response, and have </s>
                     start += 1

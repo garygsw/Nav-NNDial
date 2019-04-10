@@ -285,7 +285,7 @@ class NNDial(object):
                 # this turn features
                 srcfeat_t   = srcfeat[t]
                 refsrcfeat_t = refsrcfeat[t]
-                ref_mentions_t = ref_mentions[t]
+                #ref_mentions_t = ref_mentions[t]
 
                 # previous target
                 masked_target_tm1, target_tm1, starpos_tm1, vtarpos_tm1, offer = \
@@ -295,7 +295,7 @@ class NNDial(object):
                 #    _, reftarfeat_tm1 = self.reader.extractRef(generated_utt_tm1)
                 #else:
                 #    reftarfeat_tm1 = reftarfeat[t-1]
-                _, reftarfeat_tm1 = self.reader.extractRef(generated_utt_tm1)
+                ref_mentions_t, reftarfeat_tm1 = self.reader.extractRef(generated_utt_tm1, ref_mentions_t)
                 #ref_mentions_t = self.reader.updateRef(generated_utt_tm1)
 
                 # utterance preparation
