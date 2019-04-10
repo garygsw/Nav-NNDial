@@ -209,7 +209,7 @@ class DataReader(object):
                 # names: list of names mentioned
 
                 # update ref mention
-                cur_ref_mention, refpos = self.extractRef(turn['sys']['tokens'], cur_ref_mention, slotpos=turn['sys']['slotpos'], index=True, split=True)
+                cur_ref_mention, refpos = self.extractRef(turn['sys']['tokens'], slotpos=turn['sys']['slotpos'], index=True, split=True)
 
                 # cur_ref_mention = [x for x in cur_ref_mention] # copy the last one
                 # for name in names:
