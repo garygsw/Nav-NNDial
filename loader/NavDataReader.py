@@ -177,7 +177,7 @@ class DataReader(object):
             refmention = []
 
 
-            cur_ref_mention = [0] * len(self.refvs)
+            cur_ref_mention = [0] * len(self.refvs-1) + [1]
 
             offers  = []      # list of tuple (1,0) - offer or (0,1)- no offer
             changes = []      # list of tuple (1,0) - change or (0,1)- no change
@@ -199,7 +199,7 @@ class DataReader(object):
                 #    = self.extractSeq(sent,type='target')
 
                 mtar, tar, spos, vpos, venues = self.extractSeq(turn['sys']['tokens'], slotpos=turn['sys']['slotpos'],\
-                    type='target',index=True, split=True, debug=False)
+                    type='target',index=True, split=True, debug=True)
                 # by default, index=True, normalize=False
                 # Output:
                 # mtar: masked indexes [i1, i2, i3, ..., iN]
@@ -209,15 +209,17 @@ class DataReader(object):
                 # names: list of names mentioned
 
                 # update ref mention
-                names, refpos = self.extractRef(turn['sys']['tokens'], slotpos=turn['sys']['slotpos'],\
-                    index=True, split=True)
-                cur_ref_mention = [x for x in cur_ref_mention] # copy the last one
-                for name in names:
-                    if 'ref=%s' % name not in self.refvs:
-                        print name, 'not in self.refvs'
-                        print ' '.join(turn['sys']['tokens'])
-                        print d['dialogue_id']
-                    cur_ref_mention[self.refvs.index('ref=%s' % name)] = 1
+                cur_ref_mention, refpos = self.extractRef(turn['sys']['tokens'], cur_ref_mention, slotpos=turn['sys']['slotpos'], index=True, split=True)
+
+                # cur_ref_mention = [x for x in cur_ref_mention] # copy the last one
+                # for name in names:
+                #     if 'ref=%s' % name not in self.refvs:
+                #         print name, 'not in self.refvs'
+                #         print ' '.join(turn['sys']['tokens'])
+                #         print d['dialogue_id']
+                #     cur_ref_mention[self.refvs.index('ref=%s' % name)] = 1
+                #     cur_ref_mention[-1] = 0
+
                 refmention.append(cur_ref_mention)
 
                 # handling positional features
@@ -331,7 +333,7 @@ class DataReader(object):
                 #msrc, src, spos, vpos, _ = self.extractSeq(sent,type='source')
 
                 msrc, src, spos, vpos, _ = self.extractSeq(turn['usr']['tokens'], slotpos=turn['usr']['slotpos'],\
-                    type='source',index=True, split=True, debug=False)
+                    type='source',index=True, split=True, debug=True)
 
                 # repeats the same as sys
                 # except that now, no need for changes, offers, snapshot vector,
@@ -678,8 +680,17 @@ class DataReader(object):
                         refsltpos[j].append(i)
                         #print 'updated index %s with value %s:' % (j, i), refsltpos
                         break
-        return names, refsltpos
 
+        cur_ref_mention = [x for x in cur_ref_mention] # copy the last one
+        for name in names:
+            if 'ref=%s' % name not in self.refvs:
+                print name, 'not in self.refvs'
+                print ' '.join(turn['sys']['tokens'])
+                print d['dialogue_id']
+            cur_ref_mention[self.refvs.index('ref=%s' % name)] = 1
+            cur_ref_mention[-1] = 0
+        
+        return cur_ref_mention, refsltpos
 
     def extractSeq(self,sent,type='source',normalise=False,index=True, split=False, slotpos=None, debug=False):
 
@@ -802,7 +813,8 @@ class DataReader(object):
             utt = utt.split()
             originals = []
             replacements = []
-            for slot in slotpos:
+            for slot in slotpos:  # slot is a dict{'slot', 'start', 'exclusive_end'}
+                # if it is a name of a place, it has 'value' key
                 if slot['slot'].startswith('order'):
                     #type = slot['slot'][6:-1]  # order(before/after)
                     name = 'order'
@@ -817,10 +829,12 @@ class DataReader(object):
                     end += 1
                 if start < len(utt):
                     if slot['slot'] == 'place':
-                        originals.append(slot['value'].replace(' ', sep))
+                        utt = utt[:start+1] + utt[end:]
+                        utt[start:start+1] = value + '::' + slot['value'].replace(' ', sep)
+                        # originals.append(slot['value'].replace(' ', sep))
                     else:
                         originals.append(' '.join(utt[start:end]).replace(' ', sep))
-                    replacements.append(value + '::')
+                        replacements.append(value + '::')
                 else:
                     print '%s start index %s is out of range' % (value, start)
                     print ' '.join(utt)
