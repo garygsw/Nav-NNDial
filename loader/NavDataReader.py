@@ -57,6 +57,8 @@ class DataReader(object):
             split, lengthen, percent, shuffle,
             trkenc, verbose, mode, att=False, latent_size=1):
 
+        self.debug = False
+
         self.att = True if att=='attention' else False
         self.dl  = latent_size
         self.data  = {'train':[],'valid':[],'test':[]} # container for data
@@ -199,7 +201,7 @@ class DataReader(object):
                 #    = self.extractSeq(sent,type='target')
 
                 mtar, tar, spos, vpos, venues = self.extractSeq(turn['sys']['tokens'], slotpos=turn['sys']['slotpos'],\
-                    type='target',index=True, split=True, debug=True)
+                    type='target',index=True, split=True, debug=self.debug)
                 # by default, index=True, normalize=False
                 # Output:
                 # mtar: masked indexes [i1, i2, i3, ..., iN]
@@ -333,7 +335,7 @@ class DataReader(object):
                 #msrc, src, spos, vpos, _ = self.extractSeq(sent,type='source')
 
                 msrc, src, spos, vpos, _ = self.extractSeq(turn['usr']['tokens'], slotpos=turn['usr']['slotpos'],\
-                    type='source',index=True, split=True, debug=True)
+                    type='source',index=True, split=True, debug=self.debug)
 
                 # repeats the same as sys
                 # except that now, no need for changes, offers, snapshot vector,
