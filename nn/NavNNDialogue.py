@@ -268,7 +268,7 @@ class NNDial(object):
                 # for every if s = none, set to 1 initially, for all informable
 
             # initial ref target feat
-            ref_mentions_t = np.zeroes((self.task_size + 1))
+            ref_mentions_t = np.zeros((self.task_size + 1))
             #refmentions_t[-1] = 1.0
             #reftarfeat_tm1 = np.zeroes((self.task_size))
 
