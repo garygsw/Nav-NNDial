@@ -270,7 +270,7 @@ class NNDial(object):
             # initial ref target feat
             # ref_mentions_t = np.zeros((self.task_size + 1))
             #refmentions_t[-1] = 1.0
-            #reftarfeat_tm1 = np.zeroes((self.task_size))
+            reftarfeat_tm1 = np.zeros((self.task_size + 1))
 
             # for each turn
             reqs = []
@@ -295,7 +295,7 @@ class NNDial(object):
                 #    _, reftarfeat_tm1 = self.reader.extractRef(generated_utt_tm1)
                 #else:
                 #    reftarfeat_tm1 = reftarfeat[t-1]
-                _, reftarfeat_tm1 = self.reader.extractRef(generated_utt_tm1, ref_mentions_t)
+                # _, reftarfeat_tm1 = self.reader.extractRef(generated_utt_tm1, ref_mentions_t)
                 #ref_mentions_t = self.reader.updateRef(generated_utt_tm1)
 
                 # utterance preparation
@@ -348,7 +348,7 @@ class NNDial(object):
                 for gen in generated:
                     generated_utt = ' '.join([self.reader.vocab[g] for g in gen[0]])
                     generated_utts.append(generated_utt)
-                gennerated_utt = generated_utts[0]   # ??? why not just get the first one?
+                generated_utt = generated_utts[0]   # ??? why not just get the first one?
 
                 # calculate semantic match rate
                 twords = [self.reader.vocab[w] for w in masked_target_t]
@@ -369,7 +369,7 @@ class NNDial(object):
                 #requestables = ['phone','address','postcode','food','area','pricerange']
                 requestables = self.reader.s2v['requestable'].keys()
                 for requestable in requestables:
-                    if '[VALUE_'+requestable.upper()+']' in gennerated_utt:
+                    if '[VALUE_'+requestable.upper()+']' in generated_utt:
                         reqs.append(self.reader.reqs.index(requestable+'=exist'))
                 # check offered venue
                 if '[VALUE_PLACE]' in generated_utt and selected_venue!=None:
@@ -436,6 +436,7 @@ class NNDial(object):
                 ysem = self.reader.refvs[yidx]
                 prob = task_ref_t[bidx]
                 print '  | %25s\t%.3f\t%35s |' % (psem,prob,ysem)
+                ref_correct = ysem == psem
 
                 if self.trk=='rnn' and self.trkreq==True:
                     if self.verbose>1:
@@ -456,12 +457,12 @@ class NNDial(object):
 
                         # counting stats
                         slt,val = ysem.split('=')
-                        if slt+'=exist'==ysem:
-                            if psem==ysem: # true positive
+                        if slt+'=exist'==ysem:  # truth is exits
+                            if psem==ysem and ref_correct: # true positive
                                 stats['requestable'][slt][0] += 1.0
                             else: # false negative
                                 stats['requestable'][slt][1] += 1.0
-                        else:
+                        else:  # truth: does not exists
                             if psem==ysem: # true negative
                                 stats['requestable'][slt][2] += 1.0
                             else: # false positive
@@ -503,6 +504,7 @@ class NNDial(object):
                 #raw_input()
                 ############################### debugging ############################
                 generated_utt_tm1 = masked_target_utt
+                reftarfeat_tm1 = reftarfeat[t]
 
                 # parallel_corpus.append([generated_utts,[masked_target_utt]])
                 # not used at all
