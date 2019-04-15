@@ -898,6 +898,7 @@ class DataReader(object):
         if debug:
             print 'after lexicalise:', utt
             print
+
         return utt
 
     def prepareSlotValues(self):
