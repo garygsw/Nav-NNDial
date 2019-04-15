@@ -832,7 +832,6 @@ class DataReader(object):
                     end += 1
                 if start < len(utt):
                     originals.append(' '.join(utt[start:end]))
-                    if 'value' not in slot:
                     if slot['slot'] in ['place', 'place_address']:
                         if 'value' not in slot:
                             print slot
