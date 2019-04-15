@@ -832,7 +832,7 @@ class DataReader(object):
                     end += 1
                 if start < len(utt):
                     originals.append(' '.join(utt[start:end]))
-                    if slot['slot'] in ['place_search_keyword', 'place', 'place_address']:
+                    if slot['slot'] in ['place', 'place_address']:
                         #utt = utt[:start+1] + utt[end:]
                         #utt[start] = value + '::' + slot['value'].replace(' ', sep)
                         value_replacements.append(slot['value'].replace(' ', sep))
