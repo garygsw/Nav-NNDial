@@ -685,10 +685,9 @@ class DataReader(object):
 
         cur_ref_mention = [x for x in cur_ref_mention] # copy the last one
         for name in names:
+            name = name.lower()
             if 'ref=%s' % name not in self.refvs:
                 print name, 'not in self.refvs'
-                print ' '.join(turn['sys']['tokens'])
-                print d['dialogue_id']
             cur_ref_mention[self.refvs.index('ref=%s' % name)] = 1
             cur_ref_mention[-1] = 0
         
