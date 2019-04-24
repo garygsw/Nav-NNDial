@@ -270,7 +270,7 @@ class NNDial(object):
             # initial ref target feat
             # ref_mentions_t = np.zeros((self.task_size + 1))
             #refmentions_t[-1] = 1.0
-            reftarfeat_tm1 = np.zeros((self.task_size + 1))
+            #reftarfeat_tm1 = np.zeros((self.task_size + 1))
 
             # for each turn
             reqs = []
@@ -291,8 +291,8 @@ class NNDial(object):
                 masked_target_tm1, target_tm1, starpos_tm1, vtarpos_tm1, offer = \
                     self.reader.extractSeq(generated_utt_tm1,type='target')
                 tarfeat_tm1 = [starpos_tm1,vtarpos_tm1]
-                #if t == 0:
-                #    _, reftarfeat_tm1 = self.reader.extractRef(generated_utt_tm1)
+                if t == 0:
+                    _, reftarfeat_tm1 = self.reader.extractRef(generated_utt_tm1, ref_mentions_t)
                 #else:
                 #    reftarfeat_tm1 = reftarfeat[t-1]
                 # _, reftarfeat_tm1 = self.reader.extractRef(generated_utt_tm1, ref_mentions_t)
@@ -309,7 +309,11 @@ class NNDial(object):
                 masked_intent_t = self.model.read(masked_source_t) # bidirectional encode context
 
                 # task reference tracking
-                task_ref_t = self.model.track_ref(ref_mentions_t, masked_source_t, masked_target_tm1, refsrcfeat_t, reftarfeat_tm1)
+                task_ref_t = self.model.track_ref(ref_mentions_t,
+                                                  masked_source_t,
+                                                  masked_target_tm1,
+                                                  refsrcfeat_t,
+                                                  reftarfeat_tm1)
 
                 # belief tracking
                 full_belief_t, belief_t = self.model.track(
