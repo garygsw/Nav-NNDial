@@ -661,7 +661,7 @@ class DataReader(object):
             self.ref_semis.append(ref_semi)
         print
 
-    def extractRef(self, sent, cur_ref_mention, split=False, index=True, slotpos=None, debug=False):
+    def extractRef(self, sent, cur_ref_mention, split=False, index=True, slotpos=None):
         vocab = self.vocab
         if not split:
             words = [x.lower() for x in sent.split()]
@@ -675,7 +675,7 @@ class DataReader(object):
             idx = words
 
         # delexicalise all
-        sent = self.delexicalise(' '.join(words),slotpos,type,mode='all',sep='$',debug=debug)
+        sent = self.delexicalise(' '.join(words),slotpos,type,mode='all',sep='$')
         words= sent.split()
 
         refsltpos = [[] for x in self.refvs[:-1]]
