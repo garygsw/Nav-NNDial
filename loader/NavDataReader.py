@@ -22,6 +22,8 @@ from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
 
 digitpat = re.compile('\d+')
+LEXI_DEBUG = False
+LOAD_DIALOG_DEBUG = True
 
 class DataSplit(object):
     # data split helper , for split dataset into train/valid/test
@@ -56,8 +58,6 @@ class DataReader(object):
             corpusfile, semifile, s2vfile,  # remove 2nd db file
             split, lengthen, percent, shuffle,
             trkenc, verbose, mode, att=False, latent_size=1):
-
-        self.debug = False
 
         self.att = True if att=='attention' else False
         self.dl  = latent_size
@@ -141,7 +141,10 @@ class DataReader(object):
         self.sentGroupIndex = []
         groupidx = 0
 
-        for d in self.dialog:
+        for i, d in enumerate(self.dialog):
+
+            if LOAD_DIALOG_DEBUG:
+                print '=' * 25 + ' Dialogue ' + str(i) + ' ' + '='*28
 
             # consider finished flag
             if d.has_key('finished'):
@@ -193,6 +196,9 @@ class DataReader(object):
 
             # for each turn in a dialogue
             for t in range(len(d['dial'])):
+                if LOAD_DIALOG_DEBUG:
+                    print '-'*28 + ' Turn '+ str(t) +' '+ '-'*28
+
                 tcount += 1
                 turn = d['dial'][t]
                 # extract system side sentence feature
@@ -201,7 +207,8 @@ class DataReader(object):
                 #    = self.extractSeq(sent,type='target')
 
                 mtar, tar, spos, vpos, venues = self.extractSeq(turn['sys']['tokens'], slotpos=turn['sys']['slotpos'],\
-                    type='target',index=True, split=True, debug=self.debug)
+                    type='target',index=True, split=True)
+            
                 # by default, index=True, normalize=False
                 # Output:
                 # mtar: masked indexes [i1, i2, i3, ..., iN]
@@ -212,7 +219,6 @@ class DataReader(object):
 
                 # update ref mention
                 cur_ref_mention, refpos = self.extractRef(turn['sys']['tokens'], cur_ref_mention, slotpos=turn['sys']['slotpos'], index=True, split=True)
-
                 # cur_ref_mention = [x for x in cur_ref_mention] # copy the last one
                 # for name in names:
                 #     if 'ref=%s' % name not in self.refvs:
@@ -335,7 +341,20 @@ class DataReader(object):
                 #msrc, src, spos, vpos, _ = self.extractSeq(sent,type='source')
 
                 msrc, src, spos, vpos, _ = self.extractSeq(turn['usr']['tokens'], slotpos=turn['usr']['slotpos'],\
-                    type='source',index=True, split=True, debug=self.debug)
+                    type='source',index=True, split=True)
+
+
+                if LOAD_DIALOG_DEBUG:
+                    target_utt = ' '.join([self.vocab[w] for w in tar])
+                    source_utt = ' '.join([self.vocab[w] for w in src])
+                    masked_target_utt = ' '.join([self.vocab[w] for w in mtar])
+                    masked_source_utt = ' '.join([self.vocab[w] for w in msrc])
+                    print 'User Input   :\t%s' % source_utt
+                    print 'Masked Input :\t%s' % masked_source_utt
+                    print '=' * 25
+                    print 'System Output   :\t%s' % target_utt
+                    print 'Masked Output :\t%s' % masked_target_utt
+                    print 
 
                 # repeats the same as sys
                 # except that now, no need for changes, offers, snapshot vector,
@@ -693,11 +712,10 @@ class DataReader(object):
         
         return cur_ref_mention, refsltpos
 
-    def extractSeq(self,sent,type='source',normalise=False,index=True, split=False, slotpos=None, debug=False):
+    def extractSeq(self,sent,type='source',normalise=False,index=True, split=False, slotpos=None):
 
         # setup vocab
-        if type=='source':  vocab = self.vocab
-        elif type=='target':vocab = self.vocab
+        vocab = self.vocab
 
         # standardise sentences
         #if normalise:
@@ -726,7 +744,7 @@ class DataReader(object):
         #print words
 
         # delexicalise all
-        sent = self.delexicalise(' '.join(words),slotpos,type,mode='all', debug=debug)
+        sent = self.delexicalise(' '.join(words),slotpos,type,mode='all')
         # convert all values found in self.values into the format of
         # [SLOT_<name>]::supervalue('-' as space) or
         # [VALUE]_<name>]::supervalue('-' as space)
@@ -793,7 +811,7 @@ class DataReader(object):
         #     list of names
         return midx, idx, sltpos, valpos, names
 
-    def delexicalise(self,utt,slotpos=None,type=None,mode='all',sep='-',debug=False):
+    def delexicalise(self,utt,slotpos=None,type=None,mode='all',sep='-'):
         inftoks =   ['[VALUE_'+s.upper()+']' for s in self.s2v['informable'].keys()] + \
                     ['[SLOT_' +s.upper()+']' for s in self.s2v['informable'].keys()] + \
                     ['VALUE_ANY]','[VALUE_PLACE]'] + \
@@ -805,7 +823,7 @@ class DataReader(object):
         if utt.startswith('* gibberish *'):
             utt = '<unk>'
 
-        if debug:
+        if LEXI_DEBUG:
             print 'before lexicalise:', utt
 
         # delexicalise based on slu values first
@@ -816,56 +834,50 @@ class DataReader(object):
             slot_replacements = []
             value_replacements = []
             for slot in slotpos:  # slot is a dict{'slot', 'start', 'exclusive_end'}
-                # if it is a name of a place, it has 'value' key
-                if slot['slot'].startswith('order'):
-                    #type = slot['slot'][6:-1]  # order(before/after)
-                    name = 'order'
-                else:
-                    name = slot['slot']
                 value = '[VALUE_' + name.upper() + ']'
                 start, end = slot['start'], slot['exclusive_end']
-                if start is None:  # ?
+                if start is None:  # ignore, can't be found
                     continue
                 if type == 'target':  # means it's a system response, and have </s>
                     start += 1
                     end += 1
-                if start < len(utt):
-                    originals.append(' '.join(utt[start:end]))
-                    if slot['slot'] in ['place', 'place_address']:
-                        if 'value' not in slot:
-                            print slot
-                            print utt
-                        #utt = utt[:start+1] + utt[end:]
-                        #utt[start] = value + '::' + slot['value'].replace(' ', sep)
-                        value_replacements.append(slot['value'].replace(' ', sep))
-                    else:
-                        value_replacements.append(' '.join(utt[start:end]).replace(' ', sep))
-                        #originals.append(' '.join(utt[start:end]).replace(' ', sep))
-                    slot_replacements.append(value + '::')
-                else:
-                    print '%s start index %s is out of range' % (value, start)
-                    print ' '.join(utt)
-                        
-                # special case for [SLOT_SEARCH_PLACE_RATINGS]
-                if type == 'source' and name == 'search_place_ratings':
-                    value = '[SLOT_' + 'search_place_ratings'.upper() + ']'
-                    start = None
-                    end = None
-                    for i, token in enumerate(utt):
-                        if token == 'ratings':
-                            start = i
-                            end = i + 1
-                    if start is None:
-                        continue
-                    #assert(start)
-                    #assert(end)
+                    # >> move this tab right
                     if start < len(utt):
                         originals.append(' '.join(utt[start:end]))
-                        value_replacements.append(' '.join(utt[start:end]))
+                        if slot['slot'] in ['place', 'place_address']:
+                            if 'value' not in slot:
+                                print 'no value %s found in %s' % (slot, utt)
+                            #utt = utt[:start+1] + utt[end:]
+                            #utt[start] = value + '::' + slot['value'].replace(' ', sep)
+                            value_replacements.append(slot['value'].replace(' ', sep))
+                        else:
+                            value_replacements.append(' '.join(utt[start:end]).replace(' ', sep))
+                            #originals.append(' '.join(utt[start:end]).replace(' ', sep))
                         slot_replacements.append(value + '::')
                     else:
                         print '%s start index %s is out of range' % (value, start)
                         print ' '.join(utt)
+                        
+                # special case for [SLOT_SEARCH_PLACE_RATINGS]
+                # if type == 'source' and name == 'search_place_ratings':
+                #     value = '[SLOT_' + 'search_place_ratings'.upper() + ']'
+                #     start = None
+                #     end = None
+                #     for i, token in enumerate(utt):
+                #         if token == 'ratings':
+                #             start = i
+                #             end = i + 1
+                #     if start is None:
+                #         continue
+                #     #assert(start)
+                #     #assert(end)
+                #     if start < len(utt):
+                #         originals.append(' '.join(utt[start:end]))
+                #         value_replacements.append(' '.join(utt[start:end]))
+                #         slot_replacements.append(value + '::')
+                #     else:
+                #         print '%s start index %s is out of range' % (value, start)
+                #         print ' '.join(utt)
 
             utt = ' '.join(utt)
             for i in range(len(originals)):
@@ -875,7 +887,7 @@ class DataReader(object):
         # Problem with
         # ORDER, which the order is not explicitly stated in the utterance
         # so we need to preprocess the order first to contain the actual value
-        if debug:
+        if LEXI_DEBUG:
             print 'intermediate lexicalise:', utt
 
         # for every value in self.values  ( which is a list of all values )
@@ -897,7 +909,7 @@ class DataReader(object):
                 utt = (' '+utt+' ').replace(' '+self.values[i]+' ',' '+tok+' ')
                 utt = utt[1:-1]
         #utt = re.sub(digitpat,'[VALUE_COUNT]',utt)
-        if debug:
+        if LEXI_DEBUG:
             print 'after lexicalise:', utt
             print
 
