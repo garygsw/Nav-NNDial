@@ -834,6 +834,7 @@ class DataReader(object):
             slot_replacements = []
             value_replacements = []
             for slot in slotpos:  # slot is a dict{'slot', 'start', 'exclusive_end'}
+                name = slot['slot']
                 value = '[VALUE_' + name.upper() + ']'
                 start, end = slot['start'], slot['exclusive_end']
                 if start is None:  # ignore, can't be found
