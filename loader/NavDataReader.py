@@ -218,7 +218,8 @@ class DataReader(object):
                 # names: list of names mentioned
 
                 # update ref mention
-                cur_ref_mention, refpos = self.extractRef(turn['sys']['tokens'], cur_ref_mention, slotpos=turn['sys']['slotpos'], index=True, split=True)
+                cur_ref_mention, refpos = self.extractRef(turn['sys']['tokens'], cur_ref_mention, slotpos=turn['sys']['slotpos'],\
+                    type='target', index=True, split=True)
                 # cur_ref_mention = [x for x in cur_ref_mention] # copy the last one
                 # for name in names:
                 #     if 'ref=%s' % name not in self.refvs:
@@ -349,6 +350,7 @@ class DataReader(object):
                     source_utt = ' '.join([self.vocab[w] for w in src])
                     masked_target_utt = ' '.join([self.vocab[w] for w in mtar])
                     masked_source_utt = ' '.join([self.vocab[w] for w in msrc])
+
                     print 'User Input   :\t%s' % source_utt
                     print 'Masked Input :\t%s' % masked_source_utt
                     print '=' * 25
@@ -360,8 +362,8 @@ class DataReader(object):
                 # except that now, no need for changes, offers, snapshot vector,
 
                 # update refsrcpos
-                cur_ref_mention, refpos = self.extractRef(turn['usr']['tokens'], cur_ref_mention, slotpos=turn['usr']['slotpos'],\
-                    index=True, split=True)
+                _, refpos = self.extractRef(turn['usr']['tokens'], cur_ref_mention, slotpos=turn['usr']['slotpos'],\
+                    type='source',index=True, split=True)
                 # handling positional features
                 for f in refpos:            # list of list of index of slot positions
                     if len(f)>refmaxfeat:    # updates the maximum number of slot mentions
@@ -661,7 +663,7 @@ class DataReader(object):
             self.ref_semis.append(ref_semi)
         print
 
-    def extractRef(self, sent, cur_ref_mention, split=False, index=True, slotpos=None):
+    def extractRef(self, sent, cur_ref_mention, type=None, split=False, index=True, slotpos=None):
         vocab = self.vocab
         if not split:
             words = [x.lower() for x in sent.split()]
@@ -675,7 +677,7 @@ class DataReader(object):
             idx = words
 
         # delexicalise all
-        sent = self.delexicalise(' '.join(words),slotpos,type,mode='all',sep='$')
+        sent = self.delexicalise(' '.join(words),slotpos,type=type,mode='all',sep='$')
         words= sent.split()
 
         refsltpos = [[] for x in self.refvs[:-1]]
@@ -860,25 +862,25 @@ class DataReader(object):
                         print ' '.join(utt)
                         
                 # special case for [SLOT_SEARCH_PLACE_RATINGS]
-                # if type == 'source' and name == 'search_place_ratings':
-                #     value = '[SLOT_' + 'search_place_ratings'.upper() + ']'
-                #     start = None
-                #     end = None
-                #     for i, token in enumerate(utt):
-                #         if token == 'ratings':
-                #             start = i
-                #             end = i + 1
-                #     if start is None:
-                #         continue
-                #     #assert(start)
-                #     #assert(end)
-                #     if start < len(utt):
-                #         originals.append(' '.join(utt[start:end]))
-                #         value_replacements.append(' '.join(utt[start:end]))
-                #         slot_replacements.append(value + '::')
-                #     else:
-                #         print '%s start index %s is out of range' % (value, start)
-                #         print ' '.join(utt)
+                if type == 'source' and name == 'search_place_ratings':
+                    value = '[SLOT_' + 'search_place_ratings'.upper() + ']'
+                    start = None
+                    end = None
+                    for i, token in enumerate(utt):
+                        if token == 'ratings':
+                            start = i
+                            end = i + 1
+                    if start is None:
+                        continue
+                    #assert(start)
+                    #assert(end)
+                    if start < len(utt):
+                        originals.append(' '.join(utt[start:end]))
+                        value_replacements.append(' '.join(utt[start:end]))
+                        slot_replacements.append(value + '::')
+                    else:
+                        print '%s start index %s is out of range' % (value, start)
+                        print ' '.join(utt)
 
             utt = ' '.join(utt)
             for i in range(len(originals)):
