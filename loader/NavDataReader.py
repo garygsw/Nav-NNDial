@@ -23,7 +23,9 @@ from nltk.stem.wordnet import WordNetLemmatizer
 
 digitpat = re.compile('\d+')
 LEXI_DEBUG = False
-LOAD_DIALOG_DEBUG = True
+LOAD_DIALOG_DEBUG = False
+DEBUG_REF = True
+
 
 class DataSplit(object):
     # data split helper , for split dataset into train/valid/test
@@ -677,8 +679,10 @@ class DataReader(object):
             idx = words
 
         # delexicalise all
-        sent = self.delexicalise(' '.join(words),slotpos,type=type,mode='all',sep='$')
+        sent = self.delexicalise(' '.join(words),slotpos=slotpos,type=type,mode='all',sep='$')
         words= sent.split()
+
+        # here, it should be the same
 
         refsltpos = [[] for x in self.refvs[:-1]]
         names = []
@@ -711,7 +715,7 @@ class DataReader(object):
                 print name, 'not in self.refvs'
             cur_ref_mention[self.refvs.index('ref=%s' % name)] = 1
             cur_ref_mention[-1] = 0
-        
+
         return cur_ref_mention, refsltpos
 
     def extractSeq(self,sent,type='source',normalise=False,index=True, split=False, slotpos=None):
@@ -746,7 +750,7 @@ class DataReader(object):
         #print words
 
         # delexicalise all
-        sent = self.delexicalise(' '.join(words),slotpos,type,mode='all')
+        sent = self.delexicalise(' '.join(words),slotpos=slotpos,type=type,added_s=True,mode='all')
         # convert all values found in self.values into the format of
         # [SLOT_<name>]::supervalue('-' as space) or
         # [VALUE]_<name>]::supervalue('-' as space)
@@ -760,6 +764,7 @@ class DataReader(object):
         sltpos = [[] for x in allvs]
         valpos = [[] for x in allvs]
         names = []
+
         for i in range(len(words)):
             if '::' not in words[i]:
                 continue
@@ -784,7 +789,7 @@ class DataReader(object):
             # mytok is either SLOT or VALUE
             # sov is one of the INF or REQ keys
 
-            ID = ID.replace('-',' ')  # revert back the spaces of the actual value
+            ID = ID.replace('$',' ')  # revert back the spaces of the actual value
             #mylist = sltpos if mytok=='slot' else valpos  # unused
 
             # go through every allvs
@@ -813,7 +818,7 @@ class DataReader(object):
         #     list of names
         return midx, idx, sltpos, valpos, names
 
-    def delexicalise(self,utt,slotpos=None,type=None,mode='all',sep='-'):
+    def delexicalise(self,utt,type=None,slotpos=None,mode='all',sep='$', added_s=False):
         inftoks =   ['[VALUE_'+s.upper()+']' for s in self.s2v['informable'].keys()] + \
                     ['[SLOT_' +s.upper()+']' for s in self.s2v['informable'].keys()] + \
                     ['VALUE_ANY]','[VALUE_PLACE]'] + \
@@ -842,8 +847,9 @@ class DataReader(object):
                 if start is None:  # ignore, can't be found
                     continue
                 if type == 'target':  # means it's a system response, and have </s>
-                    start += 1
-                    end += 1
+                    if added_s:
+                        start += 1
+                        end += 1
                     # >> move this tab right
                     if start < len(utt):
                         originals.append(' '.join(utt[start:end]))
@@ -861,7 +867,7 @@ class DataReader(object):
                         print '%s start index %s is out of range' % (value, start)
                         print ' '.join(utt)
                         
-                # special case for [SLOT_SEARCH_PLACE_RATINGS]
+                # special case for [SLOT_SEARCH_PLACE_RATINGS], ignore the rest
                 if type == 'source' and name == 'search_place_ratings':
                     value = '[SLOT_' + 'search_place_ratings'.upper() + ']'
                     start = None
@@ -1132,6 +1138,20 @@ class DataReader(object):
                     self.refsrcfeat,        self.reftarfeat,
                     self.finished,          self.sentGroupIndex]
         corpus = zip(*corpus)
+
+        # Check corpus
+        for dial in corpus:
+            masked_targetutts = dial[6]
+            masked_targetcutoffs = dial[7]
+            reftarfeat = dial[20]
+
+            for i, target in enumerate(masked_targetutts):
+                for j, tarfeat in enumerate(reftarfeat[i]):
+                    if masked_targetcutoffs[i] < max(tarfeat):
+                       print 'Cutoff too much', masked_targetcutoffs[i], max(tarfeat)
+                       print 'for value ', self.refvs[j]
+                       print ' '.join([self.vocab[w] for w in target])
+                       assert(False)
 
         # split out train+valid
         train_valid = self.split.train_valid(corpus)
