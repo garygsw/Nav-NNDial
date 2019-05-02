@@ -258,6 +258,7 @@ class NNDial(object):
             venue_offered   = None
             prev_correct = False
             task_i = 0
+            ref_correct = True
 
             # initial belief
             #print 'initial belief size:', self.inf_dimensions[-1]
@@ -272,9 +273,9 @@ class NNDial(object):
             #refmentions_t[-1] = 1.0
             #reftarfeat_tm1 = np.zeros((self.task_size + 1))
 
-            # for each turn
             reqs = []
             generated_utt_tm1 = ''  # previous masked generated utterance
+            # for each turn
             for t in range(len(source)):
                 if self.verbose>0:
                     print '-'*28 + ' Turn '+ str(t) +' '+ '-'*28
@@ -373,7 +374,7 @@ class NNDial(object):
                 #requestables = ['phone','address','postcode','food','area','pricerange']
                 requestables = self.reader.s2v['requestable'].keys()
                 for requestable in requestables:
-                    if '[VALUE_'+requestable.upper()+']' in generated_utt:
+                    if '[VALUE_'+requestable.upper()+']' in generated_utt and ref_correct:
                         reqs.append(self.reader.reqs.index(requestable+'=exist'))
                 # check offered venue
                 if '[VALUE_PLACE]' in generated_utt and selected_venue!=None:
