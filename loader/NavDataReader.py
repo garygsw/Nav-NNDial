@@ -973,6 +973,18 @@ class DataReader(object):
         for s,vs in self.s2v['other'].iteritems():
             self.s2v['other'][s] = sorted(list(set(vs)))
 
+        total_values = 0
+        total_slots = 0
+        for s , v in selv.s2v['informable'].iteritems():
+            total_slots += 1
+            total_values += len(v)
+        for s , v in selv.s2v['requestable'].iteritems():
+            total_slots += 1
+            total_values += len(v)
+
+        print 'total values:', total_values
+        print 'total slots:', total_slots
+
         # Debug s2v
         print
         print '\t\t\tDebugging self.s2v values'
