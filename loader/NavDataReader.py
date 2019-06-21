@@ -975,10 +975,10 @@ class DataReader(object):
 
         total_values = 0
         total_slots = 0
-        for s , v in selv.s2v['informable'].iteritems():
+        for s , v in self.s2v['informable'].iteritems():
             total_slots += 1
             total_values += len(v)
-        for s , v in selv.s2v['requestable'].iteritems():
+        for s , v in self.s2v['requestable'].iteritems():
             total_slots += 1
             total_values += len(v)
 
