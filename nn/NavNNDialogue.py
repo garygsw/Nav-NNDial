@@ -442,6 +442,16 @@ class NNDial(object):
                 prob = task_ref_t[bidx]
                 print '  | %25s\t%.3f\t%35s |' % (psem,prob,ysem)
                 ref_correct = ysem == psem
+                if 'none' not in ysem:
+                    if psem==ysem:
+                        stats['informable']['task_reference'][0] += 1.0
+                    else:
+                        stats['informable']['task_reference'][1] += 1.0
+                else:
+                    if psem==ysem: # true negative
+                        stats['informable']['task_reference'][2] += 1.0
+                    else: # false positive
+                        stats['informable']['task_reference'][3] += 1.0
 
                 if self.trk=='rnn' and self.trkreq==True:
                     if self.verbose>1:
@@ -589,7 +599,7 @@ class NNDial(object):
         print 35*'#' + ' Trackers ' + 35*'#'
         print '---- Informable  '+ 63*'-'
         #infslots = ['area','food','pricerange']
-        infslots = self.reader.s2v['informable'].keys()
+        infslots = self.reader.s2v['informable'].keys() + ['task_reference']
         joint = [0.0 for x in range(4)]
         for i in range(len(infslots)):
             s = infslots[i]
@@ -1317,7 +1327,8 @@ class NNDial(object):
         return {'informable':{
                     'place_search_keyword': [10e-9, 10e-4, 10e-4, 10e-4],
                     'order'      : [10e-9, 10e-4, 10e-4, 10e-4],
-                    'search_place_ratings'      : [10e-9, 10e-4, 10e-4, 10e-4]
+                    'search_place_ratings'      : [10e-9, 10e-4, 10e-4, 10e-4],
+                    'task_reference': [10e-9, 10e-4, 10e-4, 10e-4]
             },  'requestable':{
                     'place_ratings': [10e-9, 10e-4, 10e-4, 10e-4],
                     'place_address'      : [10e-9, 10e-4, 10e-4, 10e-4],
