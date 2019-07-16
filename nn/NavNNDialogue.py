@@ -591,7 +591,7 @@ class NNDial(object):
         print 80*'#'
         #print 'Venue Match Rate     : %.1f%%' % (100*stats['vmc']/float(len(testset)))
         print 'Venue Match Rate     : %.1f%%' % (100*stats['vmc']/stats['vmc_total'])
-        print 'Task Success Rate    : %.1f%%' % (100*stats['success']/float(len(testset)))
+        print 'Task Success Rate    : %.1f%%' % (100*stats['success']/stats['vmc_total'])
         print 'Request Rate         : %.2f%%' % (100*recall)
         print 'Success F1           : %.2f%%' % (100*success_f1)
         if self.dec!='none':
