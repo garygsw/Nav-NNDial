@@ -523,8 +523,8 @@ class NNDial(object):
             r = tp/(tp+fn)*100
             total = tp+tn+fp+fn
             ac= (tp+tn)/(total)*100
-            print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
-                (s, p, r, 2*p*r/(p+r), ac)
+            print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %d \t|' %\
+                (s, p, r, 2*p*r/(p+r), ac, total)
         tp, fn, tn, fp = joint
         p = tp/(tp+fp)*100
         r = tp/(tp+fn)*100
