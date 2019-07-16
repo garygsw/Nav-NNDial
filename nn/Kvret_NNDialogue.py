@@ -509,8 +509,8 @@ class NNDial(object):
         total = tp+tn+fp+fn
         ac= (tp+tn)/(total)*100
         print 80*'-'
-        print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
-                ('joint', p, r, 2*p*r/(p+r), ac)
+        print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %d \t|' %\
+                ('joint', p, r, 2*p*r/(p+r), ac, total)
         print '---- Requestable '+ 63*'-'
         #reqslots = ['area','food','pricerange','address','postcode','phone']#,'change']
         reqslots = self.reader.s2v['requestable'].keys()
@@ -531,10 +531,10 @@ class NNDial(object):
         total = tp+tn+fp+fn
         ac= (tp+tn)/(total)*100
         print 80*'-'
-        print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
-                ('joint', p, r, 2*p*r/(p+r), ac)
+        print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %d\t' %\
+                ('joint', p, r, 2*p*r/(p+r), ac, total)
         print 80*'-'
-        print '%12s :\t| %7s\t| %7s\t| %7s\t| %7s\t| %7s\t' %\
+        print '%12s :\t| %7s\t| %7s\t| %7s\t| %7s\t| %7s\t | %d\t |' %\
                 ('Metrics', 'Prec.', 'Recall', 'F-1', 'Acc.', 'Total')
         print 80*'#'
 

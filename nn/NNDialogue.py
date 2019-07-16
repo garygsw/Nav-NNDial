@@ -463,6 +463,7 @@ class NNDial(object):
         print 'Venue Match Rate     : %.1f%%' % (100*stats['vmc']/float(len(testset)))
         print 'Task Success Rate    : %.1f%%' % (100*stats['success']/float(len(testset)))
         print 'Success F1           : %.2f%%' % (100*success_f1)
+        print 'Request Rate         : %.2f%%' % (100*recall)
         if self.dec!='none':
             print 'BLEU                 : %.4f' % (bscorer.score(best_corpus))
             print 'Semantic Match       : %.1f%%' % (100*stats['approp'][0]/stats['approp'][1])
@@ -476,16 +477,18 @@ class NNDial(object):
             tp, fn, tn, fp = stats['informable'][s]
             p = tp/(tp+fp)*100
             r = tp/(tp+fn)*100
-            ac= (tp+tn)/(tp+tn+fp+fn)*100
-            print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
-                (s, p, r, 2*p*r/(p+r), ac)
+            total = tp+tn+fp+fn
+            ac= (tp+tn)/(total)*100
+            print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %d \t' %\
+                (s, p, r, 2*p*r/(p+r), ac, total)
         tp, fn, tn, fp = joint
         p = tp/(tp+fp)*100
         r = tp/(tp+fn)*100
-        ac= (tp+tn)/(tp+tn+fp+fn)*100
+        total = tp+tn+fp+fn
+        ac= (tp+tn)/(total)*100
         print 80*'-'
-        print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
-                ('joint', p, r, 2*p*r/(p+r), ac)
+        print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %d \t|' %\
+                ('joint', p, r, 2*p*r/(p+r), ac, total)
         print '---- Requestable '+ 63*'-'
         reqslots = ['area','food','pricerange','address','postcode','phone']#,'change']
         joint = [0.0 for x in range(4)]
@@ -495,19 +498,21 @@ class NNDial(object):
             tp, fn, tn, fp = stats['requestable'][s]
             p = tp/(tp+fp)*100
             r = tp/(tp+fn)*100
-            ac= (tp+tn)/(tp+tn+fp+fn)*100
+            total = tp+tn+fp+fn
+            ac= (tp+tn)/(total)*100
             print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
                 (s, p, r, 2*p*r/(p+r), ac)
         tp, fn, tn, fp = joint
         p = tp/(tp+fp)*100
         r = tp/(tp+fn)*100
-        ac= (tp+tn)/(tp+tn+fp+fn)*100
+        total = tp+tn+fp+fn
+        ac= (tp+tn)/(total)*100
         print 80*'-'
-        print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
-                ('joint', p, r, 2*p*r/(p+r), ac)
+        print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %d\t' %\
+                ('joint', p, r, 2*p*r/(p+r), ac, total)
         print 80*'-'
-        print '%12s :\t| %7s\t| %7s\t| %7s\t| %7s\t|' %\
-                ('Metrics', 'Prec.', 'Recall', 'F-1', 'Acc.')
+        print '%12s :\t| %7s\t| %7s\t| %7s\t| %7s\t| %7s\t | %d\t |' %\
+                ('Metrics', 'Prec.', 'Recall', 'F-1', 'Acc.', 'Total')
         print 80*'#'
 
     def trainNet(self):
