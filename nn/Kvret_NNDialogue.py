@@ -534,7 +534,7 @@ class NNDial(object):
         print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %d\t' %\
                 ('joint', p, r, 2*p*r/(p+r), ac, total)
         print 80*'-'
-        print '%12s :\t| %7s\t| %7s\t| %7s\t| %7s\t| %7s\t | %d\t |' %\
+        print '%12s :\t| %7s\t| %7s\t| %7s\t| %7s\t| %7s\t | %7s\t |' %\
                 ('Metrics', 'Prec.', 'Recall', 'F-1', 'Acc.', 'Total')
         print 80*'#'
 
