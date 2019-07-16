@@ -473,7 +473,6 @@ class NNDial(object):
                 if set(reqs).issuperset(set(goal[1].nonzero()[0].tolist())):
                     stats['success'] += 1.0
 
-
         precision = stats['success_tp'] / (stats['success_tp'] + stats['success_fp'])
         recall =  stats['success_tp'] / (stats['success_tp'] + stats['success_fn'])
         success_f1 = 2 * precision * recall / (precision + recall + 1e-8)
@@ -484,6 +483,7 @@ class NNDial(object):
         print 80*'#'
         print 'Venue Match Rate     : %.1f%%' % (100*stats['vmc']/float(len(testset)))
         print 'Task Success Rate    : %.1f%%' % (100*stats['success']/float(len(testset)))
+        print 'Request Rate         : %.1f%%' % precision
         print 'Success F1           : %.2f%%' % (100*success_f1)
         if self.dec!='none':
             print 'BLEU                 : %.4f' % (bscorer.score(best_corpus))
@@ -499,13 +499,15 @@ class NNDial(object):
             tp, fn, tn, fp = stats['informable'][s]
             p = tp/(tp+fp)*100
             r = tp/(tp+fn)*100
-            ac= (tp+tn)/(tp+tn+fp+fn)*100
+            total = tp+tn+fp+fn
+            ac= (tp+tn)/(total)*100
             print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
                 (s, p, r, 2*p*r/(p+r), ac)
         tp, fn, tn, fp = joint
         p = tp/(tp+fp)*100
         r = tp/(tp+fn)*100
-        ac= (tp+tn)/(tp+tn+fp+fn)*100
+        total = tp+tn+fp+fn
+        ac= (tp+tn)/(total)*100
         print 80*'-'
         print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
                 ('joint', p, r, 2*p*r/(p+r), ac)
@@ -519,13 +521,15 @@ class NNDial(object):
             tp, fn, tn, fp = stats['requestable'][s]
             p = tp/(tp+fp)*100
             r = tp/(tp+fn)*100
-            ac= (tp+tn)/(tp+tn+fp+fn)*100
+            total = tp+tn+fp+fn
+            ac= (tp+tn)/(total)*100
             print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
                 (s, p, r, 2*p*r/(p+r), ac)
         tp, fn, tn, fp = joint
         p = tp/(tp+fp)*100
         r = tp/(tp+fn)*100
-        ac= (tp+tn)/(tp+tn+fp+fn)*100
+        total = tp+tn+fp+fn
+        ac= (tp+tn)/(total)*100
         print 80*'-'
         print '%12s :\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t| %2.2f%%\t|' %\
                 ('joint', p, r, 2*p*r/(p+r), ac)
