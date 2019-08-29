@@ -1184,7 +1184,7 @@ class DataReader(object):
         #self.data['test']  = self.split.test(corpus)
         self.data['train'] = []
         self.data['valid'] = []
-        self.data['test'] []
+        self.data['test'] = []
         for dial in corpus:
             if dial[-1] == 'train':
                 self.data['train'].append(dial[:-1])
