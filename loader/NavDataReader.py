@@ -1190,7 +1190,7 @@ class DataReader(object):
                 self.data['train'].append(dial[:-1])
             elif dial[-1] == 'dev': 
                 self.data['valid'].append(dial[:-1])
-            elif dial-1] == 'test':
+            elif dial[-1] == 'test':
                 self.data['test'].append(dial[:-1])
 
         # Print the shapes of every data piece
