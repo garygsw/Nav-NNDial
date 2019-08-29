@@ -134,6 +134,9 @@ class DataReader(object):
 
         # snapshot vectors
         self.snapshot_vecs = []
+        
+        # category type
+        self.category = []
 
         # for each dialogue
         dcount = 0.0
@@ -144,6 +147,8 @@ class DataReader(object):
         groupidx = 0
 
         for i, d in enumerate(self.dialog):
+
+            self.category.append(d['category'])
 
             if LOAD_DIALOG_DEBUG:
                 print '=' * 25 + ' Dialogue ' + str(i) + ' ' + '='*28
@@ -1148,7 +1153,8 @@ class DataReader(object):
                     trksrc,                 trktar,
                     self.ref_semis,         self.refmentions,
                     self.refsrcfeat,        self.reftarfeat,
-                    self.finished,          self.sentGroupIndex]
+                    self.finished,          self.sentGroupIndex,
+                    self.category]
         corpus = zip(*corpus)
 
         # Check corpus
@@ -1166,17 +1172,26 @@ class DataReader(object):
                        assert(False)
 
         # split out train+valid
-        train_valid = self.split.train_valid(corpus)
+        #train_valid = self.split.train_valid(corpus)
 
         # cut dataset according to percentage
-        percent = float(percent)/float(100)
-        train_valid = train_valid[:int(len(train_valid)*percent)]
+        #percent = float(percent)/float(100)
+        #train_valid = train_valid[:int(len(train_valid)*percent)]
 
         # split into train/valid/test
-        self.data['train'] = self.split.train(train_valid)
-        self.data['valid'] = self.split.valid(train_valid)
-        self.data['test']  = self.split.test(corpus)
-
+        #self.data['train'] = self.split.train(train_valid)
+        #self.data['valid'] = self.split.valid(train_valid)
+        #self.data['test']  = self.split.test(corpus)
+        self.data['train'] = []
+        self.data['valid'] = []
+        self.data['test'] []
+        for dial in corpus:
+            if dial[-1] == 'train':
+                self.data['train'].append(dial[:-1])
+            elif dial[-1] == 'dev': 
+                self.data['valid'].append(dial[:-1])
+            elif dial-1] == 'test':
+                self.data['test'].append(dial[:-1])
 
         # Print the shapes of every data piece
         sample_data = corpus[0]
@@ -1184,9 +1199,9 @@ class DataReader(object):
                   'target', 'target_len', 'masked_target', 'masked_target_len',
                   'snapshot', 'changes', 'goals', 'inf_labels', 'req_labels', 'db_logics', 'new_task',
                   'srcfeat', 'tarfeat', 'ref_labels', 'ref_mentions', 'refsrcfeat', 'reftarfeat',
-                  'finished', 'sent_group']
+                  'finished', 'sent_group', 'category']
         assert(len(labels) == len(sample_data))
-        for i in range(len(sample_data)):
+        for i in range(len(sample_data) - 1):
             print labels[i] + ':', np.array(sample_data[i]).shape
 
     def read(self,mode='train'):
