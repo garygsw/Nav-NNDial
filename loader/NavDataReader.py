@@ -1193,6 +1193,10 @@ class DataReader(object):
             elif dial[-1] == 'test':
                 self.data['test'].append(dial[:-1])
 
+        print 'len (train)', len(self.data['train'])
+        print 'len (valid)', len(self.data['valid'])
+        print 'len (test)', len(self.data['test'])
+
         # Print the shapes of every data piece
         sample_data = corpus[0]
         labels = ['source', 'source_len', 'masked_source', 'masked_source_len',
