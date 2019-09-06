@@ -74,7 +74,10 @@ class NNDial(object):
         # model file name
         self.modelfile = parser.get('file','model')
         # get current mode from command argument
-        if opts:  self.mode = opts.mode  # mode: trk|enc|dec|all
+        if opts:
+            if opts.mode == 'test-oracle':
+                opts.mode = 'test'
+            self.mode = opts.mode  # mode: trk|enc|dec|all
         # loading pretrained model if any
         if os.path.isfile(self.modelfile):
             # if model file already exists
