@@ -27,6 +27,8 @@ if __name__ == '__main__':
         model.trainNet()
     elif args.mode=='test' or args.mode=='valid':
         model.testNet()
+    elif args.mode=='test-oracle':
+        model.testNet(oracle=True)
     elif args.mode=='interact':
         while True: model.dialog()
     elif args.mode=='rl':

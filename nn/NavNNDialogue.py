@@ -216,7 +216,7 @@ class NNDial(object):
     #################################################################
     ############################ END ################################
     #################################################################
-    def testNet(self):
+    def testNet(self, oracle=False):
 
         # testing generation
         np.random.seed(self.seed)
@@ -310,11 +310,14 @@ class NNDial(object):
                 masked_intent_t = self.model.read(masked_source_t) # bidirectional encode context
 
                 # task reference tracking
-                task_ref_t = self.model.track_ref(ref_mentions_t,
-                                                  masked_source_t,
-                                                  masked_target_tm1,
-                                                  refsrcfeat_t,
-                                                  reftarfeat_tm1)
+                if oracle:
+                    task_ref_t = ref_trk_label[t]
+                else:    
+                    task_ref_t = self.model.track_ref(ref_mentions_t,
+                                                    masked_source_t,
+                                                    masked_target_tm1,
+                                                    refsrcfeat_t,
+                                                    reftarfeat_tm1)
 
                 # belief tracking
                 full_belief_t, belief_t = self.model.track(
