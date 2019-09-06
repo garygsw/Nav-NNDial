@@ -313,10 +313,7 @@ class NNDial(object):
                 masked_intent_t = self.model.read(masked_source_t) # bidirectional encode context
 
                 # task reference tracking
-                if oracle:
-                    task_ref_t = ref_trk_label[t]
-                else:    
-                    task_ref_t = self.model.track_ref(ref_mentions_t,
+                task_ref_t = self.model.track_ref(ref_mentions_t,
                                                     masked_source_t,
                                                     masked_target_tm1,
                                                     refsrcfeat_t,
@@ -447,7 +444,10 @@ class NNDial(object):
                 ysem = self.reader.refvs[yidx]
                 prob = task_ref_t[bidx]
                 print '  | %25s\t%.3f\t%35s |' % (psem,prob,ysem)
-                ref_correct = ysem == psem
+                if oracle:
+                    ref_correct = True
+                else:
+                    ref_correct = ysem == psem
                 if 'none' not in ysem:
                     if psem==ysem:
                         stats['informable']['task_reference'][0] += 1.0
