@@ -262,6 +262,7 @@ class NNDial(object):
             prev_correct = False
             task_i = 0
             ref_correct = True
+            prev_ref_correct = True
 
             # initial belief
             #print 'initial belief size:', self.inf_dimensions[-1]
@@ -377,8 +378,9 @@ class NNDial(object):
                 #requestables = ['phone','address','postcode','food','area','pricerange']
                 requestables = self.reader.s2v['requestable'].keys()
                 for requestable in requestables:
-                    if '[VALUE_'+requestable.upper()+']' in generated_utt and ref_correct:
+                    if '[VALUE_'+requestable.upper()+']' in generated_utt and prev_ref_correct:
                         reqs.append(self.reader.reqs.index(requestable+'=exist'))
+                prev_ref_correct = ref_correct
                 # check offered venue
                 if '[VALUE_PLACE]' in generated_utt and selected_venue!=None:
                     #venue_offered = self.reader.db2inf[selected_venue]
