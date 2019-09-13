@@ -1,6 +1,6 @@
-# NNDial
+# Nav-NNDial
 
-NNDial is an open source toolkit for building **end-to-end trainable task-oriented dialogue models**. It is released by **Tsung-Hsien (Shawn) Wen** from **Cambridge Dialogue Systems Group** under **Apache License 2.0**.
+Nav-NNDial is the extended version of NN-Dial (https://github.com/shawnwun/NNDIAL), the original open source toolkit for building **end-to-end trainable task-oriented dialogue models**. It was modified by to be able to consider the context of multi-tasking.
 
 # Requirement
 In order to run the program, here are a list of packages with the suggested versions,
@@ -14,8 +14,14 @@ In order to run the program, here are a list of packages with the suggested vers
 - NLTK wordnet
 ```
 
-# Dataset
-The dataset is the CamRest676 dataset collected in Wen et al, 2017a. The dataset is public available at: https://www.repository.cam.ac.uk/handle/1810/260970
+# Datasets
+
+1. Camrest676: Collected in Wen et al, 2017a. The dataset is publicly available at: https://www.repository.cam.ac.uk/handle/1810/260970
+
+2. KvretNav: The navigation domain subset of the KVRET dataset in Eric & Manning, 2017. The full dataset is publicly available at: https://nlp.stanford.edu/blog/a-new-multi-turn-multi-domain-task-oriented-dialogue-dataset/
+
+3. NavDial: The multi-task navigation domain dataset. It is publicy available at: https://github.com/garygsw/NavDial-dataset
+
 
 # Overview
 The model can be roughtly divided into encoder and decoder modules.
@@ -37,14 +43,6 @@ The models/methods supported in this software are listed below,
 - The Attention-based NDM model (Wen et al 2017a).
 - Various decoder implementations and snapshot learning (Wen et al 2016).
 - The LIDM model with a latent policy network and Reinforcement Learning (Wen et al 2017b).
-```
-The models were updated and refactored several times therefore some discrepancies in numbers are expected. Major changes since the earliest versions are:
-```
-- Optimiser has been changed from SGD to Adam.
-- Encoder has been changed from uni-directional LSTM to bi-directional.
-- An additional positive bias term has been added to the initialisation of all LSTM forget gates.
-- Implementation of N-gram based trackers and CNN encoder has been removed for maintainence reason.
-- MMI decoding has been removed because the gain was negligible.
 ```
 
 # Configuration Parameters
@@ -131,6 +129,13 @@ Below are configuration parameters explained by sections:
 
 The training of the model is done in two steps.
 Firstly, train the belief tracker using a tracker config file,
+
+Note:
+- use `nndial.py` to use the Camrest676 dataset
+- use `kvret_nndial.py` to use the KvretNav dataset
+- use `nav_nndial.py` to use the NavDial dataset
+- there are also special config files created for each dataset
+
 ```
 // Run the tracker training first
 python nndial.py -config config/tracker.cfg -mode train
@@ -177,7 +182,7 @@ python nndial.py -config config/LIDM-RL.cfg -mode rl
 The commands listed here are just examples. Please refer to scp/example_run.sh for more detail.
 Note, each new config file could change the intended model architecture, therefore, prompt the model to re-initiate the model parameters. For example, when training trackers it doesn't matter the structure of decoder and encoder because we can change it in the next config file.
 
-# Benchmark Results
+<!-- # Benchmark Results
 
 The following benchmark results were produced by this software. 
 We ran a small grid search over various hyperparameter settings and reported the performance of the best model on the test set.
@@ -203,15 +208,13 @@ Example scripts for generating the config files for the experiments can be found
 
 <img src="https://raw.githubusercontent.com/shawnwun/nndial/master/benchmark.png" alt="benchmark"/>
 
-5 example models were saved at model/demo/ for reference. You can directly run testing or interaction on these models.
+5 example models were saved at model/demo/ for reference. You can directly run testing or interaction on these models. -->
 
-# Bug Report
+<!-- # Bug Report
 
-If you have found any bugs in the code, please contact: thw28 at cam dot ac dot uk
+If you have found any bugs in the code, please contact: thw28 at cam dot ac dot uk -->
 
 # References
-If you use any source codes or datasets included in this toolkit in your
-work, please cite the corresponding papers. The bibtex are listed below:
 ```
 [Wen et al, 2017a]
 @InProceedings{wenN2N17,
@@ -254,4 +257,18 @@ work, please cite the corresponding papers. The bibtex are listed below:
     pages     = {2153--2162},
     url       = {https://aclweb.org/anthology/D16-1233}
 }
+
+[Eric & Manning, 2017]
+@InProceedings{Eric2017,
+    arxivId = {1705.05414},
+    author = {Eric, Mihail and Manning, Christopher D.},
+    booktitle = {Proceedings of the 18th Annual SIGdial Meeting on Discourse and Dialogue},
+    eprint = {1705.05414},
+    pages = {37--49},
+    publisher = {Association for Computational Linguistics},
+    title = {{Key-Value Retrieval Networks for Task-Oriented Dialogue}},
+    url = {http://arxiv.org/abs/1705.05414},
+    year = {2017}
+}
+
 ```

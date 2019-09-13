@@ -1193,10 +1193,6 @@ class DataReader(object):
             elif dial[-1] == 'test':
                 self.data['test'].append(dial[:-1])
 
-        print 'len (train)', len(self.data['train'])
-        print 'len (valid)', len(self.data['valid'])
-        print 'len (test)', len(self.data['test'])
-
         # Print the shapes of every data piece
         sample_data = corpus[0]
         labels = ['source', 'source_len', 'masked_source', 'masked_source_len',
@@ -1224,10 +1220,14 @@ class DataReader(object):
                     random.shuffle(self.data[mode])
                 elif self.shuffle=='dynamic':
                     # shuffle train + valid together
+                    train_len = len(self.data['train'])
                     train_valid = self.data['train']+self.data['valid']
                     random.shuffle(train_valid)
-                    self.data['train'] = self.split.train(train_valid)
-                    self.data['valid'] = self.split.valid(train_valid)
+                    #self.data['train'] = self.split.train(train_valid)
+                    #self.data['valid'] = self.split.valid(train_valid)
+                    self.data['train'] = train_valid[:train_len]
+                    self.data['valid'] = train_valid[train_len:]
+                    #self.data['valid'] = self.split.valid(train_valid)
             return data
 
         # 1 dialog at a time
