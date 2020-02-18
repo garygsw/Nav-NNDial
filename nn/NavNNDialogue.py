@@ -325,6 +325,11 @@ class NNDial(object):
                         flatten_belief_tm1, masked_source_t, masked_target_tm1,
                         srcfeat_t, tarfeat_tm1)
                 flatten_belief_t = np.concatenate(full_belief_t,axis=0)
+
+                # add task ref into belief for attention scoring
+                if self.policy == 'attention':
+                    belief_t = belief_t.concat(task_ref_t) 
+
                 # search DB
                 # db_degree_t, query = self._searchDB(flatten_belief_t)
                 # based in flatten_belief, retrieve db_degree_t

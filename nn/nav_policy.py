@@ -17,10 +17,12 @@ from theano.sandbox.rng_mrg import MRG_RandomStreams as RandomStreams
 from basic import *
 from encoder import *
 
-def computeBeleifDim(trk, inf, req, bef, iseg, rseg):
+def computeBeleifDim(trk, inf, req, bef, iseg, rseg, taskref):
 
     # compute belief vector dimension
     belief_size = 0
+    if taskref:
+        belief_size += 2
     if trk=='rnn' and req==True: # requestable
         if bef=='full' or bef=='summary':
             belief_size += 2*(len(rseg)-1)
@@ -373,7 +375,7 @@ class AttentivePolicy(BaseNNModule):
     # Policy network takes three inputs and produces a single
     # system action embedding. Its use is heavily coupled with decoder.
 
-    def __init__(self, belief_size, degree_size, ihidden_size, ohidden_size):
+    def __init__(self, belief_size, degree_size, ihidden_size, ohidden_size, belief_dim):
 
         # belief to action parameter
         self.Ws1 = theano.shared(0.3 * np.random.uniform(-1.0,1.0,\
@@ -394,6 +396,7 @@ class AttentivePolicy(BaseNNModule):
                 (ohidden_size,ohidden_size)).astype(theano.config.floatX))
         self.Va1 = theano.shared(0.3 * np.random.uniform(-1.0,1.0,\
                 (ohidden_size)).astype(theano.config.floatX))
+        self.belief_dim = belief_dim
 
         # all parameters
         self.params = [
@@ -422,7 +425,9 @@ class AttentivePolicy(BaseNNModule):
                     np.repeat(
                         T.dot(ohidden_tjm1,self.Wa1)+\
                         T.dot(wemb_tj,self.Wa2),
-                    9, axis=0)
+                    self.belief_dim, axis=0)
+        # repeat 9 times because there are 3 infs + 6 reqs
+        # previous repeat 10 times because there were 3 inf + 3 reqs + 6 degree
 
         # attention mechanism
         atten_t= T.nnet.softmax(T.dot(T.nnet.sigmoid(score_t),self.Va1))[0]

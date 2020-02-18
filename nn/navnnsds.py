@@ -25,7 +25,7 @@ class NNSDS(BaseNNModule):
     def __init__(self, enc, dec, ply, trk, inf, req, bef,
             trkenc, use_snap , decstruct, voc_size,
             ih_size, oh_size, inf_size, req_size, task_size, gradcut='1',
-            learn_mode='all', snap_size=0, latent_size=1):
+            learn_mode='all', snap_size=0, latent_size=1, taskref=False):
 
         print 'init n2n SDS ...'
         # memorise some params for future use
@@ -47,6 +47,7 @@ class NNSDS(BaseNNModule):
         self.gradcut= gradcut
         self.decstruct = decstruct
         self.use_snap = use_snap
+        self.taskref = taskref
 
         # trainable parameters
         self.params = {
@@ -107,10 +108,14 @@ class NNSDS(BaseNNModule):
         # init policy network
         degree_size = 2  # previously 6
         self.degree_size = degree_size
-        belief_size = computeBeleifDim(trk, inf, req, bef, self.iseg, self.rseg)
+        belief_size = computeBeleifDim(trk, inf, req, bef, self.iseg, self.rseg, self.taskref)
+
         if self.ply=='attention':
             print '\tinit attentive policy network ...'
-            self.policy = AttentivePolicy( belief_size, degree_size, ih_size, oh_size )
+            belief_dim = len(self.iseg) - 1 + len(self.rseg) - 1
+            if self.taskref:
+                belief_dim += 2
+            self.policy = AttentivePolicy( belief_size, degree_size, ih_size, oh_size, belief_dim)
         elif self.ply=='normal':
             print '\tinit normal policy network ...'
             self.policy = Policy( belief_size, degree_size, ih_size, oh_size )
@@ -274,6 +279,9 @@ class NNSDS(BaseNNModule):
                                 self.bef=='summary' else tmp
                         cur_sum_belief_t = T.concatenate( tmp,axis=0 )
                         belief_t.append(cur_sum_belief_t)
+
+                        if self.ply == 'attention':
+                            belief_t = belief_t.concat(task_ref_t)
 
             inf_belief_t = inf_label_t
 
