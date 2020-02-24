@@ -280,8 +280,8 @@ class NNSDS(BaseNNModule):
                         cur_sum_belief_t = T.concatenate( tmp,axis=0 )
                         belief_t.append(cur_sum_belief_t)
 
-                        if self.ply == 'attention':
-                            belief_t = T.concatenate([belief_t, task_ref_t], axis=0)
+                        #if self.ply == 'attention':
+                        #    belief_t = T.concatenate([belief_t + task_ref_t], axis=0)
 
             inf_belief_t = inf_label_t
 
@@ -338,11 +338,14 @@ class NNSDS(BaseNNModule):
             bef_t = T.concatenate(belief_t,axis=0)
             # LSTM decoder
             if self.dec=='lstm' and self.learn_mode!='trk':
+
+                 if self.ply == 'attention':
+                    input_belief_t = T.concatenate([belief_t + task_ref_t], axis=0)
                 prob_t, snapCost_t, prior_t, posterior_t, z_t, base_t, debugX = \
                     self.decoder.decode(
                         masked_source_t, masked_source_len_t,
                         masked_target_t, masked_target_len_t,
-                        masked_intent_t, belief_t, db_degree_t, # [-6:],   # why only the last 6 ones?
+                        masked_intent_t, input_belief_t, db_degree_t, # [-6:],   # why only the last 6 ones?
                         utt_group_t, snapshot_t, sample_t)
                 debug_t = prior_t
 
