@@ -338,8 +338,7 @@ class NNSDS(BaseNNModule):
             bef_t = T.concatenate(belief_t,axis=0)
             # LSTM decoder
             if self.dec=='lstm' and self.learn_mode!='trk':
-
-                 if self.ply == 'attention':
+                if self.ply == 'attention':
                     input_belief_t = T.concatenate([belief_t + task_ref_t], axis=0)
                 prob_t, snapCost_t, prior_t, posterior_t, z_t, base_t, debugX = \
                     self.decoder.decode(
