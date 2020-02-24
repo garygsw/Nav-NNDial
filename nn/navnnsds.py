@@ -277,7 +277,7 @@ class NNSDS(BaseNNModule):
                                         cur_label_t[-2].dimshuffle('x')]
                         tmp  = tmp + [cur_label_t[-1].dimshuffle('x')] if\
                                 self.bef=='summary' else tmp
-                        cur_sum_belief_t = T.concatenate( tmp,axis=0 )
+                        cur_sum_belief_t = T.concatenate( tmp,axis=0)
                         belief_t.append(cur_sum_belief_t)
 
                         #if self.ply == 'attention':
@@ -339,7 +339,7 @@ class NNSDS(BaseNNModule):
             # LSTM decoder
             if self.dec=='lstm' and self.learn_mode!='trk':
                 if self.ply == 'attention':
-                    input_belief_t = T.concatenate([belief_t, [task_ref_t]], axis=0)
+                    input_belief_t = T.concatenate([belief_t, T.sum(task_ref_t)], axis=0)
                 else:
                     input_belief_t = belief_t
                 prob_t, snapCost_t, prior_t, posterior_t, z_t, base_t, debugX = \
