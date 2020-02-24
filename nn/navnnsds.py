@@ -281,7 +281,7 @@ class NNSDS(BaseNNModule):
                         belief_t.append(cur_sum_belief_t)
 
                         if self.ply == 'attention':
-                            belief_t = belief_t.concat(task_ref_t)
+                            belief_t = belief_t + task_ref_t
 
             inf_belief_t = inf_label_t
 
