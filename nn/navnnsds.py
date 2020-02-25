@@ -339,10 +339,11 @@ class NNSDS(BaseNNModule):
             # LSTM decoder
             if self.dec=='lstm' and self.learn_mode!='trk':
                 if self.ply == 'attention':
+                    input_belief_t = belief_t[:]
                     tmp  = [T.sum(task_ref_t[:-1],axis=0).dimshuffle('x')]
                     tmp  = tmp + [task_ref_t[-1].dimshuffle('x')]
                     sum_task_ref_t = T.concatenate(tmp,axis=0)
-                    input_belief_t = belief_t + sum_task_ref_t
+                    input_belief_t.append(sum_task_ref_t)
                 else:
                     input_belief_t = belief_t
                 prob_t, snapCost_t, prior_t, posterior_t, z_t, base_t, debugX = \
