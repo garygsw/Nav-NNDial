@@ -425,7 +425,7 @@ class AttentivePolicy(BaseNNModule):
                     np.repeat(
                         T.dot(ohidden_tjm1,self.Wa1)+\
                         T.dot(wemb_tj,self.Wa2),
-                    self.belief_dim - 1, axis=0)
+                    self.belief_dim + 1, axis=0)
         # repeat 9 times because there are 3 infs + 6 reqs
         # previous repeat 10 times because there were 3 inf + 3 reqs + 6 degree
 
