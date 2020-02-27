@@ -114,7 +114,7 @@ class NNSDS(BaseNNModule):
             print '\tinit attentive policy network ...'
             belief_dim = len(self.iseg) - 1 + len(self.rseg) - 1
             if self.taskref:
-                belief_dim += 2
+                belief_dim += 1
             self.policy = AttentivePolicy( belief_size, degree_size, ih_size, oh_size, belief_dim)
         elif self.ply=='normal':
             print '\tinit normal policy network ...'
@@ -341,7 +341,7 @@ class NNSDS(BaseNNModule):
                 if self.ply == 'attention':
                     input_belief_t = belief_t[:]
                     tmp  = [T.sum(task_ref_t[:-1],axis=0).dimshuffle('x')]
-                    tmp  = tmp + [task_ref_t[-1].dimshuffle('x')]
+                    # tmp  = tmp + [task_ref_t[-1].dimshuffle('x')]
                     sum_task_ref_t = T.concatenate(tmp,axis=0)
                     input_belief_t.append(sum_task_ref_t)
                 else:
