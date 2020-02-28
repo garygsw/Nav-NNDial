@@ -328,7 +328,7 @@ class NNDial(object):
 
                 # add task ref into belief for attention scoring
                 if self.policy == 'attention':
-                    belief_t = belief_t + task_ref_t
+                    belief_t.append(task_ref_t)
                     # belief_t = belief_t.concat(task_ref_t) 
 
                 # search DB
