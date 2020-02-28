@@ -340,8 +340,8 @@ class NNSDS(BaseNNModule):
             if self.dec=='lstm' and self.learn_mode!='trk':
                 if self.ply == 'attention':
                     input_belief_t = belief_t[:]
-                    tmp  = [T.sum(task_ref_t[:-1],axis=0).dimshuffle('x')]
-                    # tmp  = tmp + [task_ref_t[-1].dimshuffle('x')]
+                    tmp  = [T.sum(ref_label_t[:-1],axis=0).dimshuffle('x'),
+                            ref_label_t[-1].dimshuffle('x')]
                     sum_task_ref_t = T.concatenate(tmp,axis=0)
                     input_belief_t.append(sum_task_ref_t)
                 else:
@@ -589,7 +589,9 @@ class NNSDS(BaseNNModule):
 
         ref_t = self.reftracker.track(ref_tm1, masked_source_t, masked_target_tm1,
                                       vsrcpos_t, vtarpos_tm1)
-        return ref_t
+        tmp = [np.sum(ref_t[:-1],axis=0),ref_t[-1]]
+        belief_t = np.array(tmp)
+        return ref_t, belief_t
 
     def track(self, belief_tm1, masked_source_t, masked_target_tm1,
             srcfeat_t, tarfeat_tm1):
