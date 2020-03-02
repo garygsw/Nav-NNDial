@@ -589,7 +589,7 @@ class NNSDS(BaseNNModule):
 
         ref_t = self.reftracker.track(ref_tm1, masked_source_t, masked_target_tm1,
                                       vsrcpos_t, vtarpos_tm1)
-        tmp = [np.sum(ref_t[:-1],axis=0),ref_t[-1]]
+        tmp = [np.sum(ref_t[:-1], axis=0), ref_t[-1]]
         belief_t = np.array(tmp)
         return ref_t, belief_t
 
