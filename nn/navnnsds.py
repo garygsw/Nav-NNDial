@@ -25,7 +25,7 @@ class NNSDS(BaseNNModule):
     def __init__(self, enc, dec, ply, trk, inf, req, bef,
             trkenc, use_snap , decstruct, voc_size,
             ih_size, oh_size, inf_size, req_size, task_size, gradcut='1',
-            learn_mode='all', snap_size=0, latent_size=1, taskref=False):
+            learn_mode='all', snap_size=0, latent_size=1, taskref=True):
 
         print 'init n2n SDS ...'
         # memorise some params for future use
